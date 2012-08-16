@@ -1,4 +1,4 @@
-#include "idep_aliasdep.h"
+#include "idep_alias_dep.h"
 #include <iostream>
 
 // This file contains a main program to exercise the idep_aliasdep component.

@@ -1,5 +1,5 @@
-// idep_adep.c
-#include "idep_aliasdep.h"
+#include "idep_alias_dep.h"
+
 #include "idep_namearray.h"
 #include "idep_nameindexmap.h"
 #include "idep_filedepiter.h"
