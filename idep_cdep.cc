@@ -1,10 +1,9 @@
-// idep_cdep.c
-#include "idep_compiledep.h"
-#include "idep_namearray.h"
-#include "idep_nameindexmap.h"
 #include "idep_binrel.h"
-#include "idep_string.h"
+#include "idep_compiledep.h"
 #include "idep_filedepiter.h"
+#include "idep_name_array.h"
+#include "idep_nameindexmap.h"
+#include "idep_string.h"
 #include "idep_tokeniter.h"
 
 #include <ctype.h>      // isascii() isspace()

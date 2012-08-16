@@ -1,13 +1,11 @@
-// idep_nimap.c
 #include "idep_nameindexmap.h"
-#include "idep_namearray.h"
 
-#include <string.h>     // strcmp() 
+#include "idep_name_array.h"
+
+#include <string.h>     // strcmp()
 #include <memory.h>     // memcpy() memset()
-#include <iostream> 
-#include <assert.h> 
-
-                // -*-*-*- static functions -*-*-*-
+#include <iostream>
+#include <assert.h>
 
 enum { DEFAULT_TABLE_SIZE = 521 };
 enum { BAD_INDEX = -1 };
@@ -20,8 +18,6 @@ static unsigned hash(register const char* name) // Note: returns unsigned!
     }
     return sum; // unsigned ensures positive value for use with (%) operator.  
 }
-
-                // -*-*-*- idep_NameIndexMapLink -*-*-*-
 
 struct idep_NameIndexMapLink {
     const char *d_name_p;                       // name
@@ -156,12 +152,11 @@ ostream& operator<<(ostream& out, const idep_NameIndexMap& map)
         --fieldWidth;
         x /= 10;
     }
- 
+
     for (int i = 0; i < map.length(); ++i) {
         out.width(fieldWidth);
         out << i << ". " << map[i] << endl;
     }
- 
+
     return out;
 }
-

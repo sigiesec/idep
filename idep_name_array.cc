@@ -1,15 +1,13 @@
-// idep_namea.c
-#include "idep_namearray.h"
+#include "idep_name_array.h"
 
 #include <memory.h>     // memcpy()
 #include <string.h>     // strlen()
 #include <iostream>
 #include <assert.h>
 
-                // -*-*-*- static functions -*-*-*-
- 
+
 enum { START_SIZE = 1, GROW_FACTOR = 2 };
- 
+
 static char *newStrCpy(const char *oldStr)
 {
     int size = strlen(oldStr) + 1;
@@ -18,25 +16,23 @@ static char *newStrCpy(const char *oldStr)
     memcpy(newStr, oldStr, size);
     return newStr;
 }
- 
-                // -*-*-*- idep_NameArray -*-*-*-
- 
+
 idep_NameArray::idep_NameArray(int maxEntriesHint)
 : d_size(maxEntriesHint > 0 ? maxEntriesHint : START_SIZE)
 , d_length(0)
 {
     d_array_p = new char *[d_size];
-} 
+}
 
 idep_NameArray::~idep_NameArray()
-{                                     
+{
     for (int i = 0; i < d_length; ++i) {
         delete [] d_array_p[i];
     }
     delete [] d_array_p;
 }
 
-int idep_NameArray::append(const char *name) 
+int idep_NameArray::append(const char *name)
 {
     if (d_length >= d_size) {
         int oldSize = d_size;
@@ -62,7 +58,7 @@ int idep_NameArray::length() const
     return d_length;
 };
 
-ostream& operator<<(ostream& out, const idep_NameArray& array) 
+ostream& operator<<(ostream& out, const idep_NameArray& array)
 {
     int fieldWidth = 10;
     int maxIndex = array.length() - 1;
@@ -80,4 +76,3 @@ ostream& operator<<(ostream& out, const idep_NameArray& array)
 
     return out;
 }
-

@@ -1,6 +1,6 @@
 #include "idep_alias_dep.h"
 
-#include "idep_namearray.h"
+#include "idep_name_array.h"
 #include "idep_nameindexmap.h"
 #include "idep_filedepiter.h"
 #include "idep_tokeniter.h"
