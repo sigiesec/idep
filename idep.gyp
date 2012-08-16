@@ -12,6 +12,8 @@
         'idep_alias_util.h',
         'idep_name_array.cc',
         'idep_name_array.h',
+        'idep_string.cc',
+        'idep_string.h',
       ],
     },
   ],

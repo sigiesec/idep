@@ -1,44 +1,38 @@
-// string.c
 #include "idep_string.h"
 
 #include <string.h>     // strlen() strcmp()
 #include <memory.h>     // memcpy()
 
-                // -*-*-*- static functions -*-*-*-
-
-static char *init (const char *str) 
-{
+static char* init(const char* str) {
     int size = strlen(str) + 1;
     char *string = new char[size];
     memcpy(string, str, size);
     return string;
 }
 
-                // -*-*-*- idep_String -*-*-*-
-
 // CREATORS
-idep_String::idep_String() 
+idep_String::idep_String()
 : d_string_p(init(""))
-{ 
+{
 }
 
-idep_String::idep_String(const idep_String& string) 
+idep_String::idep_String(const idep_String& string)
 : d_string_p(init(string.d_string_p))
-{ 
+{
 }
 
-idep_String::idep_String(const char* str) 
+idep_String::idep_String(const char* str)
 : d_string_p(init(str))
-{ 
+{
 }
 
-idep_String::~idep_String() 
+idep_String::~idep_String()
 {
     delete d_string_p;
 }
 
 // MANIPULATORS
-idep_String& idep_String::operator=(const idep_String& string) 
+idep_String& idep_String::operator=(const idep_String& string)
 {
     if (this != &string) {
         delete d_string_p;
@@ -47,7 +41,7 @@ idep_String& idep_String::operator=(const idep_String& string)
     return *this;
 }
 
-idep_String& idep_String::operator=(const char* str) 
+idep_String& idep_String::operator=(const char* str)
 {
     char *tmp = d_string_p;     // string could be a substring of itself
     d_string_p = init(str);
@@ -190,4 +184,3 @@ int operator>=(const idep_String& string, const char *str)
 {
     return strcmp(string, str) >= 0;
 }
-
