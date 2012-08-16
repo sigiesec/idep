@@ -6,7 +6,6 @@
 
 #include <ostream>
 #include <istream>
-using namespace std;
 
 class idep_AliasDep_i;
 class idep_AliasDep {
@@ -39,7 +38,7 @@ class idep_AliasDep {
         // a previously corresponding component name for this alias that is 
         // not identical to the one specified here.
 
-    int readAliases(ostream& err, const char *file);
+    int readAliases(std::ostream& err, const char *file);
         // Read a list of component aliases from the specified file.  Each
         // contiguous sequence of non-whitespace characters represents a name.
         // Names are also arranged into sequences.  The first name in a name
@@ -75,7 +74,7 @@ class idep_AliasDep {
         // non-ascii characters.
 
     // ACCESSORS
-    int unpaired(ostream& out, ostream& err, int suffixFlag = 1) const;
+    int unpaired(std::ostream& out, std::ostream& err, int suffixFlag = 1) const;
         // Format a list of unpaired files to the specified output
         // stream (out).  If more than two files have the same root,
         // produce a warning on the error stream (err).  By default
@@ -85,7 +84,7 @@ class idep_AliasDep {
         // order for creating an alias file via editor cut-and-paste.
         // This function returns the number of unpaired files.
 
-    int verify(ostream& err) const;
+    int verify(std::ostream& err) const;
         // Verify that all specified (.c) file dependencies are properly 
         // paired after any aliases are applied.  If a specified file fails 
         // to include its corresponding header file as the first include 
@@ -95,7 +94,7 @@ class idep_AliasDep {
         // the number of files containing missing or misplaced include 
         // directives.  
 
-    int extract(ostream& out, ostream& err) const;
+    int extract(std::ostream& out, std::ostream& err) const;
         // Extract any necessary aliases from the specified set of (.c) files 
         // and format them to the specified output stream (out) assuming that 
         // the corresponding header file is the first include directive in the 
