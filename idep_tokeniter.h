@@ -35,6 +35,7 @@ class idep_TokenIter {
  private:
   idep_TokenIter_i *d_this;
 
+  // Disallow copy and assign.
   idep_TokenIter(const idep_TokenIter&);
   idep_TokenIter& operator=(const idep_TokenIter&);
 };
