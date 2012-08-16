@@ -34,10 +34,12 @@ static int tryToAlias(idep_AliasTable *table, ostream& orf,
     return 0;
 }
 
-                // -*-*-*- idep_AliasUtil -*-*-*-
+namespace idep {
 
-int idep_AliasUtil::readAliases(idep_AliasTable *table, ostream& orf, 
-                                        istream& in, const char *inputName)
+int AliasUtil::readAliases(idep_AliasTable* table,
+                           ostream& orf,
+                           istream& in,
+                           const char* `inputName)
 {
     // The following is a state-machine description of the alias language:
 
@@ -196,8 +198,9 @@ int idep_AliasUtil::readAliases(idep_AliasTable *table, ostream& orf,
 }
 
 
-int idep_AliasUtil::readAliases(idep_AliasTable *table, ostream& orf, 
-                                                        const char *fileName)
+int AliasUtil::readAliases(idep_AliasTable *table,
+                           ostream& orf,
+                           const char *fileName)
 {
     enum { IOERROR = -1 };
     ifstream in(fileName);
@@ -206,4 +209,5 @@ int idep_AliasUtil::readAliases(idep_AliasTable *table, ostream& orf,
     }
     return readAliases(table, orf, in, fileName);
 }
-   
+
+}  // namespace idep

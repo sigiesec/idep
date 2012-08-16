@@ -713,7 +713,7 @@ const char *idep_LinkDep::addAlias(const char *alias, const char *component)
 
 int idep_LinkDep::readAliases(ostream& orf, const char *file)
 {
-    return idep_AliasUtil::readAliases(&d_this->d_aliases, orf, file);
+    return idep::AliasUtil::readAliases(&d_this->d_aliases, orf, file);
 }
 
 void idep_LinkDep::addUnaliasDirectory(const char *dirName)

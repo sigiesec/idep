@@ -191,7 +191,7 @@ const char *idep_AliasDep::addAlias(const char *alias, const char *component)
  
 int idep_AliasDep::readAliases(ostream& orf, const char *file)
 {
-    return idep_AliasUtil::readAliases(&d_this->d_aliases, orf, file);
+    return idep::AliasUtil::readAliases(&d_this->d_aliases, orf, file);
 }
 
 void idep_AliasDep::addFileName(const char *fileName)
