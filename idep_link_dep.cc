@@ -1,7 +1,8 @@
+#include "idep_link_dep.h"
+
 #include "idep_aliastable.h"
 #include "idep_aliasutil.h"
 #include "idep_binrel.h"
-#include "idep_linkdep.h"
 #include "idep_name_array.h"
 #include "idep_nameindexmap.h"
 #include "idep_string.h"

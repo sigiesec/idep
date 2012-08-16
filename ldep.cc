@@ -1,5 +1,5 @@
-// ldep.c
-#include "idep_linkdep.h"
+#include "idep_link_dep.h"
+
 #include <iostream>
 
 // This file contains a main program to exercise the idep_linkdep component.
