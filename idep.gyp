@@ -20,5 +20,15 @@
         'idep_string.h',
       ],
     },
+    {
+      'target_name': 'adep',
+      'type': 'executable',
+      'dependencies': [
+        'idep',
+      ],
+      'sources': [
+        'adep.cc',
+      ],
+    },
   ],
 }

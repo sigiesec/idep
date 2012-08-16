@@ -1,9 +1,12 @@
 #include "idep_alias_dep.h"
+
 #include <iostream>
+
+using namespace std;
 
 // This file contains a main program to exercise the idep_aliasdep component.
 
-const char NL[] = "\n";
+#define NL "\n"
 static const char *help() {
 return NL
 "adep - create aliases to group files into cohesive components."             NL
