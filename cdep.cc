@@ -1,12 +1,12 @@
-// cdep.c
-#include "idep_compiledep.h"
+#include "idep_compile_dep.h"
+
 #include <iostream>
 
-// This file contains a main program to exercise the idep_compiledep component.
+// This file contains a main program to exercise the idep_compile_dep component.
 
-#define NL "\n"
-static const char *help() 
-{
+const char NL[] = "\n";
+
+static const char* help() {
 return NL
 "cdep: Extract compile-time dependencies from a collection of files."        NL
 ""                                                                           NL
@@ -31,14 +31,14 @@ NL;
 
 static enum { IOERROR = -1, GOOD = 0 } s_status = GOOD;
 
-static ostream& err() 
+static ostream& err()
 {
     s_status = IOERROR;
     return cerr << "Error: ";
 }
 
 static int missing(const char *argName, char option) 
-{  
+{
     err() << "missing `" << argName << "' argument for -" 
           << option << " option." << endl;
     return s_status;

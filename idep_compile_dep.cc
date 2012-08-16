@@ -1,5 +1,6 @@
+#include "idep_compile_dep.h"
+
 #include "idep_binrel.h"
-#include "idep_compiledep.h"
 #include "idep_filedepiter.h"
 #include "idep_name_array.h"
 #include "idep_nameindexmap.h"
