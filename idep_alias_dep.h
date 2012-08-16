@@ -9,12 +9,6 @@
 
 class idep_AliasDep_i;
 class idep_AliasDep {
-    idep_AliasDep_i *d_this;
-
-  private:
-    idep_AliasDep(const idep_AliasDep&);                // not implemented
-    idep_AliasDep& operator=(const idep_AliasDep&);     // not implemented
-
   public:
     // CREATORS
     idep_AliasDep();
@@ -105,6 +99,13 @@ class idep_AliasDep {
         // If any file cannot be opened, the value returned by this function 
         // is negative.  Otherwise, this function returns the number of files 
         // containing no include directives.
+
+ private:
+  idep_AliasDep_i *d_this;
+
+  // Disallow copy and assign.
+  idep_AliasDep(const idep_AliasDep&);
+  idep_AliasDep& operator=(const idep_AliasDep&);
 };
 
 #endif  // IDEP_ALIASDEP_H_
