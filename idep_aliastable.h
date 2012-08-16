@@ -1,5 +1,5 @@
-#ifndef INCLUDED_IDEP_ALIASTABLE
-#define INCLUDED_IDEP_ALIASTABLE
+#ifndef IDEP_ALIASTABLE_H_
+#define IDEP_ALIASTABLE_H_
 
 // This leaf component defines 2 classes:
 //       idep_AliasTable: supports efficient (hashed) name to name mapping
@@ -77,4 +77,4 @@ class idep_AliasTableIter {
         // Return the (original) name corresponding to current alias name. 
 };
 
-#endif
+#endif  // IDEP_ALIASTABLE_H_

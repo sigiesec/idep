@@ -1,5 +1,5 @@
-#ifndef INCLUDED_IDEP_COMPILEDEP
-#define INCLUDED_IDEP_COMPILEDEP
+#ifndef IDEP_COMPILEDEP_H_
+#define IDEP_COMPILEDEP_H_
 
 // This wrapper component defines 3 fully insulated classes:
 //       idep_CompileDep: environment for analyzing compile-time dependencies
@@ -126,4 +126,4 @@ class idep_HeaderFileIter {
         // file depends (either directly or indirectly) at compile time.
 };
 
-#endif
+#endif  // IDEP_COMPILEDEP_H_

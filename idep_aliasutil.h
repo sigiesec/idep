@@ -1,5 +1,5 @@
-#ifndef INCLUDED_IDEP_ALIASUTIL
-#define INCLUDED_IDEP_ALIASUTIL
+#ifndef IDEP_ALIASUTIL_H_
+#define IDEP_ALIASUTIL_H_
 
 // This component defines 1 procedural utility class:
 //   idep_AliasUtil: load an alias table with information read from a file
@@ -65,4 +65,4 @@ struct idep_AliasUtil {
         // (err).
 };
 
-#endif
+#endif  // IDEP_ALIASUTIL_H_

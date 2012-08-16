@@ -1,5 +1,5 @@
-#ifndef INCLUDED_IDEP_ALIASDEP
-#define INCLUDED_IDEP_ALIASDEP
+#ifndef IDEP_ALIASDEP_H_
+#define IDEP_ALIASDEP_H_
 
 // This component defines 1 fully insulated wrapper class:
 //   idep_AliasDep: environment for creating/verifying filename aliases
@@ -108,4 +108,4 @@ class idep_AliasDep {
         // containing no include directives.
 };
 
-#endif
+#endif  // IDEP_ALIASDEP_H_
