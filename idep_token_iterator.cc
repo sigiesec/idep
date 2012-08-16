@@ -1,19 +1,16 @@
-// idep_tokitr.c
-#include "idep_tokeniter.h"
+#include "idep_token_iterator.h"
 
 #include <ctype.h>      // isspace()
 #include <memory.h>     // memcpy()
 #include <iostream>
-#include <assert.h> 
+#include <assert.h>
 
-                // -*-*-*- static functions -*-*-*-
+using namespace std;
 
 enum { START_SIZE = 1, GROW_FACTOR = 2 };
 
 const char NEWLINE_CHAR = '\n';
 const char NULL_CHAR = '\0';
-
-                // -*-*-*- idep_TokenIter_i -*-*-*-
 
 struct idep_TokenIter_i {
     istream& d_in;
@@ -21,7 +18,7 @@ struct idep_TokenIter_i {
     int d_size;
     int d_length;
     int d_newlineFlag;
-    
+
     idep_TokenIter_i(istream& in);
     ~idep_TokenIter_i();
     void grow();
@@ -63,8 +60,6 @@ void idep_TokenIter_i::addChar(char ch)
     assert(d_length < d_size);
     d_buf_p[d_length++] = ch;
 }
-
-                // -*-*-*- idep_TokenIter -*-*-*-
 
 idep_TokenIter::idep_TokenIter(istream& in)
 : d_this(new idep_TokenIter_i(in))

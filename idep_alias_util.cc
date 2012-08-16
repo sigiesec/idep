@@ -1,8 +1,8 @@
 #include "idep_alias_util.h"
 
 #include "idep_alias_table.h"
-#include "idep_tokeniter.h"
 #include "idep_string.h"
+#include "idep_token_iterator.h"
 
 #include <fstream>   // ifstream
 #include <iostream>

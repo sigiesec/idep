@@ -18,6 +18,8 @@
         'idep_name_array.h',
         'idep_string.cc',
         'idep_string.h',
+        'idep_token_iterator.cc',
+        'idep_token_iterator.h',
       ],
     },
     {

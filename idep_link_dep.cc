@@ -6,7 +6,7 @@
 #include "idep_name_array.h"
 #include "idep_nameindexmap.h"
 #include "idep_string.h"
-#include "idep_tokeniter.h"
+#include "idep_token_iterator.h"
 
 #include <math.h>       // log()
 #include <ctype.h>      // isascii() isspace()

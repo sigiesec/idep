@@ -1,7 +1,9 @@
-#ifndef IDEP_TOKENITER_H_
-#define IDEP_TOKENITER_H_
+#ifndef IDEP_TOKEN_ITERATOR_H_
+#define IDEP_TOKEN_ITERATOR_H_
 
 #include <istream>
+
+class idep_TokenIter_i;
 
 // Iterate over the tokens in an input stream.
 class idep_TokenIter {
@@ -25,7 +27,6 @@ class idep_TokenIter {
   const char *operator()() const;
 
  private:
-  class idep_TokenIter_i;
   idep_TokenIter_i *d_this;
 
   // Disallow copy and assign.
@@ -33,4 +34,4 @@ class idep_TokenIter {
   idep_TokenIter& operator=(const idep_TokenIter&);
 };
 
-#endif  // IDEP_TOKENITER_H_
+#endif  // IDEP_TOKEN_ITERATOR_H_

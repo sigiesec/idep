@@ -5,7 +5,7 @@
 #include "idep_filedepiter.h"
 #include "idep_name_array.h"
 #include "idep_nameindexmap.h"
-#include "idep_tokeniter.h"
+#include "idep_token_iterator.h"
 
 #include <ctype.h>      // isascii() isspace()
 #include <string.h>     // strlen() strrchr()
