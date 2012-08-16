@@ -5,13 +5,13 @@
 #include "idep_filedepiter.h"
 #include "idep_tokeniter.h"
 #include "idep_aliastable.h"
-#include "idep_aliasutil.h"
+#include "idep_alias_util.h"
 
 #include <ctype.h>      // isascii() isspace()
 #include <string.h>     // strlen() strrchr()
 #include <fstream>    // ifstream
 #include <memory.h>     // memcpy()
-#include <iostream>   
+#include <iostream>
 #include <assert.h>
 
                 // -*-*-*- static functions -*-*-*-

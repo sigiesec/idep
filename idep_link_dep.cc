@@ -1,7 +1,7 @@
 #include "idep_link_dep.h"
 
 #include "idep_aliastable.h"
-#include "idep_aliasutil.h"
+#include "idep_alias_util.h"
 #include "idep_binrel.h"
 #include "idep_name_array.h"
 #include "idep_nameindexmap.h"
@@ -14,8 +14,9 @@
 #include <memory.h>     // memcpy() memset()
 #include <fstream>    // ifstream
 #include <sstream>  // ostrstream
-#include <iostream>   
+#include <iostream>
 #include <assert.h>
+
 using namespace std;
                 // -*-*-*- static functions -*-*-*-
 

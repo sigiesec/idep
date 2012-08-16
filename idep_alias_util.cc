@@ -1,14 +1,12 @@
-// idep_alutil.c
-#include "idep_aliasutil.h"
+#include "idep_alias_util.h"
+
 #include "idep_aliastable.h"
 #include "idep_tokeniter.h"
 #include "idep_string.h"
 
 #include <fstream>   // ifstream
 #include <iostream>
-#include <assert.h> 
-
-                // -*-*-*- static functions -*-*-*-
+#include <assert.h>
 
 static ostream& warning(ostream& orf, const char *file, int lineno)
 {
