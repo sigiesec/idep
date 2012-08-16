@@ -37,7 +37,7 @@ namespace idep {
 int AliasUtil::readAliases(idep_AliasTable* table,
                            ostream& orf,
                            istream& in,
-                           const char* `inputName)
+                           const char* inputName)
 {
     // The following is a state-machine description of the alias language:
 
