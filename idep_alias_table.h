@@ -23,9 +23,9 @@ class idep_AliasTable {
 
   public:
     // CREATORS
-    idep_AliasTable(int sizeHint = 0); 
+    idep_AliasTable(int sizeHint = 0);
         // Create a new table; optionally specify expected number of entries.
-    ~idep_AliasTable();                                       
+    ~idep_AliasTable();
 
     // MANIPULATORS
     int add(const char *alias, const char *originalName);
@@ -39,11 +39,11 @@ class idep_AliasTable {
     const char *lookup(const char *alias) const;
         // Return the original name if the alias exists, else 0.
 };
-        
+
 ostream& operator<<(ostream& output, const idep_AliasTable& table);
     // Write the entire logical contents of the specified alias table in some 
     // reasonable format to the specified output stream.
-        
+
 class idep_AliasTableIter {
     const idep_AliasTable& d_table;     // reference to const alias table
     idep_AliasTableLink *d_link_p;      // ptr to current link in table 

@@ -1,6 +1,6 @@
 #include "idep_link_dep.h"
 
-#include "idep_aliastable.h"
+#include "idep_alias_table.h"
 #include "idep_alias_util.h"
 #include "idep_binrel.h"
 #include "idep_name_array.h"

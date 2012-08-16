@@ -1,11 +1,11 @@
 #include "idep_alias_dep.h"
 
+#include "idep_alias_table.h"
+#include "idep_alias_util.h"
+#include "idep_filedepiter.h"
 #include "idep_name_array.h"
 #include "idep_nameindexmap.h"
-#include "idep_filedepiter.h"
 #include "idep_tokeniter.h"
-#include "idep_aliastable.h"
-#include "idep_alias_util.h"
 
 #include <ctype.h>      // isascii() isspace()
 #include <string.h>     // strlen() strrchr()
@@ -14,7 +14,6 @@
 #include <iostream>
 #include <assert.h>
 
-                // -*-*-*- static functions -*-*-*-
 using namespace std;
 
 int x;

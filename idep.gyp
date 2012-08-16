@@ -8,6 +8,8 @@
       'sources': [
         'idep_alias_dep.cc',
         'idep_alias_dep.h',
+        'idep_alias_table.cc',
+        'idep_alias_table.h',
         'idep_alias_util.cc',
         'idep_alias_util.h',
         'idep_name_array.cc',

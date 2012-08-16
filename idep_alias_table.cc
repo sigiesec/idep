@@ -1,13 +1,11 @@
-// idep_altab.c
-#include "idep_aliastable.h"
+#include "idep_alias_table.h"
 
 #include <string.h>     // strcmp() strlen()
 #include <memory.h>     // memcpy()
-#include <iostream> 
-#include <assert.h> 
+#include <iostream>
+#include <assert.h>
 using namespace std;
-                // -*-*-*- static functions -*-*-*-
- 
+
 enum { DEFAULT_TABLE_SIZE = 521 };
 
 static unsigned hash(register const char* name) // Note: returns unsigned!
