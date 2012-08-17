@@ -12,6 +12,8 @@ enum { START_SIZE = 1, GROW_FACTOR = 2 };
 const char NEWLINE_CHAR = '\n';
 const char NULL_CHAR = '\0';
 
+namespace idep {
+
 struct idep_TokenIter_i {
     istream& d_in;
     char *d_buf_p;
@@ -61,19 +63,19 @@ void idep_TokenIter_i::addChar(char ch)
     d_buf_p[d_length++] = ch;
 }
 
-idep_TokenIter::idep_TokenIter(istream& in)
+TokenIterator::TokenIterator(istream& in)
 : d_this(new idep_TokenIter_i(in))
 {
     ++*this; // load first occurrence
 }
 
-idep_TokenIter::~idep_TokenIter()
+TokenIterator::~TokenIterator()
 {
     delete d_this;
 }
 
-void idep_TokenIter::operator++() 
-{ 
+void TokenIterator::operator++()
+{
     assert(*this);
 
     d_this->d_length = 0;
@@ -116,14 +118,13 @@ void idep_TokenIter::operator++()
 }    
 
 
-idep_TokenIter::operator const void *() const 
+TokenIterator::operator const void *() const 
 { 
     return d_this->d_length >= 0 ? this : 0;
 }
 
-const char *idep_TokenIter::operator()() const 
-{ 
+const char *TokenIterator::operator()() const {
     return d_this->d_buf_p;
 }
 
-
+}  // namespace idep

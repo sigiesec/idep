@@ -112,7 +112,7 @@ int AliasUtil::readAliases(idep_AliasTable* table,
     idep_String lastToken = EMPTY_NAME;
     Input lastInput = IDENT;
 
-    for (idep_TokenIter it(in); it; ++it) {
+    for (idep::TokenIterator it(in); it; ++it) {
         if (*it() == COMMENT_CHAR) {
             while (*it() != NEWLINE_CHAR) {
                 ++it;                   // ignore all tokens until newline

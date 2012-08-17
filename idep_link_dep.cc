@@ -206,7 +206,7 @@ void idep_LinkDep_i::loadDependencies(istream& in, int suffixFlag)
     int fromIndex = INVALID_INDEX;
     int lastTokenWasNewline = 1;
 
-    for (idep_TokenIter it(in); it; ++it) {     
+    for (idep::TokenIterator it(in); it; ++it) {
         if ('#' == *it()) {                          // strip comment if any
             while (it && '\n' != *it()) {
                 ++it;
@@ -744,7 +744,7 @@ int idep_LinkDep::readUnaliasDirectories(const char *file)
         return BAD;
     }
 
-    for (idep_TokenIter it(in); it; ++it) {
+    for (idep::TokenIterator it(in); it; ++it) {
         if ('\n' != *it()) {
             d_this->d_unaliases.add(it());
         }

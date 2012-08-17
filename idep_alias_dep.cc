@@ -73,7 +73,7 @@ typedef void (idep_AliasDep::*Func)(const char *);
 static void loadFromStream(std::istream& in, idep_AliasDep *dep, Func add) 
 { 
     assert(in);
-    for (idep_TokenIter it(in); it; ++it) {
+    for (idep::TokenIterator it(in); it; ++it) {
         if ('#' == *it()) {                     // strip comment if any
              while (it && '\n' != *it()) {
                 ++it;
