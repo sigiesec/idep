@@ -19,24 +19,25 @@ static unsigned hash(register const char* name) {
 }
 
 struct idep_NameIndexMapLink {
-    const char *d_name_p;                       // name
-    int d_index;                                // index of name
-    idep_NameIndexMapLink *d_next_p;            // pointer to next link
+ const char *d_name_p;                       // name
+ int d_index;                                // index of name
+ idep_NameIndexMapLink *d_next_p;            // pointer to next link
 
-    idep_NameIndexMapLink(const char *name, int index, 
-                          idep_NameIndexMapLink *d_next_p);
+ idep_NameIndexMapLink(const char* name,
+                       int index,
+                       idep_NameIndexMapLink* d_next_p);
 };
 
-idep_NameIndexMapLink::idep_NameIndexMapLink(const char *name, int index, 
-                                                idep_NameIndexMapLink *next)
-: d_name_p(name)
-, d_index(index)
-, d_next_p(next)
-{
+idep_NameIndexMapLink::idep_NameIndexMapLink(const char* name,
+                                             int index,
+                                             idep_NameIndexMapLink *next)
+    : d_name_p(name),
+      d_index(index),
+      d_next_p(next) {
 }
 
-static const idep_NameIndexMapLink *find(const idep_NameIndexMapLink *p, 
-                                                            const char *name)
+static const idep_NameIndexMapLink *find(const idep_NameIndexMapLink *p,
+                                         const char *name)
 {
     while (p && 0 != strcmp(p->d_name_p, name)) {
         p = p->d_next_p;
@@ -44,9 +45,7 @@ static const idep_NameIndexMapLink *find(const idep_NameIndexMapLink *p,
     return p;
 }
 
-                // -*-*-*- idep_NameIndexMap_i -*-*-*-
-
-struct idep_NameIndexMap_i { 
+struct idep_NameIndexMap_i {
     idep_NameArray d_array;                     // array of names
     idep_NameIndexMapLink **d_table_p;          // hash table of names
     int d_tableSize;                            // size of hash table
