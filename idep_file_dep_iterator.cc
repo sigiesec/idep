@@ -1,38 +1,35 @@
-// idep_fdepitr.c
-#include "idep_filedepiter.h"
+#include "idep_file_dep_iterator.h"
 
-#include <ctype.h>      // isspace()
-#include <string.h>     // strcspn()
-#include <memory.h>     // memcpy()
-#include <fstream>    // ifstream
-#include <assert.h> 
+#include <assert.h>
+#include <ctype.h>
+#include <fstream>
+#include <memory.h>
+#include <string.h>
 
 using namespace std;
-                // -*-*-*- static functions -*-*-*-
 
 enum { MAX_LINE_LENGTH  = 2048 };       // Arbitrary maximum length for
                                         // line containing an include 
                                         // directive.  Note that other 
                                         // lines may be longer.
 
-static int loadBuf(istream& in, char *buf, int bufSize) 
-{
+static int loadBuf(istream& in, char *buf, int bufSize) {
     enum { END_OF_INPUT = -1, SUCCESS = 0, OVERFLOW = 1 };
- 
+
     // The getline (istream) method returns the line as a string but extracts
     // the trailing '\n'  only if there is space to spare in the buffer.  We
     // need to test for this condition by placing a non-null character in the 
     // last position of the array before loading it.  If the last character is 
     // null after the read then the newline was NOT extracted.
- 
+
     int nearEnd = bufSize - 1;
- 
+
     buf[nearEnd] = '\n'; // anything but '\0'
- 
+
     if (in.getline(buf, bufSize).fail()) {
         return END_OF_INPUT;    // nothing left
     }
- 
+
     if ('\0' == buf[nearEnd]) { // line was too long
         char c;
         while (in && !in.get(c).eof() && c != '\n') { 
@@ -41,11 +38,10 @@ static int loadBuf(istream& in, char *buf, int bufSize)
         return OVERFLOW;        // buffer contains null-terminated string
     }
 
-    return SUCCESS; 
+    return SUCCESS;
 }
 
-const char *extractDependency(char *buffer) 
-{
+const char *extractDependency(char *buffer) {
     // We assume we have a null terminated string that possibly contains a 
     // valid include directive.  We will assume that such a directive has 
     // the following syntax:

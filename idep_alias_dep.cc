@@ -2,7 +2,7 @@
 
 #include "idep_alias_table.h"
 #include "idep_alias_util.h"
-#include "idep_filedepiter.h"
+#include "idep_file_dep_iterator.h"
 #include "idep_name_array.h"
 #include "idep_name_index_map.h"
 #include "idep_token_iterator.h"
