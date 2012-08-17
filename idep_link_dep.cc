@@ -2,36 +2,32 @@
 
 #include "idep_alias_table.h"
 #include "idep_alias_util.h"
-#include "idep_binrel.h"
+#include "idep_binary_relation.h"
 #include "idep_name_array.h"
 #include "idep_nameindexmap.h"
 #include "idep_string.h"
 #include "idep_token_iterator.h"
 
-#include <math.h>       // log()
-#include <ctype.h>      // isascii() isspace()
-#include <string.h>     // strchr() strrchr() strlen() strcmp()
-#include <memory.h>     // memcpy() memset()
-#include <fstream>    // ifstream
-#include <sstream>  // ostrstream
-#include <iostream>
 #include <assert.h>
+#include <ctype.h>
+#include <fstream>
+#include <iostream>
+#include <math.h>
+#include <memory.h>
+#include <sstream>
+#include <string.h>
 
 using namespace std;
-                // -*-*-*- static functions -*-*-*-
 
-static ostream& warn(ostream& ing, int index) 
-{
-    return ing << "Warning<" << index << ">: "; // '<' and '>' match cycle  
+static ostream& warn(ostream& ing, int index) {
+    return ing << "Warning<" << index << ">: "; // '<' and '>' match cycle
 }
 
-static ostream& err(ostream& orf) 
-{
+static ostream& err(ostream& orf) {
     return orf << "Error: ";
 }
 
-static const char *stripDotSlash(const char *originalPath)
-{
+static const char *stripDotSlash(const char *originalPath) {
     if (originalPath) {
         while ('.' == originalPath[0] && '/' == originalPath[1]) {
             originalPath += 2;
@@ -40,13 +36,11 @@ static const char *stripDotSlash(const char *originalPath)
     return originalPath;
 }
 
-static int isLocal(const char *dirFile)
-{
+static int isLocal(const char *dirFile) {
     return !strchr(dirFile, '/');
 }
 
-static char *removeFileName(char *dirPath)
-{
+static char *removeFileName(char *dirPath) {
     char *slash = strrchr(dirPath, '/');
     if (slash) {
         slash[1] = '\0';

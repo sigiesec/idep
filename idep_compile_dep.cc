@@ -1,27 +1,25 @@
 #include "idep_compile_dep.h"
 
-#include "idep_binrel.h"
+#include "idep_binary_relation.h"
 #include "idep_filedepiter.h"
 #include "idep_name_array.h"
 #include "idep_nameindexmap.h"
 #include "idep_string.h"
 #include "idep_token_iterator.h"
 
-#include <ctype.h>      // isascii() isspace()
-#include <string.h>     // strlen()
-#include <fstream>    // ifstream
-#include <iostream>   
 #include <assert.h>
-using namespace std;
-                // -*-*-*- static functions -*-*-*-
+#include <ctype.h>
+#include <fstream>
+#include <iostream>
+#include <string.h>
 
-static ostream& err(ostream& orf) 
-{
+using namespace std;
+
+static ostream& err(ostream& orf) {
     return orf << "Error: ";
 }
 
-static const char *stripDotSlash(const char *originalPath)
-{
+static const char *stripDotSlash(const char *originalPath) {
     if (originalPath) {
         while ('.' == originalPath[0] && '/' == originalPath[1]) {
             originalPath += 2;
@@ -30,13 +28,11 @@ static const char *stripDotSlash(const char *originalPath)
     return originalPath;
 }
 
-static int isAbsolutePath(const char *originalPath)
-{
+static int isAbsolutePath(const char *originalPath) {
     return '/' == *originalPath;
 }
 
-static int isAsciiFile(const char *fileName)
-{
+static int isAsciiFile(const char *fileName) {
     enum { NO = 0, YES = 1 };
     ifstream in(fileName);
     if (!in) {

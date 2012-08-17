@@ -1,5 +1,4 @@
-// idep_binrel.c
-#include "idep_binrel.h"
+#include "idep_binary_relation.h"
 
 #include <memory.h>     // memcpy() memset() memcmp()
 #include <iostream>
@@ -19,30 +18,26 @@ using namespace std;
 //                      char*[size]             contiguous memory
 //                                              char[size * size]
 
-                // -*-*-*- static functions -*-*-*-
-
 enum { START_SIZE = 1, GROW_FACTOR = 2 };
 
-static void clean(char **p) 
-{
+static void clean(char **p)  {
   /* crash, bt:
 #0  0x00002aaaab08011d in raise () from /lib/libc.so.6
 #1  0x00002aaaab08184e in abort () from /lib/libc.so.6
 #2  0x00002aaaab0b4e41 in __fsetlocking () from /lib/libc.so.6
 #3  0x00002aaaab0ba90e in malloc_usable_size () from /lib/libc.so.6
 #4  0x00002aaaab0bac56 in free () from /lib/libc.so.6
-#5  0x000000000040a0ab in clean (p=0x526a50) at idep_binrel.cxx:28
-#6  0x000000000040a46f in ~idep_BinRel (this=0x527b60) at idep_binrel.cxx:124
+#5  0x000000000040a0ab in clean (p=0x526a50) at idep_binary_relation.cc:28
+#6  0x000000000040a46f in ~idep_BinRel (this=0x527b60) at idep_binary_relation.cc:124
 #7  0x000000000040254b in ~idep_LinkDep_i (this=0x523460) at idep_ldep.cxx:150
 #8  0x00000000004042dc in ~idep_LinkDep (this=0x7fffffb944a0) at idep_ldep.cxx:700
 #9  0x0000000000401dbf in main (argc=5, argv=0x7fffffb94608) at ldep.cxx:199
 */
     delete [] *p;               // only one 2-d block is allocated
-    delete [] p;                // delete single block  
+    delete [] p;                // delete single block
 }
 
-static char **alloc(int size) 
-{
+static char **alloc(int size) {
     register int s = size;
     char **rel = new char *[s];
     register char *p = new char[s * s];
