@@ -14,6 +14,8 @@
         'idep_alias_util.h',
         'idep_binary_relation.cc',
         'idep_binary_relation.h',
+        'idep_compile_dep.cc',
+        'idep_compile_dep.h',
         'idep_name_array.cc',
         'idep_name_array.h',
         'idep_name_index_map.cc',
