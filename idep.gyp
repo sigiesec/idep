@@ -40,5 +40,25 @@
         'adep.cc',
       ],
     },
+    {
+      'target_name': 'cdep',
+      'type': 'executable',
+      'dependencies': [
+        'idep',
+      ],
+      'sources': [
+        'cdep.cc',
+      ],
+    },
+    {
+      'target_name': 'ldep',
+      'type': 'executable',
+      'dependencies': [
+        'idep',
+      ],
+      'sources': [
+        'ldep.cc',
+      ],
+    },
   ],
 }

@@ -4,7 +4,7 @@
 
 // This file contains a main program to exercise the idep_compile_dep component.
 
-const char NL[] = "\n";
+#define NL "\n"
 
 static const char* help() {
 return NL
@@ -31,41 +31,35 @@ NL;
 
 static enum { IOERROR = -1, GOOD = 0 } s_status = GOOD;
 
-static ostream& err()
-{
+static ostream& err() {
     s_status = IOERROR;
     return cerr << "Error: ";
 }
 
-static int missing(const char *argName, char option) 
-{
-    err() << "missing `" << argName << "' argument for -" 
+static int missing(const char *argName, char option)  {
+    err() << "missing `" << argName << "' argument for -"
           << option << " option." << endl;
     return s_status;
 }
 
-static int extra(const char *text, char option) 
-{  
-    err() << "extra text \"" << text << "\" encountered after -" 
+static int extra(const char *text, char option) {
+    err() << "extra text \"" << text << "\" encountered after -"
           << option << " option." << endl;
     return s_status;
 }
 
-static int unreadable(const char *dirFile, char option) 
-{  
-    err() << "unable to read \"" << dirFile << "\" for -" 
+static int unreadable(const char *dirFile, char option) {
+    err() << "unable to read \"" << dirFile << "\" for -"
           << option << " option." << endl;
     return s_status;
 }
 
-static const char *getArg(int *i, int argc, const char *argv[]) 
-{
-    return 0 != argv[*i][2] ? argv[*i] + 2 : 
+static const char *getArg(int *i, int argc, const char *argv[]) {
+    return 0 != argv[*i][2] ? argv[*i] + 2 :
            ++*i >= argc || '-' == argv[*i][0] ? "" : argv[*i];
 }
 
-main (int argc, char *argv[]) 
-{
+int main (int argc, char *argv[]) {
     int argCount = 0;        // record the number of files on the command line
     int fileFlag = 0;        // -f<file> sets this to 1
     int recursionFlag = 1;   // -x sets this to 0
@@ -106,7 +100,6 @@ main (int argc, char *argv[])
                 fileFlag = 1;
               } break;
               case 'x': {
-	    
 		const char ** p = (const char **)argv;
                 const char *arg = getArg(&i, argc, p);
                 if (*arg) {
@@ -139,4 +132,3 @@ main (int argc, char *argv[])
 
     return s_status;
 }
-

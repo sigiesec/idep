@@ -35,8 +35,7 @@ NL;
 
 static enum { IOERROR = -1, SUCCESS = 0, DESIGN_ERROR = 1 } s_status = SUCCESS;
 
-static ostream& err() 
-{
+static ostream& err() {
     s_status = IOERROR;
     return cerr << "Error: ";
 }
