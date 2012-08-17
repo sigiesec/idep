@@ -1,5 +1,5 @@
-#ifndef IDEP_LINKDEP_H_
-#define IDEP_LINKDEP_H_
+#ifndef IDEP_LINK_DEP_H_
+#define IDEP_LINK_DEP_H_
 
 // This wrapper component defines 8 fully insulated classes:
 //          idep_LinkDep: environment for analyzing link dependencies
@@ -389,4 +389,4 @@ class idep_DependencyIter {
     int cycle() const;
 };
 
-#endif  // IDEP_LINKDEP_H_
+#endif  // IDEP_LINK_DEP_H_

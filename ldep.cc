@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-// This file contains a main program to exercise the idep_linkdep component.
+// This file contains a main program to exercise the idep_link_dep component.
 
 #define NL "\n"
 static const char *help()
@@ -41,42 +41,36 @@ static ostream& err()
     return cerr << "Error: ";
 }
 
-static int missing(const char *argName, char option) 
-{  
-    err() << "missing `" << argName << "' argument for -" 
+static int missing(const char *argName, char option) {
+    err() << "missing `" << argName << "' argument for -"
           << option << " option." << endl;
     return s_status;
 }
 
-static int extra(const char *text, char option) 
-{  
-    err() << "extra text \"" << text << "\" encountered after -" 
+static int extra(const char *text, char option) {
+    err() << "extra text \"" << text << "\" encountered after -"
           << option << " option." << endl;
     return s_status;
 }
 
-static int unreadable(const char *dirFile, char option) 
-{  
-    err() << "unable to read \"" << dirFile << "\" for -" 
+static int unreadable(const char *dirFile, char option) {
+    err() << "unable to read \"" << dirFile << "\" for -"
           << option << " option." << endl;
     return s_status;
 }
 
-static int incorrect(const char *file, char option) 
-{  
-    err() << "file \"" << file << "\" contained invalid contents for -" 
+static int incorrect(const char *file, char option) {
+    err() << "file \"" << file << "\" contained invalid contents for -"
           << option << " option." << endl;
     return s_status;
 }
 
-static const char *getArg(int *i, int argc, const char *argv[])
-{
+static const char *getArg(int *i, int argc, const char *argv[]) {
     return 0 != argv[*i][2] ? argv[*i] + 2 :
            ++*i >= argc || '-' == argv[*i][0] ? "" : argv[*i];
 }
 
-main (int argc, char *argv[]) 
-{
+int main (int argc, char *argv[]) {
     int fileFlag = 0;        // -d<file> sets this to 1
     int longListingFlag = 0; // both -l and -L set this to 1
     int canonicalFlag = 1;   // -L sets this to 0 and -l sets it back to 1
@@ -198,4 +192,3 @@ main (int argc, char *argv[])
 
     return s_status;
 }
-

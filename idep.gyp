@@ -18,6 +18,8 @@
         'idep_compile_dep.h',
         'idep_file_dep_iterator.cc',
         'idep_file_dep_iterator.h',
+        'idep_link_dep.cc',
+        'idep_link_dep.h',
         'idep_name_array.cc',
         'idep_name_array.h',
         'idep_name_index_map.cc',
