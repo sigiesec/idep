@@ -1,4 +1,4 @@
-#include "idep_nameindexmap.h"
+#include "idep_name_index_map.h"
 
 #include "idep_name_array.h"
 
@@ -10,13 +10,12 @@
 enum { DEFAULT_TABLE_SIZE = 521 };
 enum { BAD_INDEX = -1 };
 
-static unsigned hash(register const char* name) // Note: returns unsigned!
-{
+static unsigned hash(register const char* name) {
     register unsigned sum = 1000003; // 1,000,003 is the 78,498th prime number
     while (*name) {
         sum *= *name++; // integer multiplication is a subroutine on a SPARC
     }
-    return sum; // unsigned ensures positive value for use with (%) operator.  
+    return sum; // unsigned ensures positive value for use with (%) operator.
 }
 
 struct idep_NameIndexMapLink {

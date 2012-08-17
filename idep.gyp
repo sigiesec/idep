@@ -16,6 +16,8 @@
         'idep_binary_relation.h',
         'idep_name_array.cc',
         'idep_name_array.h',
+        'idep_name_index_map.cc',
+        'idep_name_index_map.h',
         'idep_string.cc',
         'idep_string.h',
         'idep_token_iterator.cc',
