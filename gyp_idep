@@ -1,0 +1,3 @@
+#!/bin/bash
+
+gyp -f ninja --depth=. --toplevel=$(pwd) idep.gyp
