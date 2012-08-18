@@ -1,7 +1,7 @@
 #ifndef IDEP_FILE_DEP_ITERATOR_H_
 #define IDEP_FILE_DEP_ITERATOR_H_
 
-class idep_FileDepIter_i;
+class FileDepIteratorImpl;
 
 // This component defines 1 fully insulated iterator class:
 // Iterate over the header files included by a file.
@@ -35,7 +35,7 @@ class FileDepIterator {
   const char* operator()() const;
 
  private:
-  idep_FileDepIter_i *d_this;
+  FileDepIteratorImpl* impl_;
 
   // Disallow copy and assign.
   FileDepIterator(const FileDepIterator&);

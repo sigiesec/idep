@@ -100,60 +100,56 @@ const char *extractDependency(char *buffer) {
     return p;
 }
 
-                // -*-*-*- idep_FileDepIter_i -*-*-*-
-
-struct idep_FileDepIter_i {
+struct FileDepIteratorImpl {
     ifstream d_file;
     char d_buf[MAX_LINE_LENGTH];
     const char *d_header_p;
     bool d_isValidFile;
-    
-    idep_FileDepIter_i(const char *fileName);
+
+    FileDepIteratorImpl(const char *fileName);
 };
 
-idep_FileDepIter_i::idep_FileDepIter_i(const char *fileName)
+FileDepIteratorImpl::FileDepIteratorImpl(const char *fileName)
 : d_file(fileName)
 , d_header_p(d_buf)             // buffer is not yet initialized
 {
     d_isValidFile = d_file != NULL;   // depends on result of initialization
 }
 
-                // -*-*-*- idep_FileDepIter -*-*-*-
-
 FileDepIterator::FileDepIterator(const char *fileName)
-: d_this(new idep_FileDepIter_i(fileName))
+: impl_(new FileDepIteratorImpl(fileName))
 {
-    if (!isValidFile()) {       
-        d_this->d_header_p = 0; // iteration state is invalid
+    if (!isValidFile()) {
+        impl_->d_header_p = 0; // iteration state is invalid
     }
     ++*this; // load first occurrence
 }
 
 FileDepIterator::~FileDepIterator()
 {
-    delete d_this;
+    delete impl_;
 }
 
 void FileDepIterator::reset() 
 {
     if (isValidFile()) {
-        d_this->d_file.seekg(ios::beg); // rewind to beginning of file
-        d_this->d_file.clear(d_this->d_file.rdstate() & ios::badbit); 
-        d_this->d_header_p = d_this->d_buf;
+        impl_->d_file.seekg(ios::beg); // rewind to beginning of file
+        impl_->d_file.clear(impl_->d_file.rdstate() & ios::badbit); 
+        impl_->d_header_p = impl_->d_buf;
     }
     ++*this; // load first occurrence
 }
 
 bool FileDepIterator::isValidFile() const 
 { 
-    return d_this->d_isValidFile;
+    return impl_->d_isValidFile;
 }
 
 void FileDepIterator::operator++() 
 { 
-    d_this->d_header_p = 0;
-    while (loadBuf(d_this->d_file, d_this->d_buf, sizeof d_this->d_buf) >= 0) {
-        if (d_this->d_header_p = extractDependency(d_this->d_buf)) { // `=' ok
+    impl_->d_header_p = 0;
+    while (loadBuf(impl_->d_file, impl_->d_buf, sizeof impl_->d_buf) >= 0) {
+        if (impl_->d_header_p = extractDependency(impl_->d_buf)) { // `=' ok
             break;
         }
     };
@@ -161,10 +157,10 @@ void FileDepIterator::operator++()
 
 FileDepIterator::operator const void *() const 
 { 
-    return d_this->d_header_p ? this : 0;
+    return impl_->d_header_p ? this : 0;
 }
 
 const char* FileDepIterator::operator()() const 
 { 
-    return d_this->d_header_p;
+    return impl_->d_header_p;
 }
