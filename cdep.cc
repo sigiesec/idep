@@ -31,25 +31,25 @@ NL;
 
 static enum { IOERROR = -1, GOOD = 0 } s_status = GOOD;
 
-static std::ostream& err() {
-    s_status = IOERROR;
-    return std::cerr << "Error: ";
+static std::ostream& PrintError() {
+  s_status = IOERROR;
+  return std::cerr << "error: ";
 }
 
 static int missing(const char *argName, char option)  {
-    err() << "missing `" << argName << "' argument for -"
+    PrintError() << "missing `" << argName << "' argument for -"
           << option << " option." << std::endl;
     return s_status;
 }
 
 static int extra(const char *text, char option) {
-    err() << "extra text \"" << text << "\" encountered after -"
+    PrintError() << "extra text \"" << text << "\" encountered after -"
           << option << " option." << std::endl;
     return s_status;
 }
 
 static int unreadable(const char *dirFile, char option) {
-    err() << "unable to read \"" << dirFile << "\" for -"
+    PrintError() << "unable to read \"" << dirFile << "\" for -"
           << option << " option." << std::endl;
     return s_status;
 }
@@ -108,7 +108,7 @@ int main(int argc, char* argv[]) {
                 recursionFlag = 0;
               } break;
               default: {
-                 err() << "unknown option \"" << word << "\"." << std::endl
+                 PrintError() << "unknown option \"" << word << "\"." << std::endl
                        << help();
                  return s_status;
               } break;
