@@ -106,14 +106,14 @@ std::ostream& operator<<(std::ostream &o, const AliasTable& table) {
     int fieldWidth = 0;
     AliasTableIterator it(table);
     for (it.reset(); it; ++it) {
-        int len = strlen(it.alias());
+        int len = strlen(it.GetAlias());
         if (fieldWidth < len) {
             fieldWidth = len;
         }
     }
     for (it.reset(); it; ++it) {
         o.width(fieldWidth);
-        o << it.alias() << " -> " << it.GetOriginalName() << std::endl;
+        o << it.GetAlias() << " -> " << it.GetOriginalName() << std::endl;
     }
     return o;
 }
@@ -148,7 +148,7 @@ AliasTableIterator::operator const void *() const {
     return d_index < table_.size_ ? this : 0;
 }
 
-const char* AliasTableIterator::alias() const {
+const char* AliasTableIterator::GetAlias() const {
     return d_link_p->d_alias_p;
 }
 

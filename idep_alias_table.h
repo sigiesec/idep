@@ -60,7 +60,7 @@ class AliasTableIterator {
   operator const void *() const;
 
   // Return current alias name.
-  const char* alias() const;
+  const char* GetAlias() const;
 
   // Return the (original) name corresponding to current alias name.
   const char* GetOriginalName() const;

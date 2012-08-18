@@ -1079,7 +1079,7 @@ idep_AliasIter::operator const void *() const {
 }
 
 const char* idep_AliasIter::fromName() const {
-    return d_this->d_iter.alias();
+    return d_this->d_iter.GetAlias();
 }
 
 const char *idep_AliasIter::toName() const
