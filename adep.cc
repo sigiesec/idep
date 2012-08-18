@@ -82,7 +82,7 @@ int main (int argc, char *argv[]) {
     int verifyFlag = 0;      // -v sets this to 1
     int extractFlag = 0;     // -e sets this to 1
 
-    idep_AliasDep environment;
+    idep::AliasDep environment;
     for (int i = 1; i < argc; ++i) {
         const char *word = argv[i];
         if  ('-' == word[0]) {

@@ -4,14 +4,16 @@
 #include <ostream>
 #include <istream>
 
-class idep_AliasDep_i;
+namespace idep {
+
+class AliasDepImpl;
 
 // This component defines 1 fully insulated wrapper class:
 // Environment for creating/verifying filename aliases.
-class idep_AliasDep {
+class AliasDep {
  public:
-  idep_AliasDep();
-  ~idep_AliasDep();
+  AliasDep();
+  ~AliasDep();
 
   // Add a name to ignored during processing.  A command-line argument 
   // or -f<filelist> entry matching the specified name will not be 
@@ -98,11 +100,13 @@ class idep_AliasDep {
   int extract(std::ostream& out, std::ostream& err) const;
 
  private:
-  idep_AliasDep_i *d_this;
+  AliasDepImpl* impl_;
 
   // Disallow copy and assign.
-  idep_AliasDep(const idep_AliasDep&);
-  idep_AliasDep& operator=(const idep_AliasDep&);
+  AliasDep(const AliasDep&);
+  AliasDep& operator=(const AliasDep&);
 };
+
+}  // namespace idep
 
 #endif  // IDEP_ALIAS_DEP_H_

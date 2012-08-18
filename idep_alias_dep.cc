@@ -16,6 +16,8 @@
 
 using namespace std;
 
+namespace idep {
+
 int x;
 void fff()
 {
@@ -69,8 +71,8 @@ static int isAsciiFile(const char *fileName)
     return YES;
 }
 
-typedef void (idep_AliasDep::*Func)(const char *);
-static void loadFromStream(std::istream& in, idep_AliasDep *dep, Func add) 
+typedef void (AliasDep::*Func)(const char *);
+static void loadFromStream(std::istream& in, AliasDep *dep, Func add) 
 { 
     assert(in);
     for (idep::TokenIterator it(in); it; ++it) {
@@ -86,7 +88,7 @@ static void loadFromStream(std::istream& in, idep_AliasDep *dep, Func add)
     }
 }
 
-static int loadFromFile(const char *file, idep_AliasDep *dep, Func add) 
+static int loadFromFile(const char *file, AliasDep *dep, Func add) 
 {
     enum { BAD = -1, GOOD = 0 };
     if (!isAsciiFile(file)) {
@@ -115,107 +117,105 @@ static char *removeSuffix(char *dirPath)
     return dirPath;
 }
 
-                // -*-*-*- idep_AliasDepIntArray -*-*-*-
+                // -*-*-*- AliasDepIntArray -*-*-*-
 
-class idep_AliasDepIntArray {   // auxiliary class to manage array memory
+class AliasDepIntArray {   // auxiliary class to manage array memory
     int *d_array_p;
     int d_length;               
-    idep_AliasDepIntArray(const idep_AliasDepIntArray&);
-    idep_AliasDepIntArray& operator=(const idep_AliasDepIntArray&);
+    AliasDepIntArray(const AliasDepIntArray&);
+    AliasDepIntArray& operator=(const AliasDepIntArray&);
   public:
-    idep_AliasDepIntArray(int length) : // does not zero the memory!
+    AliasDepIntArray(int length) : // does not zero the memory!
 			d_array_p(new int[length]), d_length(length) {} 
-    ~idep_AliasDepIntArray() { delete [] d_array_p; }
+    ~AliasDepIntArray() { delete [] d_array_p; }
     int& operator[](int i) { return d_array_p[i]; }
     int length() const { return d_length; }
 };
 
-static void zero(idep_AliasDepIntArray *a) // non-primitive operation on array
+static void zero(AliasDepIntArray *a) // non-primitive operation on array
 { 
     for (int i = 0; i < a->length(); ++i) { 
         (*a)[i] = 0; 
     }
 }
 
-                // -*-*-*- idep_AliasDepString -*-*-*-
+                // -*-*-*- AliasDepString -*-*-*-
 
-class idep_AliasDepString {     // auxiliary class to manage modifiable char *
+class AliasDepString {     // auxiliary class to manage modifiable char *
     char *d_string_p;
-    idep_AliasDepString(const idep_AliasDepString&);
-    idep_AliasDepString& operator=(const idep_AliasDepString&);
+    AliasDepString(const AliasDepString&);
+    AliasDepString& operator=(const AliasDepString&);
   public:
-    idep_AliasDepString(const char *s) : d_string_p(newStrCpy(s)){}
-    ~idep_AliasDepString() { delete [] d_string_p; }
+    AliasDepString(const char *s) : d_string_p(newStrCpy(s)){}
+    ~AliasDepString() { delete [] d_string_p; }
     operator char *() { return d_string_p; }
 };
 
-                // -*-*-*- idep_AliasDep_i -*-*-*-
-
-struct idep_AliasDep_i {
+struct AliasDepImpl {
     idep_NameIndexMap d_ignoreNames;          // e.g., idep_compile_dep_unittest.cc
     idep_AliasTable d_aliases;                // e.g., my_inta -> my_intarray
     idep_NameIndexMap d_fileNames;            // files to be analyzed
 };
 
-                // -*-*-*- idep_AliasDep -*-*-*-
+                // -*-*-*- AliasDep -*-*-*-
 
-idep_AliasDep::idep_AliasDep() 
-: d_this(new idep_AliasDep_i)
+AliasDep::AliasDep() 
+: impl_(new AliasDepImpl)
 {
 }
 
-idep_AliasDep::~idep_AliasDep()
+AliasDep::~AliasDep()
 {
-    delete d_this;
+    delete impl_;
 }
 
-void idep_AliasDep::addIgnoreName(const char *fileName)
+void AliasDep::addIgnoreName(const char *fileName)
 {
-    d_this->d_ignoreNames.add(fileName);                
+    impl_->d_ignoreNames.add(fileName);                
 }
 
-int idep_AliasDep::readIgnoreNames(const char *file)
+int AliasDep::readIgnoreNames(const char *file)
 {
   /*
-idep_adep.cxx:180: error: argument of type 'void (idep_AliasDep::)(const char*)' does not match 'void (idep_AliasDep::*)(const char*)'
-    return loadFromFile(file, this, idep_AliasDep::addIgnoreName); 
+idep_adep.cxx:180: error: argument of type 'void (AliasDep::)(const char*)' does not match 'void (AliasDep::*)(const char*)'
+    return loadFromFile(file, this, AliasDep::addIgnoreName); 
   */
 }
 
-const char *idep_AliasDep::addAlias(const char *alias, const char *component)
+const char *AliasDep::addAlias(const char *alias, const char *component)
 {
-    return d_this->d_aliases.add(alias, component) < 0 ?
-                                        d_this->d_aliases.lookup(alias) : 0;
+    return impl_->d_aliases.add(alias, component) < 0 ?
+                                        impl_->d_aliases.lookup(alias) : 0;
 }
  
-int idep_AliasDep::readAliases(ostream& orf, const char *file)
+int AliasDep::readAliases(ostream& orf, const char *file)
 {
-    return idep::AliasUtil::readAliases(&d_this->d_aliases, orf, file);
+    return idep::AliasUtil::readAliases(&impl_->d_aliases, orf, file);
 }
 
-void idep_AliasDep::addFileName(const char *fileName)
+void AliasDep::addFileName(const char *fileName)
 {
-    d_this->d_fileNames.add(fileName);          
+    impl_->d_fileNames.add(fileName);          
 }
 
-int idep_AliasDep::readFileNames(const char *file)
+int AliasDep::readFileNames(const char *file)
 {
-  //    return loadFromFile(file, this, idep_AliasDep::addFileName); 
+  //    return loadFromFile(file, this, AliasDep::addFileName); 
 }
 
-void idep_AliasDep::inputFileNames()
+void AliasDep::inputFileNames()
 {
     if (cin) {
-      //        loadFromStream(cin, this, idep_AliasDep::addFileName); 
+      //        loadFromStream(cin, this, AliasDep::addFileName); 
       //        cin.clear(0);             // reset eof for standard input
     }
 }
 
-int idep_AliasDep::unpaired(ostream& out, ostream& ing, int suffixFlag) const
+int AliasDep::unpaired(ostream& out, ostream& ing, int suffixFlag) const
 {
-    int maxLength = d_this->d_fileNames.length();
-    idep_AliasDepIntArray hits(maxLength);  // records num files per component
-    idep_AliasDepIntArray cmap(maxLength);  // map component to (last) file
+    int maxLength = impl_->d_fileNames.length();
+    AliasDepIntArray hits(maxLength);  // records num files per component
+    AliasDepIntArray cmap(maxLength);  // map component to (last) file
     zero(&hits); 
     idep_NameIndexMap components;
     int numComponents = 0;
@@ -224,14 +224,14 @@ int idep_AliasDep::unpaired(ostream& out, ostream& ing, int suffixFlag) const
                                     // during cut and past in the editor.
 
     for (int i = 0; i < maxLength; ++i) {
-        idep_AliasDepString s(d_this->d_fileNames[i]);
+        AliasDepString s(impl_->d_fileNames[i]);
 
-        if (d_this->d_ignoreNames.lookup(s) >= 0) {
+        if (impl_->d_ignoreNames.lookup(s) >= 0) {
             continue; // ignore this file
         }
         removeSuffix(s);
 
-        const char *componentName = d_this->d_aliases.lookup(s);
+        const char *componentName = impl_->d_aliases.lookup(s);
         if (!componentName) {
             componentName = s;
         }
@@ -251,7 +251,7 @@ int idep_AliasDep::unpaired(ostream& out, ostream& ing, int suffixFlag) const
     for (int i = 0; i < numComponents; ++i) {
         assert(hits[i] > 0);
         if (1 == hits[i]) {
-            printNames.add(suffixFlag ? d_this->d_fileNames[cmap[i]] 
+            printNames.add(suffixFlag ? impl_->d_fileNames[cmap[i]] 
                                       : components[i]); 
         }
         if (hits[i] > 2) { 
@@ -269,7 +269,7 @@ int idep_AliasDep::unpaired(ostream& out, ostream& ing, int suffixFlag) const
     // text editor. 
 
     int numUnpaired = printNames.length();
-    idep_AliasDepIntArray smap(numUnpaired); 
+    AliasDepIntArray smap(numUnpaired); 
     for (int i = 0; i < numUnpaired; ++i) {
         smap[i] = i;                            // identity mapping to start
     }
@@ -310,17 +310,17 @@ static const char *th(int n)
     return 1 == n ? "st" : 2 == n ? "nd" : 3 == n ? "rd" : "th";
 }
 
-int idep_AliasDep::verify(ostream& orf) const
+int AliasDep::verify(ostream& orf) const
 {
     enum { IOERROR = -1, GOOD = 0 } status = GOOD;
     int errorCount = 0; // keep track of the number of readable faulty files
 
-    int length = d_this->d_fileNames.length();
+    int length = impl_->d_fileNames.length();
     for (int i = 0; i < length; ++i) {
-        const char *path = d_this->d_fileNames[i];
-        idep_AliasDepString c(path);
+        const char *path = impl_->d_fileNames[i];
+        AliasDepString c(path);
 
-        if (d_this->d_ignoreNames.lookup(c) >= 0) {
+        if (impl_->d_ignoreNames.lookup(c) >= 0) {
             continue; // ignore this file
         }
 
@@ -331,7 +331,7 @@ int idep_AliasDep::verify(ostream& orf) const
 	char temp[355];
 	//	#= actualComponent;
 	strcpy (temp,actualComponent);
-        const char *compAlias = d_this->d_aliases.lookup(temp);
+        const char *compAlias = impl_->d_aliases.lookup(temp);
 
         const char *component = compAlias ? compAlias : actualComponent;
 
@@ -344,10 +344,10 @@ int idep_AliasDep::verify(ostream& orf) const
             ++directiveIndex;
 
             // strip off suffix and path from header name and check aliases
-            idep_AliasDepString h(it());
+            AliasDepString h(it());
             removeSuffix(h);
             const char *actualHeader = stripDir(h);
-            const char *headerAlias = d_this->d_aliases.lookup(actualHeader);
+            const char *headerAlias = impl_->d_aliases.lookup(actualHeader);
             const char *header = headerAlias ? headerAlias : actualHeader;
 
             if (0 == strcmp(component, header)) { // if the same, we found it
@@ -381,34 +381,34 @@ int idep_AliasDep::verify(ostream& orf) const
 }
 
 
-int idep_AliasDep::extract(ostream& out, ostream& orf) const
+int AliasDep::extract(ostream& out, ostream& orf) const
 {
     enum { IOERROR = -1, GOOD = 0 } status = GOOD;
     enum { INVALID_INDEX = -1 };
     int errorCount = 0; // keep track of number of readable faulty files
 
     idep_NameIndexMap uniqueHeaders;       // used to detect multiple .c files
-    int length = d_this->d_fileNames.length();
-    idep_AliasDepIntArray hits(length);    // records frequency of headers
+    int length = impl_->d_fileNames.length();
+    AliasDepIntArray hits(length);    // records frequency of headers
     zero(&hits); 
-    idep_AliasDepIntArray hmap(length);    // index header file index in table
-    idep_AliasDepIntArray verified(length);// verifies that guess was correct
+    AliasDepIntArray hmap(length);    // index header file index in table
+    AliasDepIntArray verified(length);// verifies that guess was correct
     zero(&verified); 
 
     for (int i = 0; i < length; ++i) {
         hmap[i] = INVALID_INDEX;   // set valid when a suitable header is found
 
-        const char *path = d_this->d_fileNames[i];
-        idep_AliasDepString c(path);
+        const char *path = impl_->d_fileNames[i];
+        AliasDepString c(path);
 
-        if (d_this->d_ignoreNames.lookup(c) >= 0) {
+        if (impl_->d_ignoreNames.lookup(c) >= 0) {
             continue; // ignore this file
         }
 
         // strip off suffix and path from component file name and check aliases
         removeSuffix(c);
         const char *actualComponent = stripDir(c);
-        const char *compAlias = d_this->d_aliases.lookup(actualComponent);
+        const char *compAlias = impl_->d_aliases.lookup(actualComponent);
         const char *component = compAlias ? compAlias : actualComponent;
 
         idep::FileDepIterator it(path);      // hook up with first dependency.
@@ -428,10 +428,10 @@ int idep_AliasDep::extract(ostream& out, ostream& orf) const
         }
 
         // strip off suffix and path from header name and check aliases
-        idep_AliasDepString h(it());
+        AliasDepString h(it());
         removeSuffix(h);
         const char *actualHeader = stripDir(h);
-        const char *headerAlias = d_this->d_aliases.lookup(actualHeader);
+        const char *headerAlias = impl_->d_aliases.lookup(actualHeader);
         const char *header = headerAlias ? headerAlias : actualHeader;
 
         if (0 == strcmp(component, header)) { 
@@ -477,7 +477,7 @@ int idep_AliasDep::extract(ostream& out, ostream& orf) const
                 if (i ==  hmap[j]) {
                     orf.width(FW);
                     orf << (verified[j] ? ARROW : "");
-                    orf << '"' << stripDir(d_this->d_fileNames[j])
+                    orf << '"' << stripDir(impl_->d_fileNames[j])
                        << '"' << endl;
                 }
             }
@@ -491,7 +491,7 @@ int idep_AliasDep::extract(ostream& out, ostream& orf) const
     for (int i = 0; i < length; ++i) {
         if (hmap[i] >= 0 && !verified[i]) {
            // strip off suffix and path from component file name
-           idep_AliasDepString c(d_this->d_fileNames[i]);
+           AliasDepString c(impl_->d_fileNames[i]);
            removeSuffix(c);
            out << uniqueHeaders[hmap[i]] << ' ' << c << endl;
         }
@@ -499,3 +499,5 @@ int idep_AliasDep::extract(ostream& out, ostream& orf) const
 
     return status == GOOD ? errorCount : status;        
 }
+
+}  // namespace idep
