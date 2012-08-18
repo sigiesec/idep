@@ -499,4 +499,3 @@ int idep_AliasDep::extract(ostream& out, ostream& orf) const
 
     return status == GOOD ? errorCount : status;        
 }
-

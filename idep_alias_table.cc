@@ -1,10 +1,10 @@
 #include "idep_alias_table.h"
 
-#include <string.h>     // strcmp() strlen()
-#include <memory.h>     // memcpy()
-#include <iostream>
 #include <assert.h>
-using namespace std;
+#include <memory.h>     // memcpy()
+#include <string.h>     // strcmp() strlen()
+
+#include <iostream>
 
 enum { DEFAULT_TABLE_SIZE = 521 };
 
@@ -119,7 +119,7 @@ std::ostream& operator<<(std::ostream &o, const idep_AliasTable& table)
     }
     for (it.reset(); it; ++it) {
         o.width(fieldWidth);
-        o << it.alias() << " -> " << it.originalName() << endl;
+        o << it.alias() << " -> " << it.originalName() << std::endl;
     }
     return o;
 }
@@ -170,4 +170,3 @@ const char *idep_AliasTableIter::originalName() const
 { 
     return d_link_p->d_originalName_p;
 }
-
