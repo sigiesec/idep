@@ -1,5 +1,13 @@
 #include "idep_alias_dep.h"
 
+#include <assert.h>
+#include <ctype.h>      // isascii() isspace()
+#include <memory.h>     // memcpy()
+#include <string.h>     // strlen() strrchr()
+
+#include <fstream>
+#include <iostream>
+
 #include "idep_alias_table.h"
 #include "idep_alias_util.h"
 #include "idep_file_dep_iterator.h"
@@ -7,22 +15,7 @@
 #include "idep_name_index_map.h"
 #include "idep_token_iterator.h"
 
-#include <ctype.h>      // isascii() isspace()
-#include <string.h>     // strlen() strrchr()
-#include <fstream>    // ifstream
-#include <memory.h>     // memcpy()
-#include <iostream>
-#include <assert.h>
-
-using namespace std;
-
 namespace idep {
-
-int x;
-void fff()
-{
-  printf("hei\n");
-}
 
 std::ostream& warn(std::ostream& ing)
 {
@@ -56,7 +49,7 @@ static const char *stripDir(const char *s)
 static int isAsciiFile(const char *fileName)
 {
     enum { NO = 0, YES = 1 };
-    ifstream in(fileName);
+    std::ifstream in(fileName);
     if (!in) {
         return NO;
     }
@@ -94,7 +87,7 @@ static int loadFromFile(const char *file, AliasDep *dep, Func add)
     if (!isAsciiFile(file)) {
         return BAD;
     }
-    ifstream in(file);
+    std::ifstream in(file);
     assert(in);
     loadFromStream(in, dep, add);
     return GOOD;
@@ -205,7 +198,7 @@ int AliasDep::readFileNames(const char *file)
 
 void AliasDep::inputFileNames()
 {
-    if (cin) {
+    if (std::cin) {
       //        loadFromStream(cin, this, AliasDep::addFileName);
       //        cin.clear(0);             // reset eof for standard input
     }
@@ -256,7 +249,7 @@ int AliasDep::unpaired(std::ostream& out, std::ostream& ing, int suffixFlag) con
         }
         if (hits[i] > 2) {
             warn(ing) << "component \"" << components[i]
-                      << "\" consists of " << hits[i] << " files." << endl;
+                      << "\" consists of " << hits[i] << " files." << std::endl;
         }
     }
 
@@ -299,7 +292,7 @@ int AliasDep::unpaired(std::ostream& out, std::ostream& ing, int suffixFlag) con
     // print out names in (almost) lexicographic order (if suffixFlag set to 0)
 
     for (int i = 0; i < numUnpaired; ++i) {
-        out << printNames[smap[i]] << endl;
+        out << printNames[smap[i]] << std::endl;
     }
 
     return printNames.length();
@@ -357,20 +350,20 @@ int AliasDep::verify(std::ostream& orf) const
 
         if (!it.IsValidFile()) { // if the file was never valid to begin with
             err(orf) << "unable to open file \""
-                    << path << "\" for read access." << endl;
+                    << path << "\" for read access." << std::endl;
             status = IOERROR;
         }
         else if (!it) {                         // header not found
             err(orf) << "corresponding include directive for \"" << path
                     << "\" not found."
-                    << endl;
+                    << std::endl;
             ++errorCount;
         }
         else if (1 != directiveIndex) {         // header found but not first
             err(orf) << '"' << path
                     << "\" contains corresponding include as "
                     << directiveIndex << th(directiveIndex)
-                    << " directive." << endl;
+                    << " directive." << std::endl;
             ++errorCount;
         }
 
@@ -415,14 +408,14 @@ int AliasDep::extract(std::ostream& out, std::ostream& orf) const
 
         if (!it.IsValidFile()) {        // unable to read file
             err(orf) << "unable to open file \""
-                    << path << "\" for read access." << endl;
+                    << path << "\" for read access." << std::endl;
             status = IOERROR;
             continue;                   // nothing more we can do here
         }
 
         if (!it) {                      // no include directives
             err(orf) << '"' << path
-                    << "\" contains no include directives." << endl;
+                    << "\" contains no include directives." << std::endl;
             ++errorCount;
             continue;                   // nothing more we can do here
         }
@@ -472,16 +465,16 @@ int AliasDep::extract(std::ostream& out, std::ostream& orf) const
     for (int i = 0; i < uniqueHeaders.length(); ++i) {
         if (hits[i] > 1) {
             warn(orf) << hits[i] << " files specify \"" << uniqueHeaders[i]
-                 << "\" as their first include directive:" << endl;
+                 << "\" as their first include directive:" << std::endl;
             for (int j = 0; j < length; ++j) {
                 if (i ==  hmap[j]) {
                     orf.width(FW);
                     orf << (verified[j] ? ARROW : "");
                     orf << '"' << stripDir(impl_->d_fileNames[j])
-                       << '"' << endl;
+                       << '"' << std::endl;
                 }
             }
-            orf << endl;
+            orf << std::endl;
         }
     }
 
@@ -493,7 +486,7 @@ int AliasDep::extract(std::ostream& out, std::ostream& orf) const
            // strip off suffix and path from component file name
            AliasDepString c(impl_->d_fileNames[i]);
            removeSuffix(c);
-           out << uniqueHeaders[hmap[i]] << ' ' << c << endl;
+           out << uniqueHeaders[hmap[i]] << ' ' << c << std::endl;
         }
     }
 
