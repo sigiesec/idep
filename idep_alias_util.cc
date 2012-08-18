@@ -8,6 +8,8 @@
 #include "idep_alias_table.h"
 #include "idep_token_iterator.h"
 
+namespace idep {
+
 const char kEmptyName[] = "";
 const char kNullChar= *kEmptyName;
 const char kCommentChar= '#';
@@ -37,8 +39,6 @@ static int tryToAlias(AliasTable* table,
     }
     return 0;
 }
-
-namespace idep {
 
 int AliasUtil::ReadAliases(AliasTable* table,
                            std::ostream& orf,

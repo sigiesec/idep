@@ -3,6 +3,8 @@
 
 #include <ostream>
 
+namespace idep {
+
 class AliasTableLink;
 
 // This leaf component defines 2 classes:
@@ -77,5 +79,7 @@ class AliasTableIterator {
   AliasTableIterator(const AliasTableIterator&);
   AliasTableIterator& operator=(const AliasTableIterator&);
 };
+
+}  // namespace idep
 
 #endif  // IDEP_ALIAS_TABLE_H_

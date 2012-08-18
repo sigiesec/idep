@@ -26,13 +26,13 @@ static char *newStrCpy(const char *oldStr)
     return newStr;
 }
 
-                // -*-*-*- AliasTableLink -*-*-*-
+namespace idep {
 
 struct AliasTableLink {
     char *d_alias_p;                            // "from" (alias) name
     char *d_originalName_p;                     // "to" (original) name
     AliasTableLink *d_next_p;              // pointer to next link
-    
+
     AliasTableLink(const char *alias, const char *orignalName, 
                                                 AliasTableLink *next);
     ~AliasTableLink();
@@ -106,8 +106,7 @@ const char* AliasTable::lookup(const char* alias) const {
     return p ? p->d_originalName_p : 0;
 }
 
-std::ostream& operator<<(std::ostream &o, const AliasTable& table)
-{
+std::ostream& operator<<(std::ostream &o, const AliasTable& table) {
     int fieldWidth = 0;
     AliasTableIterator it(table);
     for (it.reset(); it; ++it) {
@@ -124,24 +123,20 @@ std::ostream& operator<<(std::ostream &o, const AliasTable& table)
 }
 
 AliasTableIterator::AliasTableIterator(const AliasTable& t)
-: d_table(t)
-{
+    : d_table(t) {
     reset();
 }
 
-AliasTableIterator::~AliasTableIterator()
-{
+AliasTableIterator::~AliasTableIterator() {
 }
 
-void AliasTableIterator::reset()
-{
+void AliasTableIterator::reset() {
     d_link_p = 0;
     d_index = -1;
     ++*this;
 }
 
-void AliasTableIterator::operator++()
-{
+void AliasTableIterator::operator++() {
     if (d_link_p) {
         d_link_p = d_link_p->d_next_p;
     }
@@ -153,17 +148,16 @@ void AliasTableIterator::operator++()
     }
 }
 
-AliasTableIterator::operator const void *() const
-{
+AliasTableIterator::operator const void *() const {
     return d_index < d_table.d_size ? this : 0;
 }
 
-const char* AliasTableIterator::alias() const
-{
+const char* AliasTableIterator::alias() const {
     return d_link_p->d_alias_p;
 }
 
-const char* AliasTableIterator::originalName() const
-{
+const char* AliasTableIterator::originalName() const {
     return d_link_p->d_originalName_p;
 }
+
+}  // namespace idep

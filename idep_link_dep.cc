@@ -88,7 +88,7 @@ static double ccdBalencedBinaryTree(int n)  {
 
 struct idep_LinkDep_i {
     idep_NameIndexMap d_unaliases;          // e.g., ".", "/usr/include"
-    AliasTable d_aliases;              // e.g., fooa -> fooarray
+    idep::AliasTable d_aliases;              // e.g., fooa -> fooarray
     idep::NameArray d_dependencyFiles;       // hold compile-time dependencies
 
     idep_NameIndexMap *d_componentNames_p;  // keys for relation
@@ -1052,12 +1052,12 @@ std::ostream& operator<<(std::ostream& o, const idep_LinkDep& dep) {
 }
 
 struct idep_AliasIter_i {
-    AliasTableIterator d_iter;
+    idep::AliasTableIterator d_iter;
 
-    idep_AliasIter_i(const AliasTable& table);
+    idep_AliasIter_i(const idep::AliasTable& table);
 };
 
-idep_AliasIter_i::idep_AliasIter_i(const AliasTable& table)
+idep_AliasIter_i::idep_AliasIter_i(const idep::AliasTable& table)
     : d_iter(table) {
 }
 

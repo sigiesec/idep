@@ -4,9 +4,9 @@
 #include <ostream>
 #include <istream>
 
-class AliasTable;
-
 namespace idep {
+
+class AliasTable;
 
 // Load an alias table with information read from a file.
 class AliasUtil {
