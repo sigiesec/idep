@@ -5,7 +5,6 @@
 #include "idep_binary_relation.h"
 #include "idep_name_array.h"
 #include "idep_name_index_map.h"
-#include "idep_string.h"
 #include "idep_token_iterator.h"
 
 #include <assert.h>
