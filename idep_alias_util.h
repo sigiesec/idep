@@ -61,7 +61,7 @@ class AliasUtil {
   static int ReadAliases(AliasTable* table,
                          std::ostream& err,
                          std::istream& in,
-                         const char* inputName);
+                         const char* input_name);
   static int ReadAliases(AliasTable* table,
                          std::ostream& err,
                          const char* file);
