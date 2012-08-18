@@ -3,6 +3,8 @@
 
 #include <ostream>
 
+#include "basictypes.h"
+
 namespace idep {
 
 class AliasTableLink;
@@ -34,9 +36,7 @@ class AliasTable {
   // Size of hash table.
   int d_size;
 
-  // Disallow copy and assign.
-  AliasTable(const AliasTable&);
-  AliasTable& operator=(const AliasTable&);
+  DISALLOW_COPY_AND_ASSIGN(AliasTable);
 };
 
 // Write the entire logical contents of the specified alias table in some
@@ -75,9 +75,7 @@ class AliasTableIterator {
   // Index of current slot.
   int d_index;
 
-  // Disallow copy and assign.
-  AliasTableIterator(const AliasTableIterator&);
-  AliasTableIterator& operator=(const AliasTableIterator&);
+  DISALLOW_COPY_AND_ASSIGN(AliasTableIterator);
 };
 
 }  // namespace idep

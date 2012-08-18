@@ -3,6 +3,8 @@
 
 #include <ostream>
 
+#include "basictypes.h"
+
 class NameIndexMapImpl;
 
 // This component defines 1 fully insulated class:
@@ -36,9 +38,7 @@ class idep_NameIndexMap {
  private:
   NameIndexMapImpl* impl_;
 
-  // Disallow copy and assign.
-  idep_NameIndexMap(const idep_NameIndexMap&);
-  idep_NameIndexMap& operator=(const idep_NameIndexMap&);
+  DISALLOW_COPY_AND_ASSIGN(idep_NameIndexMap);
 };
 
 // Print the logical contents of this mapping to the specified output stream

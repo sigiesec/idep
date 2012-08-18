@@ -3,6 +3,8 @@
 
 #include <ostream>
 
+#include "basictypes.h"
+
 namespace idep {
 
 // This leaf component defines 1 class:
@@ -42,9 +44,7 @@ class NameArray {
   // Logical size of array.
   int length_;
 
-  // Disallow copy and assign.
-  NameArray(const NameArray&);
-  NameArray& operator=(const NameArray&);
+  DISALLOW_COPY_AND_ASSIGN(NameArray);
 };
 
 // Print the logical contents of this name array to the specified

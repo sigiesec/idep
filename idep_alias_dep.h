@@ -4,6 +4,8 @@
 #include <ostream>
 #include <istream>
 
+#include "basictypes.h"
+
 namespace idep {
 
 class AliasDepImpl;
@@ -102,9 +104,7 @@ class AliasDep {
  private:
   AliasDepImpl* impl_;
 
-  // Disallow copy and assign.
-  AliasDep(const AliasDep&);
-  AliasDep& operator=(const AliasDep&);
+  DISALLOW_COPY_AND_ASSIGN(AliasDep);
 };
 
 }  // namespace idep

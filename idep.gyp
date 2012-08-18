@@ -6,6 +6,7 @@
       'dependencies': [
       ],
       'sources': [
+        'basictypes.h',
         'idep_alias_dep.cc',
         'idep_alias_dep.h',
         'idep_alias_table.cc',

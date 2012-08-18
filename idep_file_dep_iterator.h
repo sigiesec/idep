@@ -1,6 +1,8 @@
 #ifndef IDEP_FILE_DEP_ITERATOR_H_
 #define IDEP_FILE_DEP_ITERATOR_H_
 
+#include "basictypes.h"
+
 namespace idep {
 
 class FileDepIteratorImpl;
@@ -39,9 +41,7 @@ class FileDepIterator {
  private:
   FileDepIteratorImpl* impl_;
 
-  // Disallow copy and assign.
-  FileDepIterator(const FileDepIterator&);
-  FileDepIterator& operator=(const FileDepIterator&);
+  DISALLOW_COPY_AND_ASSIGN(FileDepIterator);
 };
 
 }  // namespace idep

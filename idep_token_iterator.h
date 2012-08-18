@@ -3,6 +3,8 @@
 
 #include <istream>
 
+#include "basictypes.h"
+
 namespace idep {
 
 class TokenIteratorImpl;
@@ -31,9 +33,7 @@ class TokenIterator {
  private:
   TokenIteratorImpl* impl_;
 
-  // Disallow copy and assign.
-  TokenIterator(const TokenIterator&);
-  TokenIterator& operator=(const TokenIterator&);
+  DISALLOW_COPY_AND_ASSIGN(TokenIterator);
 };
 
 }  // namespace idep
