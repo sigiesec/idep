@@ -65,7 +65,7 @@ std::ostream& operator<<(std::ostream& out, const idep_NameArray& array)
     assert (sizeof (long int) >= 4);
     long int x = 1000 * 1000 * 1000;    // requires 4-byte integer.
     while (fieldWidth > 1 && 0 == maxIndex / x) {
-        --fieldWidth;  
+        --fieldWidth;
         x /= 10;
     }
 
