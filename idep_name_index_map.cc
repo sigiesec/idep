@@ -102,41 +102,41 @@ int NameIndexMapImpl::insert(idep_NameIndexMapLink *& slot, const char *nm)
                 // -*-*-*- idep_NameIndexMap -*-*-*-
 
 idep_NameIndexMap::idep_NameIndexMap(int max_entries_hint)
-: d_this(new NameIndexMapImpl(max_entries_hint))
+: impl_(new NameIndexMapImpl(max_entries_hint))
 {
 }
 
 idep_NameIndexMap::~idep_NameIndexMap()
 {
-    delete d_this;
+    delete impl_;
 }
 
 int idep_NameIndexMap::add(const char* name)
 {
-    idep_NameIndexMapLink *& slot = d_this->findSlot(name);
-    return find(slot, name) ? BAD_INDEX : d_this->insert(slot, name);
+    idep_NameIndexMapLink *& slot = impl_->findSlot(name);
+    return find(slot, name) ? BAD_INDEX : impl_->insert(slot, name);
 }
 
 int idep_NameIndexMap::entry(const char* name)
 {
-    idep_NameIndexMapLink *& slot = d_this->findSlot(name);
+    idep_NameIndexMapLink *& slot = impl_->findSlot(name);
     const idep_NameIndexMapLink *link = find(slot, name);
-    return link ? link->d_index : d_this->insert(slot, name);
+    return link ? link->d_index : impl_->insert(slot, name);
 }
 
 const char *idep_NameIndexMap::operator[](int i) const
 {
-    return d_this->d_array[i];
+    return impl_->d_array[i];
 }
 
 int idep_NameIndexMap::length() const
 {
-    return d_this->d_array.Length();
+    return impl_->d_array.Length();
 }
 
 int idep_NameIndexMap::lookup(const char *name) const
 {
-    idep_NameIndexMapLink *& slot = d_this->findSlot(name);
+    idep_NameIndexMapLink *& slot = impl_->findSlot(name);
     const idep_NameIndexMapLink *link = find(slot, name);
     return link ? link->d_index : BAD_INDEX;
 }

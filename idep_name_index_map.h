@@ -34,7 +34,7 @@ class idep_NameIndexMap {
   int lookup(const char* name) const;
 
  private:
-  NameIndexMapImpl *d_this;
+  NameIndexMapImpl* impl_;
 
   // Disallow copy and assign.
   idep_NameIndexMap(const idep_NameIndexMap&);
