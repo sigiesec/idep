@@ -1,11 +1,10 @@
 #include "idep_token_iterator.h"
 
+#include <assert.h>
 #include <ctype.h>      // isspace()
 #include <memory.h>     // memcpy()
-#include <iostream>
-#include <assert.h>
 
-using namespace std;
+#include <iostream>
 
 enum { START_SIZE = 1, GROW_FACTOR = 2 };
 
@@ -15,7 +14,7 @@ const char NULL_CHAR = '\0';
 namespace idep {
 
 struct TokenIteratorImpl {
-    istream& d_in;
+    std::istream& d_in;
     char *d_buf_p;
     int d_size;
     int d_length;
