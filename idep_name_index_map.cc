@@ -47,7 +47,7 @@ static const idep_NameIndexMapLink *find(const idep_NameIndexMapLink *p,
 }
 
 struct idep_NameIndexMap_i {
-    idep_NameArray d_array;                     // array of names
+    idep::NameArray d_array;                     // array of names
     idep_NameIndexMapLink **d_table_p;          // hash table of names
     int d_tableSize;                            // size of hash table
 

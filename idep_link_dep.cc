@@ -89,7 +89,7 @@ static double ccdBalencedBinaryTree(int n)  {
 struct idep_LinkDep_i {
     idep_NameIndexMap d_unaliases;          // e.g., ".", "/usr/include"
     idep_AliasTable d_aliases;              // e.g., fooa -> fooarray
-    idep_NameArray d_dependencyFiles;       // hold compile-time dependencies
+    idep::NameArray d_dependencyFiles;       // hold compile-time dependencies
 
     idep_NameIndexMap *d_componentNames_p;  // keys for relation
     idep_BinRel *d_dependencies_p;          // compile-time dependencies

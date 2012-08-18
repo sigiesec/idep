@@ -86,7 +86,7 @@ static const char* search(std::string* s,
 }
 
 static const char* search(std::string* s,
-                          const idep_NameArray& a,
+                          const idep::NameArray& a,
                           const char* file) {
     if (IsAbsolutePath(file)) {
         *s = file;
@@ -114,7 +114,7 @@ static const char* search(std::string* s,
 
 static idep_BinRel *s_dependencies_p;   // set just before first call to getDep
 static idep_NameIndexMap *s_files_p;    // set just before first call to getDep
-static idep_NameArray *s_includes_p;    // set just before first call to getDep
+static idep::NameArray *s_includes_p;    // set just before first call to getDep
 static int s_recurse;                   // set just before first call to getDep
 static std::ostream *s_err_p;                // set just before first call to getDep
 
@@ -161,8 +161,8 @@ static int getDep (int index)
                 // -*-*-*- idep_CompileDep_i -*-*-*-
 
 struct idep_CompileDep_i {
-    idep_NameArray d_includeDirectories;      // e.g., ".", "/usr/include"
-    idep_NameArray d_rootFiles;               // files to be analyzed
+    idep::NameArray d_includeDirectories;      // e.g., ".", "/usr/include"
+    idep::NameArray d_rootFiles;               // files to be analyzed
 
     idep_NameIndexMap *d_fileNames_p;         // keys for relation
     idep_BinRel *d_dependencies_p;            // compile-time dependencies
@@ -337,7 +337,7 @@ std::ostream& operator<<(std::ostream& o, const idep_CompileDep&(dep))
 {
     const char *INDENT = "    ";
     for (idep_RootFileIter rit(dep); rit; ++rit) {
-        idep_NameArray a;
+        idep::NameArray a;
         o << rit() << std::endl;
         for (idep_HeaderFileIter hit(rit); hit; ++hit) {
             if (IsAbsolutePath(hit())) {
