@@ -14,106 +14,107 @@ const char NULL_CHAR = '\0';
 namespace idep {
 
 struct TokenIteratorImpl {
-    std::istream& d_in;
-    char *d_buf_p;
-    int d_size;
-    int d_length;
-    int d_newlineFlag;
+  TokenIteratorImpl(std::istream& in);
+  ~TokenIteratorImpl();
 
-    TokenIteratorImpl(std::istream& in);
-    ~TokenIteratorImpl();
-    void grow();
-    void addChar(char ch);
-    void advance();
+  void Grow();
+  void AddChar(char ch);
+  void Advance();
+
+  std::istream& in_;
+  char *buf_;
+  int size_;
+  int length_;
+  int newline_flag_;
+
 };
 
 TokenIteratorImpl::TokenIteratorImpl(std::istream& in)
-: d_in(in)
-, d_buf_p(new char[START_SIZE])
-, d_size(START_SIZE)
-, d_length(0)
-, d_newlineFlag(0) {
-    assert(d_buf_p);
+    : in_(in),
+      buf_(new char[START_SIZE]),
+      size_(START_SIZE),
+      length_(0),
+      newline_flag_(0) {
+    assert(buf_);
 }
 
 TokenIteratorImpl::~TokenIteratorImpl() {
-    delete d_buf_p;
+  delete buf_;
 }
 
-void TokenIteratorImpl::grow() {
-    int newSize = d_size * GROW_FACTOR;
-    char *tmp = d_buf_p;
-    d_buf_p = new char[newSize];
-    assert(d_buf_p);
-    memcpy(d_buf_p, tmp, d_size);
-    d_size = newSize;
-    delete [] tmp;
+void TokenIteratorImpl::Grow() {
+  int new_size = size_ * GROW_FACTOR;
+  char* tmp = buf_;
+  buf_ = new char[new_size];
+  assert(buf_);
+  memcpy(buf_, tmp, size_);
+  size_ = new_size;
+  delete[] tmp;
 }
 
-void TokenIteratorImpl::addChar(char ch) {
-    if (d_length >= d_size)
-        grow();
+void TokenIteratorImpl::AddChar(char ch) {
+  if (length_ >= size_)
+    Grow();
 
-    assert(d_length < d_size);
-    d_buf_p[d_length++] = ch;
+  assert(length_ < size_);
+  buf_[length_++] = ch;
 }
 
 TokenIterator::TokenIterator(std::istream& in)
     : impl_(new TokenIteratorImpl(in)) {
-    ++*this; // load first occurrence.
+  ++*this; // load first occurrence.
 }
 
 TokenIterator::~TokenIterator() {
-    delete impl_;
+  delete impl_;
 }
 
-void TokenIterator::operator++()
-{
+void TokenIterator::operator++() {
     assert(*this);
 
-    impl_->d_length = 0;
+    impl_->length_ = 0;
 
-    if (impl_->d_newlineFlag) {                   // left over newline
-        impl_->d_newlineFlag = 0;
-        impl_->addChar(NEWLINE_CHAR);
+    if (impl_->newline_flag_) {                   // left over newline
+        impl_->newline_flag_ = 0;
+        impl_->AddChar(NEWLINE_CHAR);
     }
     else {
         char c;
-        while (impl_->d_in && !impl_->d_in.get(c).eof()) {
-            if (impl_->d_length > 0) {            // "word" in progress
+        while (impl_->in_ && !impl_->in_.get(c).eof()) {
+            if (impl_->length_ > 0) {            // "word" in progress
                 if (isspace(c)) {
                     if (NEWLINE_CHAR == c) {
-                        impl_->d_newlineFlag = 1; // note newline for later
+                        impl_->newline_flag_ = 1; // note newline for later
                     }
                     break;                         // end of "word" in any case
                 }
-                impl_->addChar(c);                // start of "word"
+                impl_->AddChar(c);                // start of "word"
             }
             else {                                 // nothing found yet
                 if (isspace(c)) {
                     if (NEWLINE_CHAR == c) {
-                        impl_->addChar(NEWLINE_CHAR);
+                        impl_->AddChar(NEWLINE_CHAR);
                         break;                     // found a newline
                     }
                     continue;                      // found an ordinary space
                 }
-                impl_->addChar(c);                // add character to "word"
+                impl_->AddChar(c);                // add character to "word"
             }
         }
     }
 
-    if (impl_->d_length > 0)
-        impl_->addChar(NULL_CHAR);                // always append a null char
+    if (impl_->length_ > 0)
+        impl_->AddChar(NULL_CHAR);                // always append a null char
     else
-        impl_->d_length = -1;                     // or make iterator invalid
+        impl_->length_ = -1;                     // or make iterator invalid
 }
 
 TokenIterator::operator const void *() const {
-    return impl_->d_length >= 0 ? this : 0;
+  return impl_->length_ >= 0 ? this : 0;
 }
 
 const char* TokenIterator::operator()() const {
-    return impl_->d_buf_p;
+  return impl_->buf_;
 }
 
 }  // namespace idep
