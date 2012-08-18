@@ -29,7 +29,7 @@ std::ostream& warn(std::ostream& ing)
     return ing << "Warning: ";
 }
 
-static std::ostream & err(std::ostream& ors) 
+static std::ostream & err(std::ostream& ors)
 {
     return ors << "Error: ";
 }
@@ -48,7 +48,7 @@ static const char *stripDir(const char *s)
 {
     if (s) {
         const char *slash = strrchr(s, '/');
-        return slash ? slash + 1 : s; 
+        return slash ? slash + 1 : s;
     }
     return s;   // input was null
 }
@@ -72,8 +72,8 @@ static int isAsciiFile(const char *fileName)
 }
 
 typedef void (AliasDep::*Func)(const char *);
-static void loadFromStream(std::istream& in, AliasDep *dep, Func add) 
-{ 
+static void loadFromStream(std::istream& in, AliasDep *dep, Func add)
+{
     assert(in);
     for (idep::TokenIterator it(in); it; ++it) {
         if ('#' == *it()) {                     // strip comment if any
@@ -88,7 +88,7 @@ static void loadFromStream(std::istream& in, AliasDep *dep, Func add)
     }
 }
 
-static int loadFromFile(const char *file, AliasDep *dep, Func add) 
+static int loadFromFile(const char *file, AliasDep *dep, Func add)
 {
     enum { BAD = -1, GOOD = 0 };
     if (!isAsciiFile(file)) {
@@ -96,7 +96,7 @@ static int loadFromFile(const char *file, AliasDep *dep, Func add)
     }
     ifstream in(file);
     assert(in);
-    loadFromStream(in, dep, add); 
+    loadFromStream(in, dep, add);
     return GOOD;
 }
 
@@ -112,7 +112,7 @@ static char *removeSuffix(char *dirPath)
 {
     char *dot = strrchr(dirPath, '.');
     if (dot && !strchr(dot, '/')) {     // if '.' found in final path segment
-        dot[0] = '\0';                  // eliminate suffix ("a/.b" -> "a/") 
+        dot[0] = '\0';                  // eliminate suffix ("a/.b" -> "a/")
     }
     return dirPath;
 }
@@ -121,21 +121,21 @@ static char *removeSuffix(char *dirPath)
 
 class AliasDepIntArray {   // auxiliary class to manage array memory
     int *d_array_p;
-    int d_length;               
+    int d_length;
     AliasDepIntArray(const AliasDepIntArray&);
     AliasDepIntArray& operator=(const AliasDepIntArray&);
   public:
     AliasDepIntArray(int length) : // does not zero the memory!
-			d_array_p(new int[length]), d_length(length) {} 
+			d_array_p(new int[length]), d_length(length) {}
     ~AliasDepIntArray() { delete [] d_array_p; }
     int& operator[](int i) { return d_array_p[i]; }
     int length() const { return d_length; }
 };
 
 static void zero(AliasDepIntArray *a) // non-primitive operation on array
-{ 
-    for (int i = 0; i < a->length(); ++i) { 
-        (*a)[i] = 0; 
+{
+    for (int i = 0; i < a->length(); ++i) {
+        (*a)[i] = 0;
     }
 }
 
@@ -159,7 +159,7 @@ struct AliasDepImpl {
 
                 // -*-*-*- AliasDep -*-*-*-
 
-AliasDep::AliasDep() 
+AliasDep::AliasDep()
 : impl_(new AliasDepImpl)
 {
 }
@@ -171,14 +171,14 @@ AliasDep::~AliasDep()
 
 void AliasDep::addIgnoreName(const char *fileName)
 {
-    impl_->d_ignoreNames.add(fileName);                
+    impl_->d_ignoreNames.add(fileName);
 }
 
 int AliasDep::readIgnoreNames(const char *file)
 {
   /*
 idep_adep.cxx:180: error: argument of type 'void (AliasDep::)(const char*)' does not match 'void (AliasDep::*)(const char*)'
-    return loadFromFile(file, this, AliasDep::addIgnoreName); 
+    return loadFromFile(file, this, AliasDep::addIgnoreName);
   */
 }
 
@@ -187,7 +187,7 @@ const char *AliasDep::addAlias(const char *alias, const char *component)
     return impl_->d_aliases.add(alias, component) < 0 ?
                                         impl_->d_aliases.lookup(alias) : 0;
 }
- 
+
 int AliasDep::readAliases(ostream& orf, const char *file)
 {
     return idep::AliasUtil::readAliases(&impl_->d_aliases, orf, file);
@@ -195,18 +195,18 @@ int AliasDep::readAliases(ostream& orf, const char *file)
 
 void AliasDep::addFileName(const char *fileName)
 {
-    impl_->d_fileNames.add(fileName);          
+    impl_->d_fileNames.add(fileName);
 }
 
 int AliasDep::readFileNames(const char *file)
 {
-  //    return loadFromFile(file, this, AliasDep::addFileName); 
+  //    return loadFromFile(file, this, AliasDep::addFileName);
 }
 
 void AliasDep::inputFileNames()
 {
     if (cin) {
-      //        loadFromStream(cin, this, AliasDep::addFileName); 
+      //        loadFromStream(cin, this, AliasDep::addFileName);
       //        cin.clear(0);             // reset eof for standard input
     }
 }
@@ -216,7 +216,7 @@ int AliasDep::unpaired(ostream& out, ostream& ing, int suffixFlag) const
     int maxLength = impl_->d_fileNames.length();
     AliasDepIntArray hits(maxLength);  // records num files per component
     AliasDepIntArray cmap(maxLength);  // map component to (last) file
-    zero(&hits); 
+    zero(&hits);
     idep_NameIndexMap components;
     int numComponents = 0;
 
@@ -239,7 +239,7 @@ int AliasDep::unpaired(ostream& out, ostream& ing, int suffixFlag) const
         int componentIndex = components.entry(componentName);
         if (components.length() > numComponents) {      // new component
             ++numComponents;
-            
+
         }
 
         assert(components.length() == numComponents);
@@ -251,11 +251,11 @@ int AliasDep::unpaired(ostream& out, ostream& ing, int suffixFlag) const
     for (int i = 0; i < numComponents; ++i) {
         assert(hits[i] > 0);
         if (1 == hits[i]) {
-            printNames.add(suffixFlag ? impl_->d_fileNames[cmap[i]] 
-                                      : components[i]); 
+            printNames.add(suffixFlag ? impl_->d_fileNames[cmap[i]]
+                                      : components[i]);
         }
-        if (hits[i] > 2) { 
-            warn(ing) << "component \"" << components[i] 
+        if (hits[i] > 2) {
+            warn(ing) << "component \"" << components[i]
                       << "\" consists of " << hits[i] << " files." << endl;
         }
     }
@@ -264,12 +264,12 @@ int AliasDep::unpaired(ostream& out, ostream& ing, int suffixFlag) const
     // header which has the longer name representing the true name of the
     // component.  If the suffixFlag is 0, we will sort into almost
     // lexicographic order except that the shorter of two initially identical
-    // names will *follow* rather than precede longer.  This ordering will 
+    // names will *follow* rather than precede longer.  This ordering will
     // facilitate cut and past when creating an alias file by hand in a
-    // text editor. 
+    // text editor.
 
     int numUnpaired = printNames.length();
-    AliasDepIntArray smap(numUnpaired); 
+    AliasDepIntArray smap(numUnpaired);
     for (int i = 0; i < numUnpaired; ++i) {
         smap[i] = i;                            // identity mapping to start
     }
@@ -284,12 +284,12 @@ int AliasDep::unpaired(ostream& out, ostream& ing, int suffixFlag) const
                 int li = strlen(printNames[smap[i]]);
                 int lj = strlen(printNames[smap[j]]);
                 int len = li < lj ? li : lj;    // min length
-                int cmp = strncmp(printNames[smap[i]], 
-                                  printNames[smap[j]], len); 
+                int cmp = strncmp(printNames[smap[i]],
+                                  printNames[smap[j]], len);
                 swap = cmp < 0 || 0 == cmp && li > lj;  // longer first if tie
             }
             if (swap) {                                 // swap if necessary
-                int tmp = smap[i];                
+                int tmp = smap[i];
                 smap[i] = smap[j];
                 smap[j] = tmp;
             }
@@ -305,7 +305,7 @@ int AliasDep::unpaired(ostream& out, ostream& ing, int suffixFlag) const
     return printNames.length();
 }
 
-static const char *th(int n) 
+static const char *th(int n)
 {
     return 1 == n ? "st" : 2 == n ? "nd" : 3 == n ? "rd" : "th";
 }
@@ -361,14 +361,14 @@ int AliasDep::verify(ostream& orf) const
             status = IOERROR;
         }
         else if (!it) {                         // header not found
-            err(orf) << "corresponding include directive for \"" << path 
+            err(orf) << "corresponding include directive for \"" << path
                     << "\" not found."
                     << endl;
             ++errorCount;
         }
         else if (1 != directiveIndex) {         // header found but not first
-            err(orf) << '"' << path 
-                    << "\" contains corresponding include as " 
+            err(orf) << '"' << path
+                    << "\" contains corresponding include as "
                     << directiveIndex << th(directiveIndex)
                     << " directive." << endl;
             ++errorCount;
@@ -377,7 +377,7 @@ int AliasDep::verify(ostream& orf) const
         // else there is nothing wrong here
     }
 
-    return status == GOOD ? errorCount : status;        
+    return status == GOOD ? errorCount : status;
 }
 
 
@@ -390,10 +390,10 @@ int AliasDep::extract(ostream& out, ostream& orf) const
     idep_NameIndexMap uniqueHeaders;       // used to detect multiple .c files
     int length = impl_->d_fileNames.length();
     AliasDepIntArray hits(length);    // records frequency of headers
-    zero(&hits); 
+    zero(&hits);
     AliasDepIntArray hmap(length);    // index header file index in table
     AliasDepIntArray verified(length);// verifies that guess was correct
-    zero(&verified); 
+    zero(&verified);
 
     for (int i = 0; i < length; ++i) {
         hmap[i] = INVALID_INDEX;   // set valid when a suitable header is found
@@ -421,7 +421,7 @@ int AliasDep::extract(ostream& out, ostream& orf) const
         }
 
         if (!it) {                      // no include directives
-            err(orf) << '"' << path 
+            err(orf) << '"' << path
                     << "\" contains no include directives." << endl;
             ++errorCount;
             continue;                   // nothing more we can do here
@@ -434,11 +434,11 @@ int AliasDep::extract(ostream& out, ostream& orf) const
         const char *headerAlias = impl_->d_aliases.lookup(actualHeader);
         const char *header = headerAlias ? headerAlias : actualHeader;
 
-        if (0 == strcmp(component, header)) { 
+        if (0 == strcmp(component, header)) {
 
             // At this point, we have the component name and header name
-            // that match either because the root names were matching or 
-            // because we found an alias that made it work.  Record this 
+            // that match either because the root names were matching or
+            // because we found an alias that made it work.  Record this
             // fact in the verified array.
 
             verified[i] = 1;
@@ -497,7 +497,7 @@ int AliasDep::extract(ostream& out, ostream& orf) const
         }
     }
 
-    return status == GOOD ? errorCount : status;        
+    return status == GOOD ? errorCount : status;
 }
 
 }  // namespace idep
