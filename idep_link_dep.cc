@@ -1084,7 +1084,7 @@ const char* idep_AliasIter::fromName() const {
 
 const char *idep_AliasIter::toName() const
 {
-    return d_this->d_iter.originalName();
+    return d_this->d_iter.GetOriginalName();
 }
 
                 // -*-*-*- idep_UnaliasIter_i -*-*-*-
