@@ -37,30 +37,30 @@ static enum { IOERROR = -1, SUCCESS = 0, DESIGN_ERROR = 1 } s_status = SUCCESS;
 
 static std::ostream& err() {
     s_status = IOERROR;
-    return cerr << "Error: ";
+    return std::cerr << "Error: ";
 }
 
 static int missing(const char *argName, char option) {
     err() << "missing `" << argName << "' argument for -"
-          << option << " option." << endl;
+          << option << " option." << std::endl;
     return s_status;
 }
 
 static int extra(const char *text, char option) {
     err() << "extra text \"" << text << "\" encountered after -"
-          << option << " option." << endl;
+          << option << " option." << std::endl;
     return s_status;
 }
 
 static int unreadable(const char *dirFile, char option) {
     err() << "unable to read \"" << dirFile << "\" for -"
-          << option << " option." << endl;
+          << option << " option." << std::endl;
     return s_status;
 }
 
 static int incorrect(const char *file, char option) {
     err() << "file \"" << file << "\" contained invalid contents for -"
-          << option << " option." << endl;
+          << option << " option." << std::endl;
     return s_status;
 }
 
@@ -102,7 +102,7 @@ int main(int argc, char* argv[]) {
                 if (!*arg) {
                     return missing("file", option);
                 }
-                int s = environment.readAliases(cerr, arg);
+                int s = environment.readAliases(std::cerr, arg);
                 if (s < 0) {
                     return unreadable(arg, option);
                 }
@@ -156,14 +156,14 @@ int main(int argc, char* argv[]) {
                 suppression = 2;
               } break;
               default: {
-                 err() << "unknown option \"" << word << "\"." << endl 
+                 err() << "unknown option \"" << word << "\"." << std::endl 
                        << help(); 
                  return s_status;
               } break;
             }
         }
         else {
-             err() << "illegal argument \"" << word << "\"." << endl 
+             err() << "illegal argument \"" << word << "\"." << std::endl 
                    << help(); 
              return s_status;
         }
@@ -173,19 +173,19 @@ int main(int argc, char* argv[]) {
         environment.addDependencyFile(""); // "" is synonym for standard input
     }
 
-    int result = environment.calculate(cerr, canonicalFlag, suffixFlag);
+    int result = environment.calculate(std::cerr, canonicalFlag, suffixFlag);
 
     s_status = result < 0 ? IOERROR : result > 0 ? DESIGN_ERROR : SUCCESS; 
 
     if (s_status >= 0) {
         if (0 == suppression) {
-            environment.printAliases(cout);
-            environment.printUnaliases(cout);
+            environment.printAliases(std::cout);
+            environment.printUnaliases(std::cout);
         }
-        environment.printCycles(cerr);
-        environment.printLevels(cout, longListingFlag, suppression >= 2);
+        environment.printCycles(std::cerr);
+        environment.printLevels(std::cout, longListingFlag, suppression >= 2);
         if (suppression <= 1) {
-            environment.printSummary(cout);
+            environment.printSummary(std::cout);
         }
     }
 

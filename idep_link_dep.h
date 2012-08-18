@@ -12,7 +12,6 @@
 //   idep_DependencyIter: iterate over dependencies for a given component
 
 #include<ostream>
-using namespace std;
 
 class idep_AliasIter;
 class idep_UnaliasIter;
