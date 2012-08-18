@@ -58,7 +58,7 @@ int idep_NameArray::length() const
     return d_length;
 };
 
-ostream& operator<<(ostream& out, const idep_NameArray& array)
+std::ostream& operator<<(std::ostream& out, const idep_NameArray& array)
 {
     int fieldWidth = 10;
     int maxIndex = array.length() - 1;
@@ -71,7 +71,7 @@ ostream& operator<<(ostream& out, const idep_NameArray& array)
 
     for (int i = 0; i < array.length(); ++i) {
         out.width(fieldWidth);
-        out << i << ". " << array[i] << endl;
+        out << i << ". " << array[i] << std::endl;
     }
 
     return out;

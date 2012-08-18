@@ -1,14 +1,12 @@
-#ifndef IDEP_NAMEARRAY_H_
-#define IDEP_NAMEARRAY_H_
-
-// This leaf component defines 1 class:
-//   idep_NameDep: extensible array of managed character string names.
+#ifndef IDEP_NAME_ARRAY_H_
+#define IDEP_NAME_ARRAY_H_
+#pragma once
 
 #include <ostream>
 #include <istream>
-using namespace std;
 
-
+// This leaf component defines 1 class:
+//   idep_NameDep: extensible array of managed character string names.
 class idep_NameArray {
     char **d_array_p;   // array of dynamically allocated character strings
     int d_size;         // physical size of array
@@ -46,8 +44,8 @@ class idep_NameArray {
     int length() const;
 };
 
-ostream& operator<<(ostream& out, const idep_NameArray& array);
-    // Print the logical contents of this name array to the specified
-    // output stream (out) in some suitable format. 
+// Print the logical contents of this name array to the specified
+// output stream (out) in some suitable format.
+std::ostream& operator<<(std::ostream& out, const idep_NameArray& array);
 
-#endif  // IDEP_NAMEARRAY_H_
+#endif  // IDEP_NAME_ARRAY_H_

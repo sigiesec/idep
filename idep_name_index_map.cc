@@ -140,7 +140,7 @@ int idep_NameIndexMap::lookup(const char *name) const
     return link ? link->d_index : BAD_INDEX;
 }
 
-ostream& operator<<(ostream& out, const idep_NameIndexMap& map)
+std::ostream& operator<<(std::ostream& out, const idep_NameIndexMap& map)
 {
     int fieldWidth = 10;
     int maxIndex = map.length() - 1;
@@ -153,7 +153,7 @@ ostream& operator<<(ostream& out, const idep_NameIndexMap& map)
 
     for (int i = 0; i < map.length(); ++i) {
         out.width(fieldWidth);
-        out << i << ". " << map[i] << endl;
+        out << i << ". " << map[i] << std::endl;
     }
 
     return out;
