@@ -337,7 +337,7 @@ int idep_AliasDep::verify(ostream& orf) const
 
         int directiveIndex = 0;
 
-	FileDepIterator it(path);
+	idep::FileDepIterator it(path);
 
         for (it; it; ++it) {
 
@@ -411,7 +411,7 @@ int idep_AliasDep::extract(ostream& out, ostream& orf) const
         const char *compAlias = d_this->d_aliases.lookup(actualComponent);
         const char *component = compAlias ? compAlias : actualComponent;
 
-        FileDepIterator it(path);      // hook up with first dependency.
+        idep::FileDepIterator it(path);      // hook up with first dependency.
 
         if (!it.isValidFile()) {        // unable to read file
             err(orf) << "unable to open file \""

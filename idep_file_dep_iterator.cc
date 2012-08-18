@@ -100,6 +100,8 @@ const char *extractDependency(char *buffer) {
     return p;
 }
 
+namespace idep {
+
 struct FileDepIteratorImpl {
     ifstream d_file;
     char d_buf[MAX_LINE_LENGTH];
@@ -164,3 +166,5 @@ const char* FileDepIterator::operator()() const
 { 
     return impl_->d_header_p;
 }
+
+}  // namespace idep

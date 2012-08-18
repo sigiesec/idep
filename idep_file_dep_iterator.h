@@ -1,6 +1,8 @@
 #ifndef IDEP_FILE_DEP_ITERATOR_H_
 #define IDEP_FILE_DEP_ITERATOR_H_
 
+namespace idep {
+
 class FileDepIteratorImpl;
 
 // This component defines 1 fully insulated iterator class:
@@ -41,5 +43,7 @@ class FileDepIterator {
   FileDepIterator(const FileDepIterator&);
   FileDepIterator& operator=(const FileDepIterator&);
 };
+
+}  // namespace idep
 
 #endif  // IDEP_FILE_DEP_ITERATOR_H_

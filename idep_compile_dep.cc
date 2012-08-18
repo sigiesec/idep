@@ -126,7 +126,7 @@ static int getDep (int index)
      
     idep_String buffer; // string buffer, do not use directly
 
-    FileDepIterator it((*s_files_p)[index]);
+    idep::FileDepIterator it((*s_files_p)[index]);
     for (it; it; ++it) {
         const char *dirFile = search(&buffer, *s_includes_p, it());
         if (!dirFile) {
