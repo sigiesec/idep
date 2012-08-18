@@ -13,9 +13,7 @@
 #include <iostream>
 #include <string.h>
 
-using namespace std;
-
-static ostream& err(ostream& orf) {
+static std::ostream& err(std::ostream& orf) {
     return orf << "Error: ";
 }
 
@@ -131,7 +129,7 @@ static int getDep (int index)
         const char *dirFile = search(&buffer, *s_includes_p, it());
         if (!dirFile) {
             err(*s_err_p) << "include directory for file \""
-                 << it() << "\" not specified." << endl; 
+                 << it() << "\" not specified." << std::endl; 
             status = BAD;
             continue;
         }
@@ -153,7 +151,7 @@ static int getDep (int index)
 
     if (!it.isValidFile()) {
        err(*s_err_p) << "unable to open file \""
-         << (*s_files_p)[index] << "\" for read access." << endl; 
+         << (*s_files_p)[index] << "\" for read access." << std::endl; 
         status = BAD;
     }
 
@@ -291,12 +289,12 @@ int idep_CompileDep::calculate(ostream& orf, int recursionFlag)
 
         if (!dirFile) {
             err(orf) << "root file \"" << file 
-                    << "\" not found." << endl;
+                    << "\" not found." << std::endl;
             status = BAD;
         }
         else if (d_this->d_fileNames_p->add(dirFile) < 0) { 
             err(orf) << "root file \"" << file 
-                    << "\" redundantly specified." << endl;
+                    << "\" redundantly specified." << std::endl;
             status = BAD;
         }
         else {
@@ -323,7 +321,7 @@ int idep_CompileDep::calculate(ostream& orf, int recursionFlag)
         const char *name = (*d_this->d_fileNames_p)[i];
         if (getDep(i)) {
             err(orf) << "could not determine all dependencies for \""
-                    << name << "\"." << endl;
+                    << name << "\"." << std::endl;
             status = BAD;
         }
     }
@@ -340,18 +338,18 @@ std::ostream& operator<<(std::ostream& o, const idep_CompileDep&(dep))
     const char *INDENT = "    ";
     for (idep_RootFileIter rit(dep); rit; ++rit) {
         idep_NameArray a;
-        o << rit() << endl;
+        o << rit() << std::endl;
         for (idep_HeaderFileIter hit(rit); hit; ++hit) {
             if (IsAbsolutePath(hit())) {
                 a.append(hit());
             } else {
-                o << INDENT << hit() << endl;
+                o << INDENT << hit() << std::endl;
             }
         }
         for (int i = 0; i < a.length(); ++i) {
-           o << INDENT << a[i] << endl;
+           o << INDENT << a[i] << std::endl;
         }
-        o << endl;
+        o << std::endl;
     }
     return o;
 }
