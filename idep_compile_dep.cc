@@ -112,7 +112,7 @@ static const char* search(std::string* s,
 // in order to avoid the unnecessary time and space costs of passing 
 // several invariant arguments on the program stack.
 
-static idep_BinRel *s_dependencies_p;   // set just before first call to getDep
+static idep::BinaryRelation *s_dependencies_p;   // set just before first call to getDep
 static idep_NameIndexMap *s_files_p;    // set just before first call to getDep
 static idep::NameArray *s_includes_p;    // set just before first call to getDep
 static int s_recurse;                   // set just before first call to getDep
@@ -165,7 +165,7 @@ struct idep_CompileDep_i {
     idep::NameArray d_rootFiles;               // files to be analyzed
 
     idep_NameIndexMap *d_fileNames_p;         // keys for relation
-    idep_BinRel *d_dependencies_p;            // compile-time dependencies
+    idep::BinaryRelation *d_dependencies_p;            // compile-time dependencies
     int d_numRootFiles;                       // number of roots in relation
 
     idep_CompileDep_i();
@@ -276,7 +276,7 @@ int idep_CompileDep::calculate(std::ostream& orf, int recursionFlag)
 
     // allocate new data structures for this calculation
     d_this->d_fileNames_p = new idep_NameIndexMap;
-    d_this->d_dependencies_p = new idep_BinRel;     
+    d_this->d_dependencies_p = new idep::BinaryRelation;     
     d_this->d_numRootFiles = 0;
 
 
@@ -426,25 +426,25 @@ idep_HeaderFileIter::~idep_HeaderFileIter()
 }
 
 
-void idep_HeaderFileIter::operator++() 
+void idep_HeaderFileIter::operator++()
 {
     assert(*this);
-    idep_BinRel *rel = d_this->d_iter.d_dep.d_dependencies_p;
-    
+    idep::BinaryRelation *rel = d_this->d_iter.d_dep.d_dependencies_p;
+
     do {
         ++d_this->d_index;
     }
-    while (   d_this->d_index < rel->length() 
+    while (d_this->d_index < rel->length()
            && !rel->get(d_this->d_iter.d_index, d_this->d_index)
     );
 }
- 
+
 idep_HeaderFileIter::operator const void *() const
 {
-    idep_BinRel *rel = d_this->d_iter.d_dep.d_dependencies_p;
+    idep::BinaryRelation *rel = d_this->d_iter.d_dep.d_dependencies_p;
     return d_this->d_index < rel->length() ? this : 0;
 }
- 
+
 const char *idep_HeaderFileIter::operator()() const
 {
     return (*d_this->d_iter.d_dep.d_fileNames_p)[d_this->d_index];

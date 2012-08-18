@@ -28,7 +28,7 @@ static void clean(char **p)  {
 #3  0x00002aaaab0ba90e in malloc_usable_size () from /lib/libc.so.6
 #4  0x00002aaaab0bac56 in free () from /lib/libc.so.6
 #5  0x000000000040a0ab in clean (p=0x526a50) at idep_binary_relation.cc:28
-#6  0x000000000040a46f in ~idep_BinRel (this=0x527b60) at idep_binary_relation.cc:124
+#6  0x000000000040a46f in ~BinaryRelation (this=0x527b60) at idep_binary_relation.cc:124
 #7  0x000000000040254b in ~idep_LinkDep_i (this=0x523460) at idep_ldep.cxx:150
 #8  0x00000000004042dc in ~idep_LinkDep (this=0x7fffffb944a0) at idep_ldep.cxx:700
 #9  0x0000000000401dbf in main (argc=5, argv=0x7fffffb94608) at ldep.cxx:199
@@ -57,9 +57,9 @@ static void copy(char **left, const char *const *right, int size)
     memcpy(*left, *right, size * size);
 }
 
-                // -*-*-*- private functions -*-*-*-
+namespace idep {
 
-void idep_BinRel::grow()
+void BinaryRelation::grow()
 {
     int newSize = d_size * GROW_FACTOR;
     char **tmp = d_rel_p;
@@ -74,7 +74,7 @@ void idep_BinRel::grow()
     clean(tmp);
 }
 
-void idep_BinRel::compress()
+void BinaryRelation::compress()
 {
     if (d_size > d_length && d_length > 0) {
         d_size = d_length;
@@ -90,7 +90,7 @@ void idep_BinRel::compress()
 
                 // -*-*-*- public functions -*-*-*-
 
-idep_BinRel::idep_BinRel(int initialEntries, int maxEntriesHint) 
+BinaryRelation::BinaryRelation(int initialEntries, int maxEntriesHint) 
 : d_size(maxEntriesHint > 0 ? maxEntriesHint : START_SIZE) 
 , d_length(initialEntries > 0 ? initialEntries : 0)
 {
@@ -101,7 +101,7 @@ idep_BinRel::idep_BinRel(int initialEntries, int maxEntriesHint)
     clear(d_rel_p, d_size);
 }
 
-idep_BinRel::idep_BinRel(const idep_BinRel& rel) 
+BinaryRelation::BinaryRelation(const BinaryRelation& rel) 
 : d_size(rel.d_size)
 , d_length(rel.d_length)
 , d_rel_p(alloc(rel.d_size))
@@ -110,7 +110,7 @@ idep_BinRel::idep_BinRel(const idep_BinRel& rel)
   copy(d_rel_p, d_rel_p + d_size, rel.d_size);
 }
 
-idep_BinRel& idep_BinRel::operator=(const idep_BinRel& rel) 
+BinaryRelation& BinaryRelation::operator=(const BinaryRelation& rel) 
 {  
     if (&rel != this) {
         if (d_size != rel.d_size) { 
@@ -126,12 +126,12 @@ idep_BinRel& idep_BinRel::operator=(const idep_BinRel& rel)
     return *this;
 }
 
-idep_BinRel::~idep_BinRel() 
+BinaryRelation::~BinaryRelation() 
 {
   clean(d_rel_p); // part of crash
 }
 
-int idep_BinRel::cmp(const idep_BinRel& rel) const
+int BinaryRelation::cmp(const BinaryRelation& rel) const
 {
     enum { SAME = 0, DIFFERENT = 1 };
 
@@ -153,7 +153,7 @@ int idep_BinRel::cmp(const idep_BinRel& rel) const
     return SAME;
 }
 
-void idep_BinRel::warshall(int bit) 
+void BinaryRelation::warshall(int bit) 
 {
     // DEFINITION: Transitive Closure
     //
@@ -200,12 +200,12 @@ void idep_BinRel::warshall(int bit)
     }
 }
 
-void idep_BinRel::makeTransitive() 
+void BinaryRelation::makeTransitive() 
 {
     warshall(1);
 }
 
-void idep_BinRel::makeNonTransitive() 
+void BinaryRelation::makeNonTransitive() 
 {
     warshall(0);
     // make non-reflexive too -- i.e., subtract the identity matrix.
@@ -214,18 +214,16 @@ void idep_BinRel::makeNonTransitive()
     }
 }
 
-                // -*-*-*- free operators -*-*-*-
-
-std::ostream& operator<<(std::ostream& o, const idep_BinRel& rel) 
+std::ostream& operator<<(std::ostream& o, const BinaryRelation& rel) 
 {
     int r, c;
     const int GAP_GRID = 10;
     const char *SP = rel.length() < 30 ? " " : "";
     for (r = 0; r < rel.length(); ++r) {
-        if (r && 0 == r % GAP_GRID) { 
+        if (r && 0 == r % GAP_GRID) {
             o << std::endl;
         }
-        
+
         for (c = 0; c < rel.length(); ++c) {
             if (c && 0 == c % GAP_GRID) { 
                 o << ' ' << SP;
@@ -237,3 +235,4 @@ std::ostream& operator<<(std::ostream& o, const idep_BinRel& rel)
     return o;
 }
 
+}  // namespace idep

@@ -92,7 +92,7 @@ struct idep_LinkDep_i {
     idep::NameArray d_dependencyFiles;       // hold compile-time dependencies
 
     idep_NameIndexMap *d_componentNames_p;  // keys for relation
-    idep_BinRel *d_dependencies_p;          // compile-time dependencies
+    idep::BinaryRelation *d_dependencies_p;          // compile-time dependencies
     int *d_map_p;                           // map to levelized order   
     int *d_levels_p;                        // number of components per level
     int *d_levelNumbers_p;                  // level number for each component
@@ -318,7 +318,7 @@ int idep_LinkDep_i::calculate(ostream& orf, int canonicalFlag, int suffixFlag)
 
     // allocate new data structures for this calculation
     d_componentNames_p = new idep_NameIndexMap;
-    d_dependencies_p = new idep_BinRel;     
+    d_dependencies_p = new idep::BinaryRelation;     
     d_map_p = 0;                // allocated later when length is known
     d_levels_p = 0;             // allocated later when length is known
     d_levelNumbers_p = 0;       // allocated later when length is known
@@ -618,7 +618,7 @@ int idep_LinkDep_i::calculate(ostream& orf, int canonicalFlag, int suffixFlag)
     delete [] current;
 
     // Calculate CCD and cache the value in a data member of the object.
-    idep_BinRel tmp = *d_dependencies_p; // temporary for calculating CCD
+    idep::BinaryRelation tmp = *d_dependencies_p; // temporary for calculating CCD
     for (int i = 0; i < d_numComponents; ++i) {
         if (0 == d_levelNumbers_p[i]) { 
             for (int j = 0; j < d_numComponents; ++j) {
@@ -649,7 +649,7 @@ int idep_LinkDep_i::calculate(ostream& orf, int canonicalFlag, int suffixFlag)
         // transitive entries from that relation, the results are then mapped 
         // back to the d_dependencies_p relation.
 
-        idep_BinRel tmp(d_numComponents);
+        idep::BinaryRelation tmp(d_numComponents);
 
         for (int i = 0; i < d_numComponents; ++i) {
             int u = d_map_p[i];
