@@ -106,7 +106,7 @@ struct idep_FileDepIter_i {
     ifstream d_file;
     char d_buf[MAX_LINE_LENGTH];
     const char *d_header_p;
-    int d_isValidFile;
+    bool d_isValidFile;
     
     idep_FileDepIter_i(const char *fileName);
 };
@@ -115,12 +115,12 @@ idep_FileDepIter_i::idep_FileDepIter_i(const char *fileName)
 : d_file(fileName)
 , d_header_p(d_buf)             // buffer is not yet initialized
 {
-    d_isValidFile = !!d_file;   // depends on result of initialization
+    d_isValidFile = d_file != NULL;   // depends on result of initialization
 }
 
                 // -*-*-*- idep_FileDepIter -*-*-*-
 
-idep_FileDepIter::idep_FileDepIter(const char *fileName)
+FileDepIterator::FileDepIterator(const char *fileName)
 : d_this(new idep_FileDepIter_i(fileName))
 {
     if (!isValidFile()) {       
@@ -129,12 +129,12 @@ idep_FileDepIter::idep_FileDepIter(const char *fileName)
     ++*this; // load first occurrence
 }
 
-idep_FileDepIter::~idep_FileDepIter()
+FileDepIterator::~FileDepIterator()
 {
     delete d_this;
 }
 
-void idep_FileDepIter::reset() 
+void FileDepIterator::reset() 
 {
     if (isValidFile()) {
         d_this->d_file.seekg(ios::beg); // rewind to beginning of file
@@ -144,7 +144,12 @@ void idep_FileDepIter::reset()
     ++*this; // load first occurrence
 }
 
-void idep_FileDepIter::operator++() 
+bool FileDepIterator::isValidFile() const 
+{ 
+    return d_this->d_isValidFile;
+}
+
+void FileDepIterator::operator++() 
 { 
     d_this->d_header_p = 0;
     while (loadBuf(d_this->d_file, d_this->d_buf, sizeof d_this->d_buf) >= 0) {
@@ -154,18 +159,12 @@ void idep_FileDepIter::operator++()
     };
 }    
 
-int idep_FileDepIter::isValidFile() const 
-{ 
-    return d_this->d_isValidFile;
-}
-
-idep_FileDepIter::operator const void *() const 
+FileDepIterator::operator const void *() const 
 { 
     return d_this->d_header_p ? this : 0;
 }
 
-const char *idep_FileDepIter::operator ()() const 
+const char* FileDepIterator::operator()() const 
 { 
     return d_this->d_header_p;
 }
-
