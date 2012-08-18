@@ -129,7 +129,7 @@ const char *idep_NameIndexMap::operator[](int i) const
     return impl_->d_array[i];
 }
 
-int idep_NameIndexMap::length() const
+int idep_NameIndexMap::Length() const
 {
     return impl_->d_array.Length();
 }
@@ -144,7 +144,7 @@ int idep_NameIndexMap::Lookup(const char* name) const
 std::ostream& operator<<(std::ostream& out, const idep_NameIndexMap& map)
 {
     int fieldWidth = 10;
-    int maxIndex = map.length() - 1;
+    int maxIndex = map.Length() - 1;
     assert (sizeof (long int) >= 4);
     long int x = 1000 * 1000 * 1000;    // requires 4-byte integer.
     while (fieldWidth > 1 && 0 == maxIndex / x) {
@@ -152,7 +152,7 @@ std::ostream& operator<<(std::ostream& out, const idep_NameIndexMap& map)
         x /= 10;
     }
 
-    for (int i = 0; i < map.length(); ++i) {
+    for (int i = 0; i < map.Length(); ++i) {
         out.width(fieldWidth);
         out << i << ". " << map[i] << std::endl;
     }

@@ -30,7 +30,7 @@ class idep_NameIndexMap {
   const char* operator[](int index) const;
 
   // Return the number of unique names in this mapping.
-  int length() const;
+  int Length() const;
 
   // Return the index of the specified name, or -1 if not found.
   int Lookup(const char* name) const;

@@ -56,7 +56,7 @@ class BinaryRelation {
         // Return 0 if and only if the specified relation has the same
         // length and logical values as this relation.
 
-    int length() const;
+    int Length() const;
         // Return number of rows and columns in this relation.  The length
         // represents the cardinality of the set on which this relation is
         // defined.
@@ -119,7 +119,7 @@ inline int BinaryRelation::get(int row, int col) const
     return d_rel_p[row][col];
 }
 
-inline int BinaryRelation::length() const {
+inline int BinaryRelation::Length() const {
     return d_length;
 }
 

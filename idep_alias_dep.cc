@@ -114,20 +114,20 @@ static char *removeSuffix(char *dirPath)
 
 class AliasDepIntArray {   // auxiliary class to manage array memory
     int *d_array_p;
-    int d_length;
+    int length_;
     AliasDepIntArray(const AliasDepIntArray&);
     AliasDepIntArray& operator=(const AliasDepIntArray&);
   public:
     AliasDepIntArray(int length) : // does not zero the memory!
-			d_array_p(new int[length]), d_length(length) {}
+			d_array_p(new int[length]), length_(length) {}
     ~AliasDepIntArray() { delete [] d_array_p; }
     int& operator[](int i) { return d_array_p[i]; }
-    int length() const { return d_length; }
+    int Length() const { return length_; }
 };
 
 static void zero(AliasDepIntArray *a) // non-primitive operation on array
 {
-    for (int i = 0; i < a->length(); ++i) {
+    for (int i = 0; i < a->Length(); ++i) {
         (*a)[i] = 0;
     }
 }
@@ -206,7 +206,7 @@ void AliasDep::inputFileNames()
 
 int AliasDep::unpaired(std::ostream& out, std::ostream& ing, int suffixFlag) const
 {
-    int maxLength = impl_->d_fileNames.length();
+    int maxLength = impl_->d_fileNames.Length();
     AliasDepIntArray hits(maxLength);  // records num files per component
     AliasDepIntArray cmap(maxLength);  // map component to (last) file
     zero(&hits);
@@ -230,12 +230,12 @@ int AliasDep::unpaired(std::ostream& out, std::ostream& ing, int suffixFlag) con
         }
 
         int componentIndex = components.entry(componentName);
-        if (components.length() > numComponents) {      // new component
+        if (components.Length() > numComponents) {      // new component
             ++numComponents;
 
         }
 
-        assert(components.length() == numComponents);
+        assert(components.Length() == numComponents);
 
         ++hits[componentIndex];
         cmap[componentIndex] = i; // overwrite with most recent index
@@ -261,7 +261,7 @@ int AliasDep::unpaired(std::ostream& out, std::ostream& ing, int suffixFlag) con
     // facilitate cut and past when creating an alias file by hand in a
     // text editor.
 
-    int numUnpaired = printNames.length();
+    int numUnpaired = printNames.Length();
     AliasDepIntArray smap(numUnpaired);
     for (int i = 0; i < numUnpaired; ++i) {
         smap[i] = i;                            // identity mapping to start
@@ -295,7 +295,7 @@ int AliasDep::unpaired(std::ostream& out, std::ostream& ing, int suffixFlag) con
         out << printNames[smap[i]] << std::endl;
     }
 
-    return printNames.length();
+    return printNames.Length();
 }
 
 static const char *th(int n)
@@ -308,7 +308,7 @@ int AliasDep::verify(std::ostream& orf) const
     enum { IOERROR = -1, GOOD = 0 } status = GOOD;
     int errorCount = 0; // keep track of the number of readable faulty files
 
-    int length = impl_->d_fileNames.length();
+    int length = impl_->d_fileNames.Length();
     for (int i = 0; i < length; ++i) {
         const char *path = impl_->d_fileNames[i];
         AliasDepString c(path);
@@ -381,7 +381,7 @@ int AliasDep::extract(std::ostream& out, std::ostream& orf) const
     int errorCount = 0; // keep track of number of readable faulty files
 
     idep_NameIndexMap uniqueHeaders;       // used to detect multiple .c files
-    int length = impl_->d_fileNames.length();
+    int length = impl_->d_fileNames.Length();
     AliasDepIntArray hits(length);    // records frequency of headers
     zero(&hits);
     AliasDepIntArray hmap(length);    // index header file index in table
@@ -462,7 +462,7 @@ int AliasDep::extract(std::ostream& out, std::ostream& orf) const
     // For each unique header, if more than one .c file names this header
     // int its first include directive, output a warning to the error stream.
 
-    for (int i = 0; i < uniqueHeaders.length(); ++i) {
+    for (int i = 0; i < uniqueHeaders.Length(); ++i) {
         if (hits[i] > 1) {
             warn(orf) << hits[i] << " files specify \"" << uniqueHeaders[i]
                  << "\" as their first include directive:" << std::endl;

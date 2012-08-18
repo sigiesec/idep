@@ -179,9 +179,9 @@ int idep_LinkDep_i::entry(const char *name, int suffixFlag)
         componentName = buf;
     }
 
-    int length = d_componentNames_p->length();
+    int length = d_componentNames_p->Length();
     int index = d_componentNames_p->entry(componentName);
-    if (d_componentNames_p->length() > length) {
+    if (d_componentNames_p->Length() > length) {
         d_dependencies_p->appendEntry();
     }
 
@@ -334,9 +334,9 @@ int idep_LinkDep_i::calculate(std::ostream& orf, int canonicalFlag, int suffixFl
 
     for (int i = 0; i < d_dependencyFiles.Length(); ++i) {
         const int INSANITY = 1000;
-        if (d_dependencies_p->length() > INSANITY) {
+        if (d_dependencies_p->Length() > INSANITY) {
             orf << "SANITY CHECK: Number of components is currently " 
-               << d_dependencies_p->length() << " !!!!" << endl;
+               << d_dependencies_p->Length() << " !!!!" << endl;
 
         }
         enum { IOERROR = -1 };
@@ -359,8 +359,8 @@ int idep_LinkDep_i::calculate(std::ostream& orf, int canonicalFlag, int suffixFl
 
     // We can now allocate fixed size arrays:
 
-    d_numComponents = d_dependencies_p->length();
-    assert (d_componentNames_p->length() == d_numComponents);
+    d_numComponents = d_dependencies_p->Length();
+    assert (d_componentNames_p->Length() == d_numComponents);
 
     // Create the level array for component name indices.  We will fill in the 
     // level array with the number of components on each level.  
@@ -1123,7 +1123,7 @@ void idep_UnaliasIter::operator++()
  
 idep_UnaliasIter::operator const void *() const
 {
-    return d_this->d_index < d_this->d_array.length() ? this : 0;
+    return d_this->d_index < d_this->d_array.Length() ? this : 0;
 }
  
 const char *idep_UnaliasIter::operator()() const

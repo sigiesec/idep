@@ -133,10 +133,10 @@ static int getDep (int index)
             continue;
         }
 
-        int length = s_files_p->length();
+        int length = s_files_p->Length();
         int otherIndex = s_files_p->entry(dirFile);
 
-        if (s_files_p->length() > length) {
+        if (s_files_p->Length() > length) {
             // first time looking at this file
             s_dependencies_p->appendEntry();
                 
@@ -433,7 +433,7 @@ void idep_HeaderFileIter::operator++()
     do {
         ++d_this->d_index;
     }
-    while (d_this->d_index < rel->length()
+    while (d_this->d_index < rel->Length()
            && !rel->get(d_this->d_iter.d_index, d_this->d_index)
     );
 }
@@ -441,7 +441,7 @@ void idep_HeaderFileIter::operator++()
 idep_HeaderFileIter::operator const void *() const
 {
     idep::BinaryRelation *rel = d_this->d_iter.d_dep.d_dependencies_p;
-    return d_this->d_index < rel->length() ? this : 0;
+    return d_this->d_index < rel->Length() ? this : 0;
 }
 
 const char *idep_HeaderFileIter::operator()() const

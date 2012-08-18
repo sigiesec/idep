@@ -209,7 +209,7 @@ void BinaryRelation::makeNonTransitive()
 {
     warshall(0);
     // make non-reflexive too -- i.e., subtract the identity matrix.
-    for (int i = 0; i < length(); ++i) {
+    for (int i = 0; i < Length(); ++i) {
         d_rel_p[i][i] = 0;
     }
 }
@@ -218,13 +218,13 @@ std::ostream& operator<<(std::ostream& o, const BinaryRelation& rel)
 {
     int r, c;
     const int GAP_GRID = 10;
-    const char *SP = rel.length() < 30 ? " " : "";
-    for (r = 0; r < rel.length(); ++r) {
+    const char *SP = rel.Length() < 30 ? " " : "";
+    for (r = 0; r < rel.Length(); ++r) {
         if (r && 0 == r % GAP_GRID) {
             o << std::endl;
         }
 
-        for (c = 0; c < rel.length(); ++c) {
+        for (c = 0; c < rel.Length(); ++c) {
             if (c && 0 == c % GAP_GRID) { 
                 o << ' ' << SP;
             }
