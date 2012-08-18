@@ -4,7 +4,6 @@
 #include <ostream>
 
 class idep_AliasTableLink;
-class idep_AliasTableIter;
 
 // This leaf component defines 2 classes:
 // Supports efficient (hashed) name to name mapping.
