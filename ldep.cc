@@ -69,7 +69,7 @@ static const char *getArg(int *i, int argc, const char *argv[]) {
            ++*i >= argc || '-' == argv[*i][0] ? "" : argv[*i];
 }
 
-int main (int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     int fileFlag = 0;        // -d<file> sets this to 1
     int longListingFlag = 0; // both -l and -L set this to 1
     int canonicalFlag = 1;   // -L sets this to 0 and -l sets it back to 1
