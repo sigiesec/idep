@@ -1,17 +1,17 @@
 #include "idep_compile_dep.h"
 
+#include <assert.h>
+#include <ctype.h>
+#include <string.h>
+
+#include <fstream>
+#include <iostream>
+
 #include "idep_binary_relation.h"
 #include "idep_file_dep_iterator.h"
 #include "idep_name_array.h"
 #include "idep_name_index_map.h"
-#include "idep_string.h"
 #include "idep_token_iterator.h"
-
-#include <assert.h>
-#include <ctype.h>
-#include <fstream>
-#include <iostream>
-#include <string.h>
 
 static std::ostream& err(std::ostream& orf) {
     return orf << "Error: ";
@@ -76,21 +76,21 @@ template <typename Func> static int loadFromFile(const char *file, idep_CompileD
     return GOOD;
 }
 
-static const char* search(idep_String* s,
+static const char* search(std::string* s,
                           const char* includeDir,
                           const char* file) {
     assert(!IsAbsolutePath(file));
     (*s = includeDir) += file;
-    const char *dirFile = stripDotSlash(*s);
+    const char *dirFile = stripDotSlash((*s).c_str());
     return std::ifstream(dirFile) ? dirFile : 0;
 }
 
-static const char *search(idep_String *s, const idep_NameArray& a, 
-                                                            const char *file)
-{
+static const char* search(std::string* s,
+                          const idep_NameArray& a,
+                          const char* file) {
     if (IsAbsolutePath(file)) {
         *s = file;
-        const char *absFile = *s;
+        const char *absFile = (*s).c_str();
         return std::ifstream(absFile) ? absFile : 0;
     }
 
@@ -122,7 +122,7 @@ static int getDep (int index)
 {
     enum { BAD = -1, GOOD = 0 } status = GOOD;
      
-    idep_String buffer; // string buffer, do not use directly
+    std::string buffer; // string buffer, do not use directly
 
     idep::FileDepIterator it((*s_files_p)[index]);
     for (it; it; ++it) {
@@ -283,7 +283,7 @@ int idep_CompileDep::calculate(std::ostream& orf, int recursionFlag)
     // place all root files at the start of the relation
 
     for (int i = 0; i < d_this->d_rootFiles.length(); ++i) {
-        idep_String s;
+        std::string s;
         const char *file = d_this->d_rootFiles[i];
         const char *dirFile = search(&s, d_this->d_includeDirectories, file);
 
