@@ -188,7 +188,7 @@ const char *AliasDep::addAlias(const char *alias, const char *component)
                                         impl_->d_aliases.lookup(alias) : 0;
 }
 
-int AliasDep::readAliases(ostream& orf, const char *file)
+int AliasDep::readAliases(std::ostream& orf, const char *file)
 {
     return AliasUtil::ReadAliases(&impl_->d_aliases, orf, file);
 }
@@ -211,7 +211,7 @@ void AliasDep::inputFileNames()
     }
 }
 
-int AliasDep::unpaired(ostream& out, ostream& ing, int suffixFlag) const
+int AliasDep::unpaired(std::ostream& out, std::ostream& ing, int suffixFlag) const
 {
     int maxLength = impl_->d_fileNames.length();
     AliasDepIntArray hits(maxLength);  // records num files per component
@@ -310,7 +310,7 @@ static const char *th(int n)
     return 1 == n ? "st" : 2 == n ? "nd" : 3 == n ? "rd" : "th";
 }
 
-int AliasDep::verify(ostream& orf) const
+int AliasDep::verify(std::ostream& orf) const
 {
     enum { IOERROR = -1, GOOD = 0 } status = GOOD;
     int errorCount = 0; // keep track of the number of readable faulty files
@@ -381,7 +381,7 @@ int AliasDep::verify(ostream& orf) const
 }
 
 
-int AliasDep::extract(ostream& out, ostream& orf) const
+int AliasDep::extract(std::ostream& out, std::ostream& orf) const
 {
     enum { IOERROR = -1, GOOD = 0 } status = GOOD;
     enum { INVALID_INDEX = -1 };

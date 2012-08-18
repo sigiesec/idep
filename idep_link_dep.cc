@@ -111,7 +111,7 @@ struct idep_LinkDep_i {
     int entry(const char *name, int suffixFlag);
     void loadDependencies(istream& in, int suffixFlag);
     void createCycleArray();
-    int calculate(ostream& orf, int canonicalFlag, int suffixFlag);
+    int calculate(std::ostream& orf, int canonicalFlag, int suffixFlag);
 };
 
 idep_LinkDep_i::idep_LinkDep_i() 
@@ -302,7 +302,7 @@ void idep_LinkDep_i::createCycleArray()
     }
 }
 
-int idep_LinkDep_i::calculate(ostream& orf, int canonicalFlag, int suffixFlag)
+int idep_LinkDep_i::calculate(std::ostream& orf, int canonicalFlag, int suffixFlag)
 {
     enum { IOERRR = -1 };
 
@@ -698,7 +698,7 @@ const char *idep_LinkDep::addAlias(const char *alias, const char *component)
                                         d_this->d_aliases.lookup(alias) : 0;
 }
 
-int idep_LinkDep::readAliases(ostream& orf, const char *file)
+int idep_LinkDep::readAliases(std::ostream& orf, const char *file)
 {
     return idep::AliasUtil::ReadAliases(&d_this->d_aliases, orf, file);
 }
@@ -745,7 +745,7 @@ int idep_LinkDep::readUnaliasDirectories(const char *file)
     return GOOD;
 }
 
-int idep_LinkDep::calculate(ostream& orf, int canonicalFlag, int suffixFlag)
+int idep_LinkDep::calculate(std::ostream& orf, int canonicalFlag, int suffixFlag)
 {
     return d_this->calculate(orf, canonicalFlag, suffixFlag);
 }
@@ -796,7 +796,7 @@ double idep_LinkDep::nccd() const
         ccd()/ccdBalencedBinaryTree(numLocalComponents()) : 0.0;
 }
  
-void idep_LinkDep::printAliases(ostream& o) const
+void idep_LinkDep::printAliases(std::ostream& o) const
 {
     idep_AliasIter it(*this);
     if (it) {
@@ -818,7 +818,7 @@ void idep_LinkDep::printAliases(ostream& o) const
     }
 }
 
-void idep_LinkDep::printUnaliases(ostream& o) const
+void idep_LinkDep::printUnaliases(std::ostream& o) const
 {
     idep_UnaliasIter it(*this);
     if (it) {
@@ -830,7 +830,7 @@ void idep_LinkDep::printUnaliases(ostream& o) const
     }
 }
 
-void idep_LinkDep::printCycles(ostream& ing) const
+void idep_LinkDep::printCycles(std::ostream& ing) const
 {
     const char *const SPACE = "    ";
     for (idep_CycleIter cit(*this); cit; ++cit) {
@@ -844,7 +844,7 @@ void idep_LinkDep::printCycles(ostream& ing) const
     }
 }
 
-void idep_LinkDep::printLevels(ostream& o, int longFlag, int supressFlag) const
+void idep_LinkDep::printLevels(std::ostream& o, int longFlag, int supressFlag) const
 {
     if (!supressFlag) {
         o << "LEVELS:" << endl;
@@ -949,7 +949,7 @@ inline const char* AppendSIfNecessary(int n) {
 }
     // Helps get singular and plural right.
 
-void idep_LinkDep::printSummary(ostream& o) const
+void idep_LinkDep::printSummary(std::ostream& o) const
 {
     std::_Ios_Fmtflags iostate = o.setf(ios::left, ios::adjustfield);
     const int FIELD_BUFFER_SIZE = 100;   // Not completely arbitrary -- this
