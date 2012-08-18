@@ -34,7 +34,7 @@ class AliasTable {
   AliasTableLink** d_table_p;
 
   // Size of hash table.
-  int d_size;
+  int size_;
 
   DISALLOW_COPY_AND_ASSIGN(AliasTable);
 };

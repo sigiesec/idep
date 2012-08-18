@@ -52,20 +52,16 @@ AliasTableLink::~AliasTableLink()
     delete [] d_originalName_p;
 }
 
-                // -*-*-*- idep_AliasTable -*-*-*-
-
-
-AliasTable::AliasTable(int size) 
-: d_size(size > 0 ? size : DEFAULT_TABLE_SIZE)
-{
-    d_table_p = new AliasTableLink *[d_size];
+AliasTable::AliasTable(int size)
+    : size_(size > 0 ? size : DEFAULT_TABLE_SIZE) {
+    d_table_p = new AliasTableLink *[size_];
     assert (d_table_p);
-    memset (d_table_p, 0, d_size * sizeof *d_table_p);
+    memset (d_table_p, 0, size_ * sizeof *d_table_p);
 };
 
 AliasTable::~AliasTable() 
 {
-    for (int i = 0; i < d_size; ++i) {
+    for (int i = 0; i < size_; ++i) {
         AliasTableLink *p = d_table_p[i];
         while (p) {
             AliasTableLink *q = p;
@@ -80,7 +76,7 @@ int AliasTable::add(const char *alias, const char *originalName)
 {
     enum { FOUND_DIFFERENT = -1, NOT_FOUND = 0, FOUND_IDENTICAL = 1 }; 
 
-    AliasTableLink *&slot = d_table_p[hash(alias) % d_size];
+    AliasTableLink *&slot = d_table_p[hash(alias) % size_];
     AliasTableLink *p = slot;
 
     while (p && 0 != strcmp(p->d_alias_p, alias)) {
@@ -99,7 +95,7 @@ int AliasTable::add(const char *alias, const char *originalName)
 }
 
 const char* AliasTable::Lookup(const char* alias) const {
-    AliasTableLink* p = d_table_p[hash(alias) % d_size];
+    AliasTableLink* p = d_table_p[hash(alias) % size_];
     while (p && 0 != strcmp(p->d_alias_p, alias)) {
         p = p->d_next_p;
     }
@@ -149,7 +145,7 @@ void AliasTableIterator::operator++() {
 }
 
 AliasTableIterator::operator const void *() const {
-    return d_index < d_table.d_size ? this : 0;
+    return d_index < d_table.size_ ? this : 0;
 }
 
 const char* AliasTableIterator::alias() const {
