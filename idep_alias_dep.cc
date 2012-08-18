@@ -153,7 +153,7 @@ class AliasDepString {     // auxiliary class to manage modifiable char *
 
 struct AliasDepImpl {
     idep_NameIndexMap d_ignoreNames;          // e.g., idep_compile_dep_unittest.cc
-    idep_AliasTable d_aliases;                // e.g., my_inta -> my_intarray
+    AliasTable d_aliases;                // e.g., my_inta -> my_intarray
     idep_NameIndexMap d_fileNames;            // files to be analyzed
 };
 

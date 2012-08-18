@@ -55,7 +55,7 @@ idep_AliasTableLink::~idep_AliasTableLink()
                 // -*-*-*- idep_AliasTable -*-*-*-
 
 
-idep_AliasTable::idep_AliasTable(int size) 
+AliasTable::AliasTable(int size) 
 : d_size(size > 0 ? size : DEFAULT_TABLE_SIZE)
 {
     d_table_p = new idep_AliasTableLink *[d_size];
@@ -63,7 +63,7 @@ idep_AliasTable::idep_AliasTable(int size)
     memset (d_table_p, 0, d_size * sizeof *d_table_p);
 };
 
-idep_AliasTable::~idep_AliasTable() 
+AliasTable::~AliasTable() 
 {
     for (int i = 0; i < d_size; ++i) {
         idep_AliasTableLink *p = d_table_p[i];
@@ -76,7 +76,7 @@ idep_AliasTable::~idep_AliasTable()
     delete [] d_table_p;
 }
 
-int idep_AliasTable::add(const char *alias, const char *originalName) 
+int AliasTable::add(const char *alias, const char *originalName) 
 {
     enum { FOUND_DIFFERENT = -1, NOT_FOUND = 0, FOUND_IDENTICAL = 1 }; 
 
@@ -98,7 +98,7 @@ int idep_AliasTable::add(const char *alias, const char *originalName)
     }
 }
 
-const char *idep_AliasTable::lookup(const char *alias) const
+const char* AliasTable::lookup(const char *alias) const
 {
     idep_AliasTableLink *p = d_table_p[hash(alias) % d_size];
     while (p && 0 != strcmp(p->d_alias_p, alias)) {
@@ -107,7 +107,7 @@ const char *idep_AliasTable::lookup(const char *alias) const
     return p ? p->d_originalName_p : 0;
 }
 
-std::ostream& operator<<(std::ostream &o, const idep_AliasTable& table)
+std::ostream& operator<<(std::ostream &o, const AliasTable& table)
 {
     int fieldWidth = 0;
     idep_AliasTableIter it(table);
@@ -124,9 +124,7 @@ std::ostream& operator<<(std::ostream &o, const idep_AliasTable& table)
     return o;
 }
 
-                // -*-*-*- idep_AliasTableIter -*-*-*-
-
-idep_AliasTableIter::idep_AliasTableIter(const idep_AliasTable& t) 
+idep_AliasTableIter::idep_AliasTableIter(const AliasTable& t)
 : d_table(t)
 {
     reset();

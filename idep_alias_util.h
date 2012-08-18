@@ -4,7 +4,7 @@
 #include <ostream>
 #include <istream>
 
-class idep_AliasTable;
+class AliasTable;
 
 namespace idep {
 
@@ -58,11 +58,11 @@ class AliasUtil {
   // that where inconsistent with existing alias definitions.  All such
   // errors are also reported explicitly to the specified output stream
   // (err).
-  static int ReadAliases(idep_AliasTable* table,
+  static int ReadAliases(AliasTable* table,
                          std::ostream& err,
                          std::istream& in,
                          const char* inputName);
-  static int ReadAliases(idep_AliasTable* table,
+  static int ReadAliases(AliasTable* table,
                          std::ostream& err,
                          const char* file);
 };

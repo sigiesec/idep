@@ -7,13 +7,12 @@ class idep_AliasTableLink;
 class idep_AliasTableIter;
 
 // This leaf component defines 2 classes:
-//       idep_AliasTable: supports efficient (hashed) name to name mapping
-//   idep_AliasTableIter: iterate through the collection of name mappings
-class idep_AliasTable {
+// Supports efficient (hashed) name to name mapping.
+class AliasTable {
  public:
   // Create a new table; optionally specify expected number of entries.
-  explicit idep_AliasTable(int sizeHint = 0);
-  ~idep_AliasTable();
+  explicit AliasTable(int size_hint = 0);
+  ~AliasTable();
 
   // Add an alias to the table.  Returns 0 on success, 1 if the
   // identical alias/originalName was already present, -1 if an
@@ -30,22 +29,24 @@ class idep_AliasTable {
 
   // Hash Table.
   idep_AliasTableLink **d_table_p;
+
   // Size of hash table.
   int d_size;
 
   // Disallow copy and assign.
-  idep_AliasTable(const idep_AliasTable&);
-  idep_AliasTable& operator=(const idep_AliasTable&);
+  AliasTable(const AliasTable&);
+  AliasTable& operator=(const AliasTable&);
 };
 
 // Write the entire logical contents of the specified alias table in some
 // reasonable format to the specified output stream.
-std::ostream& operator<<(std::ostream& output, const idep_AliasTable& table);
+std::ostream& operator<<(std::ostream& output, const AliasTable& table);
 
+// Iterate through the collection of name mappings.
 class idep_AliasTableIter {
  public:
   // Create an iterator for the specified table.
-  idep_AliasTableIter(const idep_AliasTable& table);
+  idep_AliasTableIter(const AliasTable& table);
   ~idep_AliasTableIter();
 
   // Reset this iterator to the start of the iteration.
@@ -58,14 +59,14 @@ class idep_AliasTableIter {
   operator const void *() const;
 
   // Return current alias name.
-  const char *alias() const;
+  const char* alias() const;
 
   // Return the (original) name corresponding to current alias name.
-  const char *originalName() const;
+  const char* originalName() const;
 
  private:
   // Reference to const alias table.
-  const idep_AliasTable& d_table;
+  const AliasTable& d_table;
 
   // Pointer to current link in table.
   idep_AliasTableLink *d_link_p;

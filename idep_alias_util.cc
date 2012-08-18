@@ -22,7 +22,7 @@ static std::ostream& err(std::ostream& orf, const char* file, int lineno) {
     return orf << "Error in " << file << '(' << lineno << "): ";
 }
 
-static int tryToAlias(idep_AliasTable* table,
+static int tryToAlias(AliasTable* table,
                       std::ostream& orf,
                       const char* inputName,
                       int lineno,
@@ -40,7 +40,7 @@ static int tryToAlias(idep_AliasTable* table,
 
 namespace idep {
 
-int AliasUtil::ReadAliases(idep_AliasTable* table,
+int AliasUtil::ReadAliases(AliasTable* table,
                            std::ostream& orf,
                            std::istream& in,
                            const char* inputName) {
@@ -193,7 +193,7 @@ int AliasUtil::ReadAliases(idep_AliasTable* table,
 }
 
 
-int AliasUtil::ReadAliases(idep_AliasTable* table,
+int AliasUtil::ReadAliases(AliasTable* table,
                            std::ostream& orf,
                            const char* fileName) {
     enum { IOERROR = -1 };
