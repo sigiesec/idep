@@ -11,7 +11,7 @@
 //    idep_ComponentIter: iterate over components on a given level
 //   idep_DependencyIter: iterate over dependencies for a given component
 
-#include<ostream>
+#include <ostream>
 
 class idep_AliasIter;
 class idep_UnaliasIter;

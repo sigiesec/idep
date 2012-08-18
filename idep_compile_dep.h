@@ -6,7 +6,7 @@
 //     idep_RootFileIter: iterate over the specified root file names
 //   idep_HeaderFileIter: iterate over the dependencies of each root file
 
-#include<ostream>
+#include <ostream>
 
 class idep_RootFileIter;
 class idep_HeaderFileIter;
