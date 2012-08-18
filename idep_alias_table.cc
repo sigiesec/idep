@@ -54,29 +54,29 @@ AliasTableLink::~AliasTableLink()
 
 AliasTable::AliasTable(int size)
     : size_(size > 0 ? size : DEFAULT_TABLE_SIZE) {
-    d_table_p = new AliasTableLink *[size_];
-    assert (d_table_p);
-    memset (d_table_p, 0, size_ * sizeof *d_table_p);
+  table_ = new AliasTableLink *[size_];
+  assert(table_);
+  memset(table_, 0, size_ * sizeof *table_);
 };
 
 AliasTable::~AliasTable() 
 {
     for (int i = 0; i < size_; ++i) {
-        AliasTableLink *p = d_table_p[i];
+        AliasTableLink* p = table_[i];
         while (p) {
             AliasTableLink *q = p;
             p = p->d_next_p;
             delete q;
         }
     }
-    delete [] d_table_p;
+    delete[] table_;
 }
 
 int AliasTable::add(const char *alias, const char *originalName) 
 {
     enum { FOUND_DIFFERENT = -1, NOT_FOUND = 0, FOUND_IDENTICAL = 1 }; 
 
-    AliasTableLink *&slot = d_table_p[hash(alias) % size_];
+    AliasTableLink *&slot = table_[hash(alias) % size_];
     AliasTableLink *p = slot;
 
     while (p && 0 != strcmp(p->d_alias_p, alias)) {
@@ -95,7 +95,7 @@ int AliasTable::add(const char *alias, const char *originalName)
 }
 
 const char* AliasTable::Lookup(const char* alias) const {
-    AliasTableLink* p = d_table_p[hash(alias) % size_];
+    AliasTableLink* p = table_[hash(alias) % size_];
     while (p && 0 != strcmp(p->d_alias_p, alias)) {
         p = p->d_next_p;
     }
@@ -119,8 +119,8 @@ std::ostream& operator<<(std::ostream &o, const AliasTable& table) {
 }
 
 AliasTableIterator::AliasTableIterator(const AliasTable& t)
-    : d_table(t) {
-    reset();
+    : table_(t) {
+  reset();
 }
 
 AliasTableIterator::~AliasTableIterator() {
@@ -139,13 +139,13 @@ void AliasTableIterator::operator++() {
     while (!d_link_p && *this) {
         ++d_index;
         if (*this) {
-            d_link_p = d_table.d_table_p[d_index];
+            d_link_p = table_.table_[d_index];
         }
     }
 }
 
 AliasTableIterator::operator const void *() const {
-    return d_index < d_table.size_ ? this : 0;
+    return d_index < table_.size_ ? this : 0;
 }
 
 const char* AliasTableIterator::alias() const {

@@ -31,7 +31,7 @@ class AliasTable {
   friend class AliasTableIterator;
 
   // Hash Table.
-  AliasTableLink** d_table_p;
+  AliasTableLink** table_;
 
   // Size of hash table.
   int size_;
@@ -67,7 +67,7 @@ class AliasTableIterator {
 
  private:
   // Reference to const alias table.
-  const AliasTable& d_table;
+  const AliasTable& table_;
 
   // Pointer to current link in table.
   AliasTableLink* d_link_p;
