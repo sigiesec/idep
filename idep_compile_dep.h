@@ -1,5 +1,5 @@
-#ifndef IDEP_COMPILEDEP_H_
-#define IDEP_COMPILEDEP_H_
+#ifndef IDEP_COMPILE_DEP_H_
+#define IDEP_COMPILE_DEP_H_
 
 // This wrapper component defines 3 fully insulated classes:
 //       idep_CompileDep: environment for analyzing compile-time dependencies
@@ -7,8 +7,6 @@
 //   idep_HeaderFileIter: iterate over the dependencies of each root file
 
 #include<ostream>
-
-using namespace std;
 
 class idep_RootFileIter;
 class idep_HeaderFileIter;
@@ -60,7 +58,7 @@ class idep_CompileDep {
         // from <stdin>, which is reset on eof.  No check is done for
         // non-ascii characters.
 
-    int calculate(ostream& err, int recursionFlag = 1);
+    int calculate(std::ostream& err, int recursionFlag = 1);
         // Calculate compile-time dependencies among the specified set of
         // rootfiles.  Return 0 on success, non-zero on error.  Errors will
         // be printed to the indicated output stream (err).  By default,
@@ -72,7 +70,7 @@ class idep_CompileDep {
         // provides an incomplete list of compile-time dependencies.
 };
 
-ostream &operator<<(ostream& o, const idep_CompileDep&);
+std::ostream& operator<<(std::ostream& o, const idep_CompileDep&);
     // output dependencies in standard format:
     //    A series of files is emitted one per line, with a blank line
     //    denoting the end of each series.  The first file in each series is
@@ -126,4 +124,4 @@ class idep_HeaderFileIter {
         // file depends (either directly or indirectly) at compile time.
 };
 
-#endif  // IDEP_COMPILEDEP_H_
+#endif  // IDEP_COMPILE_DEP_H_
