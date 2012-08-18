@@ -8,20 +8,6 @@ namespace idep {
 // This leaf component defines 1 class:
 // Square matrix of bits with transitive closure capability.
 class BinaryRelation {
-    char **d_rel_p;     // array of pointers into a contiguous byte array
-    int d_size;         // physical size of array
-    int d_length;       // logical size of array
-
-  private:
-    void grow();
-      // Increase the physical size of this relation.
-
-    void compress();
-      // Make the physical size same as Logical size (unless that is 0).
-
-    void warshall(int bit);
-      // Perform Warshall's algorithm either forward or backward. 
-
   public:
     // CREATORS
     BinaryRelation(int initialEntries = 0, int max_entries_hint = 0);
@@ -74,6 +60,20 @@ class BinaryRelation {
         // Return number of rows and columns in this relation.  The length
         // represents the cardinality of the set on which this relation is
         // defined.
+
+  private:
+    void grow();
+      // Increase the physical size of this relation.
+
+    void compress();
+      // Make the physical size same as Logical size (unless that is 0).
+
+    void warshall(int bit);
+      // Perform Warshall's algorithm either forward or backward. 
+
+    char **d_rel_p;     // array of pointers into a contiguous byte array
+    int d_size;         // physical size of array
+    int d_length;       // logical size of array
 };
 
 std::ostream& operator<<(std::ostream& out, const BinaryRelation& rel);
@@ -91,8 +91,7 @@ int operator!=(const BinaryRelation& left, const BinaryRelation& right);
 // The following consists of inline function definitions for this component. 
 // #########################################################################
 
-inline
-int BinaryRelation::appendEntry() 
+inline int BinaryRelation::appendEntry() 
 {
     if (d_length >= d_size) {
         grow();
@@ -100,26 +99,22 @@ int BinaryRelation::appendEntry()
     return d_length++;
 }
 
-inline
-void BinaryRelation::set(int row, int col, int bit) 
+inline void BinaryRelation::set(int row, int col, int bit) 
 {
     d_rel_p[row][col] = !!bit;
 }
 
-inline
-void BinaryRelation::set(int row, int col) 
+inline void BinaryRelation::set(int row, int col) 
 {
     d_rel_p[row][col] = 1;
 }
 
-inline
-void BinaryRelation::clr(int row, int col) 
+inline void BinaryRelation::clr(int row, int col) 
 {
     d_rel_p[row][col] = 0;
 }
 
-inline
-int BinaryRelation::get(int row, int col) const
+inline int BinaryRelation::get(int row, int col) const
 {
     return d_rel_p[row][col];
 }
