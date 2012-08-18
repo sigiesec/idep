@@ -31,7 +31,7 @@ NameArray::~NameArray() {
   delete [] d_array_p;
 }
 
-int NameArray::append(const char* name) {
+int NameArray::Append(const char* name) {
   if (d_length >= d_size) {
     int oldSize = d_size;
     d_size *= GROW_FACTOR;
@@ -50,13 +50,13 @@ const char* NameArray::operator[](int i) const {
   return i < d_length && i >= 0 ? d_array_p[i] : 0;
 }
 
-int NameArray::length() const {
+int NameArray::Length() const {
   return d_length;
 }
 
 std::ostream& operator<<(std::ostream& out, const NameArray& array) {
   int fieldWidth = 10;
-  int maxIndex = array.length() - 1;
+  int maxIndex = array.Length() - 1;
   assert (sizeof (long int) >= 4);
   long int x = 1000 * 1000 * 1000;    // requires 4-byte integer.
   while (fieldWidth > 1 && 0 == maxIndex / x) {
@@ -64,7 +64,7 @@ std::ostream& operator<<(std::ostream& out, const NameArray& array) {
     x /= 10;
   }
 
-  for (int i = 0; i < array.length(); ++i) {
+  for (int i = 0; i < array.Length(); ++i) {
     out.width(fieldWidth);
     out << i << ". " << array[i] << std::endl;
   }

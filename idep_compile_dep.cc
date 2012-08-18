@@ -94,15 +94,14 @@ static const char* search(std::string* s,
         return std::ifstream(absFile) ? absFile : 0;
     }
 
-    const char *dirFile = 0;
-    for (int i = 0; i < a.length(); ++i) {
-        dirFile = search(s, a[i], file);
-        if (dirFile) {
+    const char* dir_file = 0;
+    for (int i = 0; i < a.Length(); ++i) {
+        dir_file = search(s, a[i], file);
+        if (dir_file)
             break;
-        }
     }
 
-    return dirFile;
+    return dir_file;
 }
 
                 // -*-*-*- static recursive functions -*-*-*-
@@ -224,14 +223,14 @@ void idep_CompileDep::addIncludeDirectory(const char *dirName)
     if (*dirName) {
         int len = strlen(dirName);
         if ('/' == dirName[len-1]) {            // already ends in '/'
-            d_this->d_includeDirectories.append(dirName);               
+            d_this->d_includeDirectories.Append(dirName);
         }
         else {                                  // add trailing '/'
             char *buf = new char[len+2];
             memcpy(buf, dirName, len);
             buf[len] = '/';
             buf[len+1] = '\0';
-            d_this->d_includeDirectories.append(buf);           
+            d_this->d_includeDirectories.Append(buf);
             delete [] buf;
         }
     }
@@ -245,7 +244,7 @@ int idep_CompileDep::readIncludeDirectories(const char *file)
 
 void idep_CompileDep::addRootFile(const char *fileName)
 {
-    d_this->d_rootFiles.append(fileName);               
+    d_this->d_rootFiles.Append(fileName);
 }
 
 int idep_CompileDep::readRootFiles(const char *file)
@@ -282,7 +281,7 @@ int idep_CompileDep::calculate(std::ostream& orf, int recursionFlag)
 
     // place all root files at the start of the relation
 
-    for (int i = 0; i < d_this->d_rootFiles.length(); ++i) {
+    for (int i = 0; i < d_this->d_rootFiles.Length(); ++i) {
         std::string s;
         const char *file = d_this->d_rootFiles[i];
         const char *dirFile = search(&s, d_this->d_includeDirectories, file);
@@ -341,12 +340,12 @@ std::ostream& operator<<(std::ostream& o, const idep_CompileDep&(dep))
         o << rit() << std::endl;
         for (idep_HeaderFileIter hit(rit); hit; ++hit) {
             if (IsAbsolutePath(hit())) {
-                a.append(hit());
+                a.Append(hit());
             } else {
                 o << INDENT << hit() << std::endl;
             }
         }
-        for (int i = 0; i < a.length(); ++i) {
+        for (int i = 0; i < a.Length(); ++i) {
            o << INDENT << a[i] << std::endl;
         }
         o << std::endl;

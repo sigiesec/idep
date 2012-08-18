@@ -21,7 +21,7 @@ class NameArray {
   // Append a copy of the specified string to the end of the array.
   // The value of the new index is returned.  No attempt is made to
   // check for repeated string values.
-  int append(const char* new_name);
+  int Append(const char* new_name);
 
   // Return a pointer to the specified string.  Strings are stored at
   // at consecutive non-negative index locations beginning with 0 up
@@ -30,7 +30,7 @@ class NameArray {
   const char* operator[](int index) const;
 
   // Return the number of names currently stored in this array.
-  int length() const;
+  int Length() const;
 
  private:
   char** d_array_p;   // Array of dynamically allocated character strings.

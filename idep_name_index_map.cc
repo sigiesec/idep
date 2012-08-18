@@ -94,7 +94,7 @@ idep_NameIndexMapLink *& idep_NameIndexMap_i::findSlot(const char *name)
 
 int idep_NameIndexMap_i::insert(idep_NameIndexMapLink *& slot, const char *nm)
 {
-    int index = d_array.append(nm); // index is into a managed string array
+    int index = d_array.Append(nm); // index is into a managed string array
     slot = new idep_NameIndexMapLink(d_array[index], index, slot);
     return index;
 }
@@ -131,7 +131,7 @@ const char *idep_NameIndexMap::operator[](int i) const
 
 int idep_NameIndexMap::length() const
 {
-    return d_this->d_array.length();
+    return d_this->d_array.Length();
 }
 
 int idep_NameIndexMap::lookup(const char *name) const

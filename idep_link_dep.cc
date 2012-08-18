@@ -332,7 +332,7 @@ int idep_LinkDep_i::calculate(ostream& orf, int canonicalFlag, int suffixFlag)
     // Now try to read dependencies from specified set of files.
     // If an I/O error occurs, abort; otherwise keep on processing.
 
-    for (int i = 0; i < d_dependencyFiles.length(); ++i) {
+    for (int i = 0; i < d_dependencyFiles.Length(); ++i) {
         const int INSANITY = 1000;
         if (d_dependencies_p->length() > INSANITY) {
             orf << "SANITY CHECK: Number of components is currently " 
@@ -689,7 +689,7 @@ idep_LinkDep::~idep_LinkDep()
 
 void idep_LinkDep::addDependencyFile(const char *fileName)
 {
-    d_this->d_dependencyFiles.append(fileName);
+    d_this->d_dependencyFiles.Append(fileName);
 }
 
 const char *idep_LinkDep::addAlias(const char *alias, const char *component)
