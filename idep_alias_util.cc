@@ -1,12 +1,12 @@
 #include "idep_alias_util.h"
 
-#include "idep_alias_table.h"
-#include "idep_string.h"
-#include "idep_token_iterator.h"
+#include <assert.h>
 
 #include <fstream>   // ifstream
 #include <iostream>
-#include <assert.h>
+
+#include "idep_alias_table.h"
+#include "idep_token_iterator.h"
 
 static std::ostream& warning(std::ostream& orf, const char *file, int lineno)
 {
@@ -108,8 +108,8 @@ int AliasUtil::readAliases(idep_AliasTable* table,
     int numBadAliases = 0;
     int lineno = 1;
 
-    idep_String componentName = EMPTY_NAME;
-    idep_String lastToken = EMPTY_NAME;
+    std::string componentName(EMPTY_NAME);
+    std::string lastToken(EMPTY_NAME);
     Input lastInput = IDENT;
 
     for (idep::TokenIterator it(in); it; ++it) {
@@ -149,25 +149,25 @@ int AliasUtil::readAliases(idep_AliasTable* table,
           case BEG_PRE_CUR: {
             componentName = lastToken;
             numBadAliases += tryToAlias(table, orf, inputName, lineno,
-                                                        componentName, it());
+                                                        componentName.c_str(), it());
             warning(orf, inputName, lineno) << '"' << lastToken 
                 << "\" << used as component name." << std::endl;
           } break;
           case TRY_CUR: {
             numBadAliases += tryToAlias(table, orf, inputName, lineno,
-                                                        componentName, it());
+                                                        componentName.c_str(), it());
           } break;
           case TRY_PRE: {
             numBadAliases += tryToAlias(table, orf, inputName, lineno,
-                                                   componentName, lastToken);
-            warning(orf, inputName, lineno) << '"' << lastToken 
+                                                   componentName.c_str(), lastToken.c_str());
+            warning(orf, inputName, lineno) << '"' << lastToken
                 << "\" << used as alias name." << std::endl;
           } break;
           case TRY_PRE_CUR: {
             numBadAliases += tryToAlias(table, orf, inputName, lineno,
-                                                   componentName, lastToken);
+                                                   componentName.c_str(), lastToken.c_str());
             numBadAliases += tryToAlias(table, orf, inputName, lineno,
-                                                        componentName, it());
+                                                        componentName.c_str(), it());
             warning(orf, inputName, lineno) << '"' << lastToken 
                 << "\" << used as alias name." << std::endl;
           } break;
