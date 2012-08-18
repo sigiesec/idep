@@ -19,39 +19,39 @@ static char* newStrCpy(const char* oldStr) {
 namespace idep {
 
 NameArray::NameArray(int max_entries_hint)
-    : d_size(max_entries_hint> 0 ? max_entries_hint: START_SIZE),
-      d_length(0) {
-  d_array_p = new char *[d_size];
+    : size_(max_entries_hint> 0 ? max_entries_hint: START_SIZE),
+      length_(0) {
+  array_ = new char *[size_];
 }
 
 NameArray::~NameArray() {
-  for (int i = 0; i < d_length; ++i)
-    delete [] d_array_p[i];
+  for (int i = 0; i < length_; ++i)
+    delete [] array_[i];
 
-  delete [] d_array_p;
+  delete [] array_;
 }
 
 int NameArray::Append(const char* name) {
-  if (d_length >= d_size) {
-    int oldSize = d_size;
-    d_size *= GROW_FACTOR;
-    char **tmp = d_array_p;
-    d_array_p = new char *[d_size];
-    assert (d_array_p);
-    memcpy (d_array_p, tmp, oldSize * sizeof *d_array_p);
+  if (length_ >= size_) {
+    int oldSize = size_;
+    size_ *= GROW_FACTOR;
+    char **tmp = array_;
+    array_ = new char *[size_];
+    assert (array_);
+    memcpy (array_, tmp, oldSize * sizeof *array_);
     delete [] tmp;
   }
-  assert(d_length < d_size);
-  d_array_p[d_length++] = newStrCpy(name);
-  return d_length - 1;
+  assert(length_ < size_);
+  array_[length_++] = newStrCpy(name);
+  return length_ - 1;
 }
 
 const char* NameArray::operator[](int i) const {
-  return i < d_length && i >= 0 ? d_array_p[i] : 0;
+  return i < length_ && i >= 0 ? array_[i] : 0;
 }
 
 int NameArray::Length() const {
-  return d_length;
+  return length_;
 }
 
 std::ostream& operator<<(std::ostream& out, const NameArray& array) {

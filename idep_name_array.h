@@ -33,9 +33,14 @@ class NameArray {
   int Length() const;
 
  private:
-  char** d_array_p;   // Array of dynamically allocated character strings.
-  int d_size;         // Physical size of array.
-  int d_length;       // Logical size of array.
+  // Array of dynamically allocated character strings.
+  char** array_;
+
+  // Physical size of array.
+  int size_;
+
+  // Logical size of array.
+  int length_;
 
   // Disallow copy and assign.
   NameArray(const NameArray&);
