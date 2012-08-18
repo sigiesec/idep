@@ -46,15 +46,15 @@ static const idep_NameIndexMapLink *find(const idep_NameIndexMapLink *p,
     return p;
 }
 
-struct idep_NameIndexMap_i {
+struct NameIndexMapImpl {
     idep::NameArray d_array;                     // array of names
     idep_NameIndexMapLink **d_table_p;          // hash table of names
     int d_tableSize;                            // size of hash table
 
-    idep_NameIndexMap_i(int size);
+    NameIndexMapImpl(int size);
         // create a map representation assuming the specified (max) size
 
-    ~idep_NameIndexMap_i();
+    ~NameIndexMapImpl();
 
     idep_NameIndexMapLink *& findSlot(const char *name);
         // find the appropriate slot for this name
@@ -63,7 +63,7 @@ struct idep_NameIndexMap_i {
         // insert name into specified slot
 };
 
-idep_NameIndexMap_i::idep_NameIndexMap_i(int size)
+NameIndexMapImpl::NameIndexMapImpl(int size)
 : d_array(size)
 , d_tableSize(size > 0 ? size : DEFAULT_TABLE_SIZE)
 {
@@ -72,7 +72,7 @@ idep_NameIndexMap_i::idep_NameIndexMap_i(int size)
     memset(d_table_p, 0, d_tableSize * sizeof *d_table_p);
 }
 
-idep_NameIndexMap_i::~idep_NameIndexMap_i()
+NameIndexMapImpl::~NameIndexMapImpl()
 {
     for (int i = 0; i < d_tableSize; ++i) {
         idep_NameIndexMapLink *p = d_table_p[i];
@@ -85,14 +85,14 @@ idep_NameIndexMap_i::~idep_NameIndexMap_i()
     delete [] d_table_p;
 }
 
-idep_NameIndexMapLink *& idep_NameIndexMap_i::findSlot(const char *name)
+idep_NameIndexMapLink *& NameIndexMapImpl::findSlot(const char *name)
 {
     int index = hash(name) % d_tableSize;
     assert(index >= 0 && index < d_tableSize);
     return d_table_p[index];
 }
 
-int idep_NameIndexMap_i::insert(idep_NameIndexMapLink *& slot, const char *nm)
+int NameIndexMapImpl::insert(idep_NameIndexMapLink *& slot, const char *nm)
 {
     int index = d_array.Append(nm); // index is into a managed string array
     slot = new idep_NameIndexMapLink(d_array[index], index, slot);
@@ -102,7 +102,7 @@ int idep_NameIndexMap_i::insert(idep_NameIndexMapLink *& slot, const char *nm)
                 // -*-*-*- idep_NameIndexMap -*-*-*-
 
 idep_NameIndexMap::idep_NameIndexMap(int maxEntriesHint)
-: d_this(new idep_NameIndexMap_i(maxEntriesHint))
+: d_this(new NameIndexMapImpl(maxEntriesHint))
 {
 }
 

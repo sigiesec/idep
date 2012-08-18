@@ -3,7 +3,7 @@
 
 #include <ostream>
 
-class idep_NameIndexMap_i;
+class NameIndexMapImpl;
 
 // This component defines 1 fully insulated class:
 // Efficient two-way mapping between strings and indices.
@@ -34,7 +34,7 @@ class idep_NameIndexMap {
   int lookup(const char* name) const;
 
  private:
-  idep_NameIndexMap_i *d_this;
+  NameIndexMapImpl *d_this;
 
   // Disallow copy and assign.
   idep_NameIndexMap(const idep_NameIndexMap&);
