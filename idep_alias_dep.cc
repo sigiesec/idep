@@ -75,7 +75,7 @@ typedef void (AliasDep::*Func)(const char *);
 static void loadFromStream(std::istream& in, AliasDep *dep, Func add)
 {
     assert(in);
-    for (idep::TokenIterator it(in); it; ++it) {
+    for (TokenIterator it(in); it; ++it) {
         if ('#' == *it()) {                     // strip comment if any
              while (it && '\n' != *it()) {
                 ++it;
@@ -190,7 +190,7 @@ const char *AliasDep::addAlias(const char *alias, const char *component)
 
 int AliasDep::readAliases(ostream& orf, const char *file)
 {
-    return idep::AliasUtil::ReadAliases(&impl_->d_aliases, orf, file);
+    return AliasUtil::ReadAliases(&impl_->d_aliases, orf, file);
 }
 
 void AliasDep::addFileName(const char *fileName)
@@ -337,7 +337,7 @@ int AliasDep::verify(ostream& orf) const
 
         int directiveIndex = 0;
 
-	idep::FileDepIterator it(path);
+	FileDepIterator it(path);
 
         for (it; it; ++it) {
 
@@ -411,7 +411,7 @@ int AliasDep::extract(ostream& out, ostream& orf) const
         const char *compAlias = impl_->d_aliases.lookup(actualComponent);
         const char *component = compAlias ? compAlias : actualComponent;
 
-        idep::FileDepIterator it(path);      // hook up with first dependency.
+        FileDepIterator it(path);      // hook up with first dependency.
 
         if (!it.IsValidFile()) {        // unable to read file
             err(orf) << "unable to open file \""
