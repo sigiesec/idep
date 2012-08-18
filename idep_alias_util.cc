@@ -14,20 +14,20 @@ const char kCommentChar= '#';
 const char kContinueChar= '\\';
 const char kNewLineChar= '\n';
 
-static std::ostream& warning(std::ostream& orf, const char *file, int lineno)
-{
+static std::ostream& warning(std::ostream& orf, const char* file, int lineno) {
     return orf << "Warning in " << file << '(' << lineno << "): ";
 }
- 
-static std::ostream& err(std::ostream& orf, const char *file, int lineno)
-{
+
+static std::ostream& err(std::ostream& orf, const char* file, int lineno) {
     return orf << "Error in " << file << '(' << lineno << "): ";
 }
 
-static int tryToAlias(idep_AliasTable *table, std::ostream& orf,
-                      const char *inputName, int lineno,
-                      const char *componentName, const char *alias)
-{
+static int tryToAlias(idep_AliasTable* table,
+                      std::ostream& orf,
+                      const char* inputName,
+                      int lineno,
+                      const char* componentName,
+                      const char* alias) {
     if (table->add(alias, componentName) < 0) {
         const char *previousName = table->lookup(alias);
         err(orf, inputName, lineno) << "two names for alias \"" 
@@ -112,7 +112,7 @@ int AliasUtil::readAliases(idep_AliasTable* table,
     std::string lastToken(kEmptyName);
     Input lastInput = IDENT;
 
-    for (idep::TokenIterator it(in); it; ++it) {
+    for (TokenIterator it(in); it; ++it) {
         if (*it() == kCommentChar) {
             while (*it() != kNewLineChar) {
                 ++it;                   // ignore all tokens until newline
