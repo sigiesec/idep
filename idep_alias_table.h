@@ -3,7 +3,7 @@
 
 #include <ostream>
 
-class idep_AliasTableLink;
+class AliasTableLink;
 
 // This leaf component defines 2 classes:
 // Supports efficient (hashed) name to name mapping.
@@ -27,7 +27,7 @@ class AliasTable {
   friend class AliasTableIterator;
 
   // Hash Table.
-  idep_AliasTableLink **d_table_p;
+  AliasTableLink** d_table_p;
 
   // Size of hash table.
   int d_size;
@@ -68,7 +68,7 @@ class AliasTableIterator {
   const AliasTable& d_table;
 
   // Pointer to current link in table.
-  idep_AliasTableLink *d_link_p;
+  AliasTableLink* d_link_p;
 
   // Index of current slot.
   int d_index;
