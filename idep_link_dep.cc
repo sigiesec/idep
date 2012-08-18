@@ -945,7 +945,9 @@ void idep_LinkDep::printLevels(ostream& o, int longFlag, int supressFlag) const
     }
 }
 
-inline const char *s(int n) { return (n == 1) ? "" : "s"; }
+inline const char* AppendSIfNecessary(int n) {
+  return (n == 1) ? "" : "s";
+}
     // Helps get singular and plural right.
 
 void idep_LinkDep::printSummary(ostream& o) const
@@ -961,16 +963,17 @@ void idep_LinkDep::printSummary(ostream& o) const
 
     if (numCycles() > 0) {
         {
-            ostringstream f(string(field, sizeof field));
+            std::ostringstream f(string(field, sizeof field));
             f.width(N);
-            f << numCycles() << " Cycle" << s(numCycles()) << ends;
+            f << numCycles() << " Cycle"
+              << AppendSIfNecessary(numCycles()) << ends;
             o.width(W);
             o << field;
         }
         o.width(G);
         o << "";
         {
-            ostringstream f(string(field, sizeof field));
+            std::ostringstream f(string(field, sizeof field));
             f.width(N);
             f << numMembers() << " Members" << ends;
             o.width(W);
@@ -982,32 +985,34 @@ void idep_LinkDep::printSummary(ostream& o) const
         printf("%d\n", numLocalComponents());
         ostringstream f(string(field, sizeof field));
         f.width(N);
-        f << numLocalComponents() << " Component" 
-                                  << s(numLocalComponents()) << ends;
+        f << numLocalComponents() << " Component"
+          << AppendSIfNecessary(numLocalComponents()) << ends;
         o.width(W);
         o << field;
     }
     o.width(G);
     o << "";
-    { 
+    {
         ostringstream f(string(field, sizeof field));
         f.width(N);
-        f << numLevels() << " Level" << s(numLevels()) << ends;
+        f << numLevels() << " Level"
+          << AppendSIfNecessary(numLevels()) << ends;
         o.width(W);
         o << field;
     }
     o.width(G);
     o << "";
-    { 
+    {
         ostringstream f(string(field, sizeof field));
         f.width(N);
-        f << numPackages() << " Package" << s(numPackages()) << ends;
+        f << numPackages() << " Package"
+          << AppendSIfNecessary(numPackages()) << ends;
         o.width(W);
         o << field;
     }
-    o << endl;
-    { 
-        ostringstream f(string(field, sizeof field));
+    o << std::endl;
+    {
+        std::ostringstream f(string(field, sizeof field));
         f.width(N);
         f << ccd() << " CCD" << ends;
         o.width(W);
@@ -1015,8 +1020,8 @@ void idep_LinkDep::printSummary(ostream& o) const
     }
     o.width(G);
     o << "";
-    { 
-        ostringstream f(string(field, sizeof field));
+    {
+        std::ostringstream f(string(field, sizeof field));
         f.width(N);
         f << acd() << " ACD" << ends;
         o.width(W);
