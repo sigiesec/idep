@@ -8,8 +8,8 @@
 
 enum { START_SIZE = 1, GROW_FACTOR = 2 };
 
-const char NEWLINE_CHAR = '\n';
-const char NULL_CHAR = '\0';
+const char kNewLineChar = '\n';
+const char kNullChar= '\0';
 
 namespace idep {
 
@@ -76,14 +76,14 @@ void TokenIterator::operator++() {
 
     if (impl_->newline_flag_) {                   // left over newline
         impl_->newline_flag_ = 0;
-        impl_->AddChar(NEWLINE_CHAR);
+        impl_->AddChar(kNewLineChar);
     }
     else {
         char c;
         while (impl_->in_ && !impl_->in_.get(c).eof()) {
             if (impl_->length_ > 0) {            // "word" in progress
                 if (isspace(c)) {
-                    if (NEWLINE_CHAR == c) {
+                    if (kNewLineChar == c) {
                         impl_->newline_flag_ = 1; // note newline for later
                     }
                     break;                         // end of "word" in any case
@@ -92,8 +92,8 @@ void TokenIterator::operator++() {
             }
             else {                                 // nothing found yet
                 if (isspace(c)) {
-                    if (NEWLINE_CHAR == c) {
-                        impl_->AddChar(NEWLINE_CHAR);
+                    if (kNewLineChar== c) {
+                        impl_->AddChar(kNewLineChar);
                         break;                     // found a newline
                     }
                     continue;                      // found an ordinary space
@@ -104,7 +104,7 @@ void TokenIterator::operator++() {
     }
 
     if (impl_->length_ > 0)
-        impl_->AddChar(NULL_CHAR);                // always append a null char
+        impl_->AddChar(kNullChar);               // always append a null char
     else
         impl_->length_ = -1;                     // or make iterator invalid
 }
