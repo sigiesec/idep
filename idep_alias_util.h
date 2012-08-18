@@ -1,5 +1,5 @@
-#ifndef IDEP_ALIASUTIL_H_
-#define IDEP_ALIASUTIL_H_
+#ifndef IDEP_ALIAS_UTIL_H_
+#define IDEP_ALIAS_UTIL_H_
 
 #include <ostream>
 #include <istream>
@@ -69,4 +69,4 @@ class AliasUtil {
 
 }  // namespace idep
 
-#endif  // IDEP_ALIASUTIL_H_
+#endif  // IDEP_ALIAS_UTIL_H_

@@ -1,5 +1,5 @@
-#ifndef IDEP_BINREL_H_
-#define IDEP_BINREL_H_
+#ifndef IDEP_BINARY_RELATION_H_
+#define IDEP_BINARY_RELATION_H_
 
 // This leaf component defines 1 class:
 //   idep_BinRel: Square matrix of bits with transitive closure capability.
@@ -134,4 +134,4 @@ inline int operator!=(const idep_BinRel& left, const idep_BinRel& right) {
     return left.cmp(right) != 0;
 }
 
-#endif  // IDEP_BINREL_H_
+#endif  // IDEP_BINARY_RELATION_H_
