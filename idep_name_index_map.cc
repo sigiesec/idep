@@ -2,10 +2,11 @@
 
 #include "idep_name_array.h"
 
-#include <string.h>     // strcmp()
-#include <memory.h>     // memcpy() memset()
-#include <iostream>
 #include <assert.h>
+#include <memory.h>     // memcpy() memset()
+#include <string.h>     // strcmp()
+
+#include <iostream>
 
 enum { DEFAULT_TABLE_SIZE = 521 };
 enum { BAD_INDEX = -1 };
@@ -50,12 +51,12 @@ struct idep_NameIndexMap_i {
     idep_NameIndexMapLink **d_table_p;          // hash table of names
     int d_tableSize;                            // size of hash table
 
-    idep_NameIndexMap_i(int size); 
+    idep_NameIndexMap_i(int size);
         // create a map representation assuming the specified (max) size
 
-    ~idep_NameIndexMap_i(); 
+    ~idep_NameIndexMap_i();
 
-    idep_NameIndexMapLink *& findSlot(const char *name); 
+    idep_NameIndexMapLink *& findSlot(const char *name);
         // find the appropriate slot for this name
 
     int insert(idep_NameIndexMapLink *& slot, const char *name);
@@ -65,14 +66,14 @@ struct idep_NameIndexMap_i {
 idep_NameIndexMap_i::idep_NameIndexMap_i(int size)
 : d_array(size)
 , d_tableSize(size > 0 ? size : DEFAULT_TABLE_SIZE)
-{ 
+{
     d_table_p = new idep_NameIndexMapLink *[d_tableSize];
     assert(d_table_p);
     memset(d_table_p, 0, d_tableSize * sizeof *d_table_p);
 }
 
 idep_NameIndexMap_i::~idep_NameIndexMap_i()
-{ 
+{
     for (int i = 0; i < d_tableSize; ++i) {
         idep_NameIndexMapLink *p = d_table_p[i];
         while (p) {
@@ -103,12 +104,12 @@ int idep_NameIndexMap_i::insert(idep_NameIndexMapLink *& slot, const char *nm)
 idep_NameIndexMap::idep_NameIndexMap(int maxEntriesHint)
 : d_this(new idep_NameIndexMap_i(maxEntriesHint))
 {
-} 
+}
 
 idep_NameIndexMap::~idep_NameIndexMap()
 {
     delete d_this;
-}                                     
+}
 
 int idep_NameIndexMap::add(const char* name)
 {
