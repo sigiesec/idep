@@ -19,40 +19,38 @@
 
 using namespace std;
 
-static ostream& warn(ostream& ing, int index) {
-    return ing << "Warning<" << index << ">: "; // '<' and '>' match cycle
+static std::ostream& warn(std::ostream& ing, int index) {
+  return ing << "Warning<" << index << ">: "; // '<' and '>' match cycle
 }
 
-static ostream& err(ostream& orf) {
-    return orf << "Error: ";
+static std::ostream& err(std::ostream& orf) {
+  return orf << "Error: ";
 }
 
-static const char *stripDotSlash(const char *originalPath) {
-    if (originalPath) {
-        while ('.' == originalPath[0] && '/' == originalPath[1]) {
-            originalPath += 2;
-        }
-    }
-    return originalPath;
+static const char* stripDotSlash(const char* originalPath) {
+  if (originalPath) {
+     while ('.' == originalPath[0] && '/' == originalPath[1])
+       originalPath += 2;
+  }
+  return originalPath;
 }
 
-static int isLocal(const char *dirFile) {
-    return !strchr(dirFile, '/');
+static int isLocal(const char* dirFile) {
+  return !strchr(dirFile, '/');
 }
 
-static char *removeFileName(char *dirPath) {
-    char *slash = strrchr(dirPath, '/');
-    if (slash) {
-        slash[1] = '\0';
-    }
-    else {
-        dirPath[0] = '\0';
-    }
-    return dirPath;
+static char* removeFileName(char* dirPath) {
+  char *slash = strrchr(dirPath, '/');
+  if (slash) {
+    slash[1] = '\0';
+  }
+  else {
+    dirPath[0] = '\0';
+  }
+  return dirPath;
 }
 
-static char *removeSuffix(char *dirPath)
-{
+static char* removeSuffix(char* dirPath) {
     char *dot = strrchr(dirPath, '.');
     if (dot && !strchr(dot, '/')) {
         dot[0] = '\0';
@@ -60,8 +58,7 @@ static char *removeSuffix(char *dirPath)
     return dirPath;
 }
 
-static int digits(int n) 
-{
+static int digits(int n) {
     int fieldWidth = 10;
     assert (sizeof (long int) >= 4);
     long int x = 1000 * 1000 * 1000;    // requires 4-byte integer.
@@ -72,17 +69,15 @@ static int digits(int n)
     return fieldWidth;
 }
 
-static double logBase2(double x) 
-{
-    // log (x) = ln(x)/ln(a) 
+static double logBase2(double x) {
+    // log (x) = ln(x)/ln(a)
     //    a
 
     assert(x > 0.0);
     return log(x)/log(2);
 }
 
-static double ccdBalencedBinaryTree(int n) 
-{
+static double ccdBalencedBinaryTree(int n)  {
     // CCD(n)         = (n + 1) * (log (n + 1) - 1) + 1
     //       balanced                 2
     //       binary
@@ -91,8 +86,6 @@ static double ccdBalencedBinaryTree(int n)
     assert(n >= 0);
     return (n + 1) * (logBase2(n + 1) - 1) + 1;
 }
-
-                // -*-*-*- idep_LinkDep_i -*-*-*-
 
 struct idep_LinkDep_i {
     idep_NameIndexMap d_unaliases;          // e.g., ".", "/usr/include"
@@ -967,7 +960,7 @@ void idep_LinkDep::printSummary(ostream& o) const
     const int W = 23;           // width of entire column
 
     if (numCycles() > 0) {
-        { 
+        {
             ostringstream f(string(field, sizeof field));
             f.width(N);
             f << numCycles() << " Cycle" << s(numCycles()) << ends;
@@ -976,7 +969,7 @@ void idep_LinkDep::printSummary(ostream& o) const
         }
         o.width(G);
         o << "";
-        { 
+        {
             ostringstream f(string(field, sizeof field));
             f.width(N);
             f << numMembers() << " Members" << ends;
@@ -985,7 +978,8 @@ void idep_LinkDep::printSummary(ostream& o) const
         }
         o << endl;
     }
-    { 
+    {
+        printf("%d\n", numLocalComponents());
         ostringstream f(string(field, sizeof field));
         f.width(N);
         f << numLocalComponents() << " Component" 
@@ -1044,10 +1038,7 @@ void idep_LinkDep::printSummary(ostream& o) const
     o << endl;
 }
 
-                // -*-*-*- free operators -*-*-*-
- 
-ostream &operator<<(ostream& o, const idep_LinkDep& dep) 
-{
+std::ostream& operator<<(std::ostream& o, const idep_LinkDep& dep) {
     dep.printAliases(o);
     dep.printUnaliases(o);
     dep.printCycles(o);
@@ -1056,8 +1047,6 @@ ostream &operator<<(ostream& o, const idep_LinkDep& dep)
     return o;
 }
 
-                // -*-*-*- idep_AliasIter_i -*-*-*-
-
 struct idep_AliasIter_i {
     idep_AliasTableIter d_iter;
 
@@ -1065,34 +1054,27 @@ struct idep_AliasIter_i {
 };
 
 idep_AliasIter_i::idep_AliasIter_i(const idep_AliasTable& table)
-: d_iter(table)
-{
+    : d_iter(table) {
 }
 
-                // -*-*-*- idep_AliasIter -*-*-*-
 
-idep_AliasIter::idep_AliasIter(const idep_LinkDep& dep) 
-: d_this(new idep_AliasIter_i(dep.d_this->d_aliases))
-{
+idep_AliasIter::idep_AliasIter(const idep_LinkDep& dep)
+    : d_this(new idep_AliasIter_i(dep.d_this->d_aliases)) {
 }
 
-idep_AliasIter::~idep_AliasIter()
-{
+idep_AliasIter::~idep_AliasIter() {
     delete d_this;
 }
 
-void idep_AliasIter::operator++() 
-{
+void idep_AliasIter::operator++() {
     ++d_this->d_iter;
 }
- 
-idep_AliasIter::operator const void *() const
-{
+
+idep_AliasIter::operator const void *() const {
     return d_this->d_iter;
 }
- 
-const char *idep_AliasIter::fromName() const
-{
+
+const char* idep_AliasIter::fromName() const {
     return d_this->d_iter.alias();
 }
 
@@ -1344,13 +1326,10 @@ const char *idep_ComponentIter::operator()() const
                                 d_this->d_dep.d_map_p[d_this->d_index]];
 }
 
-int idep_ComponentIter::cycle() const
-{
-    return d_this->d_dep.d_cycleIndices_p[
-                                d_this->d_dep.d_map_p[d_this->d_index]] + 1;
+int idep_ComponentIter::cycle() const {
+  return d_this->d_dep.d_cycleIndices_p[
+      d_this->d_dep.d_map_p[d_this->d_index]] + 1;
 }
-
-                // -*-*-*- idep_DependencyIter_i -*-*-*-
 
 struct idep_DependencyIter_i {
     const idep_LinkDep_i& d_dep;
@@ -1361,59 +1340,48 @@ struct idep_DependencyIter_i {
 };
 
 idep_DependencyIter_i::idep_DependencyIter_i(const idep_ComponentIter_i& iter) 
-: d_dep(iter.d_dep)
-, d_row(iter.d_dep.d_map_p[iter.d_index])
-, d_col(-1)
-{
+    : d_dep(iter.d_dep),
+      d_row(iter.d_dep.d_map_p[iter.d_index]),
+      d_col(-1){
 }
-
-                // -*-*-*- idep_DependencyIter -*-*-*-
 
 idep_DependencyIter::idep_DependencyIter(const idep_ComponentIter& iter) 
-: d_this(new idep_DependencyIter_i(*iter.d_this))
-{
-    ++*this;
+    : d_this(new idep_DependencyIter_i(*iter.d_this)) {
+  ++*this;
 }
 
-idep_DependencyIter::~idep_DependencyIter()
-{
-    delete d_this;
+idep_DependencyIter::~idep_DependencyIter() {
+  delete d_this;
 }
 
-
-void idep_DependencyIter::operator++() 
-{
-    assert(*this);
-    do {
-        ++d_this->d_col;
-    } 
-    while (*this &&                             // look in levelized order
-           !d_this->d_dep.d_dependencies_p->get(d_this->d_row, 
-                                d_this->d_dep.d_map_p[d_this->d_col])); 
-}
- 
-idep_DependencyIter::operator const void *() const
-{
-    return d_this->d_col < d_this->d_dep.d_numComponents ? this : 0;
-}
- 
-const char *idep_DependencyIter::operator()() const
-{
-    return (*d_this->d_dep.d_componentNames_p)[ // levelized order
-                                d_this->d_dep.d_map_p[d_this->d_col]];
+void idep_DependencyIter::operator++()  {
+  assert(*this);
+  do {
+    ++d_this->d_col;
+  }
+  while (*this && // look in levelized order
+      !d_this->d_dep.d_dependencies_p->get(d_this->d_row,
+          d_this->d_dep.d_map_p[d_this->d_col]));
 }
 
-int idep_DependencyIter::level() const
-{
-    return d_this->d_dep.d_levelNumbers_p[      // levelized order
-                                d_this->d_dep.d_map_p[d_this->d_col]];
+idep_DependencyIter::operator const void *() const {
+  return d_this->d_col < d_this->d_dep.d_numComponents ? this : 0;
 }
 
-int idep_DependencyIter::cycle() const
-{
-    return d_this->d_dep.d_cycleIndices_p[      // levelized order
-                                d_this->d_dep.d_map_p[d_this->d_col]] + 1;
+const char* idep_DependencyIter::operator()() const {
+  // Levelized order.
+  return (*d_this->d_dep.d_componentNames_p)[
+      d_this->d_dep.d_map_p[d_this->d_col]];
 }
 
+int idep_DependencyIter::level() const {
+  // Levelized order.
+  return d_this->d_dep.d_levelNumbers_p[
+      d_this->d_dep.d_map_p[d_this->d_col]];
+}
 
-
+int idep_DependencyIter::cycle() const {
+  // Levelized order.
+  return d_this->d_dep.d_cycleIndices_p[
+      d_this->d_dep.d_map_p[d_this->d_col]] + 1;
+}
