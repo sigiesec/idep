@@ -8,25 +8,25 @@
 #include <iostream>
 #include <assert.h>
 
-static ostream& warning(ostream& orf, const char *file, int lineno)
+static std::ostream& warning(std::ostream& orf, const char *file, int lineno)
 {
     return orf << "Warning in " << file << '(' << lineno << "): ";
 }
  
-static ostream& err(ostream& orf, const char *file, int lineno)
+static std::ostream& err(std::ostream& orf, const char *file, int lineno)
 {
     return orf << "Error in " << file << '(' << lineno << "): ";
 }
 
-static int tryToAlias(idep_AliasTable *table, ostream& orf, 
-                      const char *inputName, int lineno, 
+static int tryToAlias(idep_AliasTable *table, std::ostream& orf,
+                      const char *inputName, int lineno,
                       const char *componentName, const char *alias)
 {
     if (table->add(alias, componentName) < 0) {
         const char *previousName = table->lookup(alias);
         err(orf, inputName, lineno) << "two names for alias \"" 
-            << alias << "\":" << endl << "    \"" << previousName
-            << "\" and \"" << componentName << "\"" << endl;
+            << alias << "\":" << std::endl << "    \"" << previousName
+            << "\" and \"" << componentName << "\"" << std::endl;
         return 1;
     }
     return 0;
@@ -35,8 +35,8 @@ static int tryToAlias(idep_AliasTable *table, ostream& orf,
 namespace idep {
 
 int AliasUtil::readAliases(idep_AliasTable* table,
-                           ostream& orf,
-                           istream& in,
+                           std::ostream& orf,
+                           std::istream& in,
                            const char* inputName)
 {
     // The following is a state-machine description of the alias language:
@@ -144,14 +144,14 @@ int AliasUtil::readAliases(idep_AliasTable* table,
           case BEG_PRE: {
             componentName = lastToken;
             warning(orf, inputName, lineno) << '"' << lastToken 
-                << "\" << used as component name." << endl;
+                << "\" << used as component name." << std::endl;
           } break;
           case BEG_PRE_CUR: {
             componentName = lastToken;
             numBadAliases += tryToAlias(table, orf, inputName, lineno,
                                                         componentName, it());
             warning(orf, inputName, lineno) << '"' << lastToken 
-                << "\" << used as component name." << endl;
+                << "\" << used as component name." << std::endl;
           } break;
           case TRY_CUR: {
             numBadAliases += tryToAlias(table, orf, inputName, lineno,
@@ -161,7 +161,7 @@ int AliasUtil::readAliases(idep_AliasTable* table,
             numBadAliases += tryToAlias(table, orf, inputName, lineno,
                                                    componentName, lastToken);
             warning(orf, inputName, lineno) << '"' << lastToken 
-                << "\" << used as alias name." << endl;
+                << "\" << used as alias name." << std::endl;
           } break;
           case TRY_PRE_CUR: {
             numBadAliases += tryToAlias(table, orf, inputName, lineno,
@@ -169,7 +169,7 @@ int AliasUtil::readAliases(idep_AliasTable* table,
             numBadAliases += tryToAlias(table, orf, inputName, lineno,
                                                         componentName, it());
             warning(orf, inputName, lineno) << '"' << lastToken 
-                << "\" << used as alias name." << endl;
+                << "\" << used as alias name." << std::endl;
           } break;
           case END: {
             componentName = EMPTY_NAME;
@@ -197,11 +197,11 @@ int AliasUtil::readAliases(idep_AliasTable* table,
 
 
 int AliasUtil::readAliases(idep_AliasTable *table,
-                           ostream& orf,
+                           std::ostream& orf,
                            const char *fileName)
 {
     enum { IOERROR = -1 };
-    ifstream in(fileName);
+    std::ifstream in(fileName);
     if (!in) {
         return IOERROR;
     }

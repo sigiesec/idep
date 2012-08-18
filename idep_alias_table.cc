@@ -107,9 +107,9 @@ const char *idep_AliasTable::lookup(const char *alias) const
     return p ? p->d_originalName_p : 0;
 }
 
-ostream& operator<<(ostream &o, const idep_AliasTable& table) 
+std::ostream& operator<<(std::ostream &o, const idep_AliasTable& table)
 {
-    int fieldWidth = 0; 
+    int fieldWidth = 0;
     idep_AliasTableIter it(table);
     for (it.reset(); it; ++it) {
         int len = strlen(it.alias());
