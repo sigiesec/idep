@@ -72,8 +72,7 @@ AliasTable::~AliasTable()
     delete[] table_;
 }
 
-int AliasTable::add(const char *alias, const char *originalName) 
-{
+int AliasTable::Add(const char* alias, const char* original_name)  {
     enum { FOUND_DIFFERENT = -1, NOT_FOUND = 0, FOUND_IDENTICAL = 1 }; 
 
     AliasTableLink *&slot = table_[hash(alias) % size_];
@@ -83,13 +82,11 @@ int AliasTable::add(const char *alias, const char *originalName)
         p = p->d_next_p;
     }
     if (!p) {
-        slot = new AliasTableLink(alias, originalName, slot);
+        slot = new AliasTableLink(alias, original_name, slot);
         return NOT_FOUND;
-    } 
-    else if (0 == strcmp(p->d_originalName_p, originalName)) {
+    } else if (0 == strcmp(p->d_originalName_p, original_name)) {
         return FOUND_IDENTICAL;
-    }
-    else {
+    } else {
         return FOUND_DIFFERENT;
     }
 }
@@ -105,13 +102,13 @@ const char* AliasTable::Lookup(const char* alias) const {
 std::ostream& operator<<(std::ostream &o, const AliasTable& table) {
     int fieldWidth = 0;
     AliasTableIterator it(table);
-    for (it.reset(); it; ++it) {
+    for (it.Reset(); it; ++it) {
         int len = strlen(it.GetAlias());
         if (fieldWidth < len) {
             fieldWidth = len;
         }
     }
-    for (it.reset(); it; ++it) {
+    for (it.Reset(); it; ++it) {
         o.width(fieldWidth);
         o << it.GetAlias() << " -> " << it.GetOriginalName() << std::endl;
     }
@@ -120,16 +117,16 @@ std::ostream& operator<<(std::ostream &o, const AliasTable& table) {
 
 AliasTableIterator::AliasTableIterator(const AliasTable& t)
     : table_(t) {
-  reset();
+  Reset();
 }
 
 AliasTableIterator::~AliasTableIterator() {
 }
 
-void AliasTableIterator::reset() {
-    d_link_p = 0;
-    d_index = -1;
-    ++*this;
+void AliasTableIterator::Reset() {
+  d_link_p = 0;
+  d_index = -1;
+  ++*this;
 }
 
 void AliasTableIterator::operator++() {

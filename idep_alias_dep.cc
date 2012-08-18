@@ -175,10 +175,9 @@ idep_adep.cxx:180: error: argument of type 'void (AliasDep::)(const char*)' does
   */
 }
 
-const char *AliasDep::addAlias(const char *alias, const char *component)
-{
-    return impl_->d_aliases.add(alias, component) < 0 ?
-                                        impl_->d_aliases.Lookup(alias) : 0;
+const char *AliasDep::addAlias(const char *alias, const char *component) {
+  return impl_->d_aliases.Add(alias, component) < 0 ?
+      impl_->d_aliases.Lookup(alias) : 0;
 }
 
 int AliasDep::readAliases(std::ostream& orf, const char *file)

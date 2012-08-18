@@ -692,10 +692,9 @@ void idep_LinkDep::addDependencyFile(const char *fileName)
     d_this->d_dependencyFiles.Append(fileName);
 }
 
-const char *idep_LinkDep::addAlias(const char *alias, const char *component)
-{
-    return d_this->d_aliases.add(alias, component) < 0 ?
-                                        d_this->d_aliases.Lookup(alias) : 0;
+const char* idep_LinkDep::addAlias(const char* alias, const char* component) {
+  return d_this->d_aliases.Add(alias, component) < 0 ?
+      d_this->d_aliases.Lookup(alias) : 0;
 }
 
 int idep_LinkDep::readAliases(std::ostream& orf, const char *file)

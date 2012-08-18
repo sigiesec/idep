@@ -22,7 +22,7 @@ class AliasTable {
   // alias with a different original name was present.  Under
   // no circumstances will an alias be overwritten with a new
   // original name.  (Neither alias nor originalName may be 0.)
-  int add(const char* alias, const char* originalName);
+  int Add(const char* alias, const char* original_name);
 
   // Return the original name if the alias exists, else 0.
   const char* Lookup(const char* alias) const;
@@ -51,7 +51,7 @@ class AliasTableIterator {
   ~AliasTableIterator();
 
   // Reset this iterator to the start of the iteration.
-  void reset();
+  void Reset();
 
   // Advance state of iteration to next alias/originalName pair.
   void operator++();
