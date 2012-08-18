@@ -31,26 +31,26 @@ NL;
 
 static enum { IOERROR = -1, GOOD = 0 } s_status = GOOD;
 
-static ostream& err() {
+static std::ostream& err() {
     s_status = IOERROR;
-    return cerr << "Error: ";
+    return std::cerr << "Error: ";
 }
 
 static int missing(const char *argName, char option)  {
     err() << "missing `" << argName << "' argument for -"
-          << option << " option." << endl;
+          << option << " option." << std::endl;
     return s_status;
 }
 
 static int extra(const char *text, char option) {
     err() << "extra text \"" << text << "\" encountered after -"
-          << option << " option." << endl;
+          << option << " option." << std::endl;
     return s_status;
 }
 
 static int unreadable(const char *dirFile, char option) {
     err() << "unable to read \"" << dirFile << "\" for -"
-          << option << " option." << endl;
+          << option << " option." << std::endl;
     return s_status;
 }
 
@@ -108,7 +108,7 @@ int main (int argc, char *argv[]) {
                 recursionFlag = 0;
               } break;
               default: {
-                 err() << "unknown option \"" << word << "\"." << endl
+                 err() << "unknown option \"" << word << "\"." << std::endl
                        << help();
                  return s_status;
               } break;
@@ -124,11 +124,11 @@ int main (int argc, char *argv[]) {
         environment.inputRootFiles();
     }
 
-    if (environment.calculate(cerr, recursionFlag)) {
+    if (environment.calculate(std::cerr, recursionFlag)) {
          s_status = IOERROR;
     }
 
-    cout << environment;
+    std::cout << environment;
 
     return s_status;
 }
