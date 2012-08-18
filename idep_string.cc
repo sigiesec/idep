@@ -49,14 +49,14 @@ idep_String& idep_String::operator=(const char* str)
     return *this;
 }
 
-idep_String& idep_String::operator+=(const idep_String& string) 
+idep_String& idep_String::operator+=(const idep_String& string)
 {
     return *this += string.d_string_p;
 }
-    
-idep_String& idep_String::operator+=(const char* str) 
+
+idep_String& idep_String::operator+=(const char* str)
 {
-    char *tmp = d_string_p;     
+    char *tmp = d_string_p;
     int len = length();
     int size = strlen(str) + 1;
     d_string_p = new char[len + size];
@@ -67,120 +67,120 @@ idep_String& idep_String::operator+=(const char* str)
 }
 
 // ACCESSORS
-idep_String::operator const char *() const 
+idep_String::operator const char *() const
 {
     return d_string_p;
 }
 
-int idep_String::length() const 
+int idep_String::length() const
 {
     return strlen(d_string_p);
-}    
+}
 
 // FREE OPERATORS
-idep_String operator+(const idep_String& left, const idep_String& right) 
+idep_String operator+(const idep_String& left, const idep_String& right)
 {
     return idep_String(left) += right;
 }
 
-idep_String operator+(const char* str, const idep_String& string) 
+idep_String operator+(const char* str, const idep_String& string)
 {
     return idep_String(str) += string;
 }
 
-idep_String operator+(const idep_String& string, const char* str) 
+idep_String operator+(const idep_String& string, const char* str)
 {
     return idep_String(string) += str;
 }
 
-int operator==(const idep_String& left, const idep_String& right) 
+int operator==(const idep_String& left, const idep_String& right)
 {
     return strcmp(left, right) == 0;
 }
 
-int operator!=(const idep_String& left, const idep_String& right) 
+int operator!=(const idep_String& left, const idep_String& right)
 {
     return strcmp(left, right) != 0;
 }
 
-int operator<(const idep_String& left, const idep_String& right) 
+int operator<(const idep_String& left, const idep_String& right)
 {
     return strcmp(left, right) <  0;
 }
 
-int operator<=(const idep_String& left, const idep_String& right) 
+int operator<=(const idep_String& left, const idep_String& right)
 {
     return strcmp(left, right) <= 0;
 }
 
-int operator>(const idep_String& left, const idep_String& right) 
+int operator>(const idep_String& left, const idep_String& right)
 {
     return strcmp(left, right) >  0;
 }
 
-int operator>=(const idep_String& left, const idep_String& right) 
+int operator>=(const idep_String& left, const idep_String& right)
 {
     return strcmp(left, right) >= 0;
 }
 
 
-int operator==(const char* str, const idep_String& string) 
+int operator==(const char* str, const idep_String& string)
 {
     return strcmp(str, string) == 0;
 }
 
-int operator!=(const char* str, const idep_String& string) 
+int operator!=(const char* str, const idep_String& string)
 {
     return strcmp(str, string) != 0;
 }
 
-int operator<(const char* str, const idep_String& string) 
+int operator<(const char* str, const idep_String& string)
 {
     return strcmp(str, string) <  0;
 }
 
-int operator<=(const char* str, const idep_String& string) 
+int operator<=(const char* str, const idep_String& string)
 {
     return strcmp(str, string) <= 0;
 }
 
-int operator>(const char* str, const idep_String& string) 
+int operator>(const char* str, const idep_String& string)
 {
     return strcmp(str, string) >  0;
 }
 
-int operator>=(const char* str, const idep_String& string) 
+int operator>=(const char* str, const idep_String& string)
 {
     return strcmp(str, string) >= 0;
 }
 
 
-int operator==(const idep_String& string, const char *str) 
+int operator==(const idep_String& string, const char *str)
 {
     return strcmp(str, string) == 0;
 }
 
-int operator!=(const idep_String& string, const char *str) 
+int operator!=(const idep_String& string, const char *str)
 {
     return strcmp(string, str) != 0;
 }
 
-int operator<(const idep_String& string, const char *str) 
+int operator<(const idep_String& string, const char *str)
 {
     return strcmp(string, str) <  0;
 }
 
-int operator<=(const idep_String& string, const char *str) 
+int operator<=(const idep_String& string, const char *str)
 {
     return strcmp(string, str) <= 0;
 }
 
-int operator>(const idep_String& string, const char *str) 
+int operator>(const idep_String& string, const char *str)
 {
     return strcmp(string, str) >  0;
 }
 
-int operator>=(const idep_String& string, const char *str) 
+int operator>=(const idep_String& string, const char *str)
 {
     return strcmp(string, str) >= 0;
 }
