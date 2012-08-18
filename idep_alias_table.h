@@ -25,7 +25,7 @@ class AliasTable {
   int add(const char* alias, const char* originalName);
 
   // Return the original name if the alias exists, else 0.
-  const char* lookup(const char* alias) const;
+  const char* Lookup(const char* alias) const;
 
  private:
   friend class AliasTableIterator;

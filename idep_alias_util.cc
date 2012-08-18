@@ -31,7 +31,7 @@ static int tryToAlias(AliasTable* table,
                       const char* componentName,
                       const char* alias) {
     if (table->add(alias, componentName) < 0) {
-        const char *previousName = table->lookup(alias);
+        const char *previousName = table->Lookup(alias);
         err(orf, input_name, lineno) << "two names for alias \"" 
             << alias << "\":" << std::endl << "    \"" << previousName
             << "\" and \"" << componentName << "\"" << std::endl;

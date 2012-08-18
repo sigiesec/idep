@@ -98,7 +98,7 @@ int AliasTable::add(const char *alias, const char *originalName)
     }
 }
 
-const char* AliasTable::lookup(const char* alias) const {
+const char* AliasTable::Lookup(const char* alias) const {
     AliasTableLink* p = d_table_p[hash(alias) % d_size];
     while (p && 0 != strcmp(p->d_alias_p, alias)) {
         p = p->d_next_p;

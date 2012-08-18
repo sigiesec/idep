@@ -134,10 +134,10 @@ int idep_NameIndexMap::length() const
     return impl_->d_array.Length();
 }
 
-int idep_NameIndexMap::lookup(const char *name) const
+int idep_NameIndexMap::Lookup(const char* name) const
 {
     NameIndexMapLink *& slot = impl_->findSlot(name);
-    const NameIndexMapLink *link = find(slot, name);
+    const NameIndexMapLink* link = find(slot, name);
     return link ? link->d_index : BAD_INDEX;
 }
 

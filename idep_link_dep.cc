@@ -151,7 +151,7 @@ int idep_LinkDep_i::entry(const char *name, int suffixFlag)
 
     if (!isLocal(buf)) {
         removeFileName(buf);
-        if (d_unaliases.lookup(buf) >= 0) {             // found unalias
+        if (d_unaliases.Lookup(buf) >= 0) {             // found unalias
             memcpy(buf, name, size);                    // restore buffer
         }
     }
@@ -160,7 +160,7 @@ int idep_LinkDep_i::entry(const char *name, int suffixFlag)
         removeSuffix(buf);
     }
 
-    const char *componentName = d_aliases.lookup(buf);
+    const char *componentName = d_aliases.Lookup(buf);
     if (!componentName) {
         const char SLASH_CHAR = '/';
         const char NULL_CHAR = '\0';
@@ -168,7 +168,7 @@ int idep_LinkDep_i::entry(const char *name, int suffixFlag)
         int last = len - 1;
         if (SLASH_CHAR == buf[last]) {             // If the input ends in '/' 
             buf[last] = NULL_CHAR;                 // try removing the '/' and
-            componentName = d_aliases.lookup(buf); // checking for that alias.
+            componentName = d_aliases.Lookup(buf); // checking for that alias.
             if (!componentName) {
                 buf[last] = SLASH_CHAR; // restore
             }
@@ -695,7 +695,7 @@ void idep_LinkDep::addDependencyFile(const char *fileName)
 const char *idep_LinkDep::addAlias(const char *alias, const char *component)
 {
     return d_this->d_aliases.add(alias, component) < 0 ?
-                                        d_this->d_aliases.lookup(alias) : 0;
+                                        d_this->d_aliases.Lookup(alias) : 0;
 }
 
 int idep_LinkDep::readAliases(std::ostream& orf, const char *file)

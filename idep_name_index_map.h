@@ -21,7 +21,7 @@ class idep_NameIndexMap {
   int add(const char* name);
 
   // Add a name to the table if necessary; always return a valid index.
-  // Note: entry() is usually more efficient than lookup() followed by
+  // Note: entry() is usually more efficient than Lookup() followed by
   // an occasional add().
   int entry(const char* name);
 
@@ -33,7 +33,7 @@ class idep_NameIndexMap {
   int length() const;
 
   // Return the index of the specified name, or -1 if not found.
-  int lookup(const char* name) const;
+  int Lookup(const char* name) const;
 
  private:
   NameIndexMapImpl* impl_;

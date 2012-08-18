@@ -178,7 +178,7 @@ idep_adep.cxx:180: error: argument of type 'void (AliasDep::)(const char*)' does
 const char *AliasDep::addAlias(const char *alias, const char *component)
 {
     return impl_->d_aliases.add(alias, component) < 0 ?
-                                        impl_->d_aliases.lookup(alias) : 0;
+                                        impl_->d_aliases.Lookup(alias) : 0;
 }
 
 int AliasDep::readAliases(std::ostream& orf, const char *file)
@@ -219,12 +219,12 @@ int AliasDep::unpaired(std::ostream& out, std::ostream& ing, int suffixFlag) con
     for (int i = 0; i < maxLength; ++i) {
         AliasDepString s(impl_->d_fileNames[i]);
 
-        if (impl_->d_ignoreNames.lookup(s) >= 0) {
+        if (impl_->d_ignoreNames.Lookup(s) >= 0) {
             continue; // ignore this file
         }
         removeSuffix(s);
 
-        const char *componentName = impl_->d_aliases.lookup(s);
+        const char *componentName = impl_->d_aliases.Lookup(s);
         if (!componentName) {
             componentName = s;
         }
@@ -313,7 +313,7 @@ int AliasDep::verify(std::ostream& orf) const
         const char *path = impl_->d_fileNames[i];
         AliasDepString c(path);
 
-        if (impl_->d_ignoreNames.lookup(c) >= 0) {
+        if (impl_->d_ignoreNames.Lookup(c) >= 0) {
             continue; // ignore this file
         }
 
@@ -324,7 +324,7 @@ int AliasDep::verify(std::ostream& orf) const
 	char temp[355];
 	//	#= actualComponent;
 	strcpy (temp,actualComponent);
-        const char *compAlias = impl_->d_aliases.lookup(temp);
+        const char *compAlias = impl_->d_aliases.Lookup(temp);
 
         const char *component = compAlias ? compAlias : actualComponent;
 
@@ -340,7 +340,7 @@ int AliasDep::verify(std::ostream& orf) const
             AliasDepString h(it());
             removeSuffix(h);
             const char *actualHeader = stripDir(h);
-            const char *headerAlias = impl_->d_aliases.lookup(actualHeader);
+            const char *headerAlias = impl_->d_aliases.Lookup(actualHeader);
             const char *header = headerAlias ? headerAlias : actualHeader;
 
             if (0 == strcmp(component, header)) { // if the same, we found it
@@ -394,14 +394,14 @@ int AliasDep::extract(std::ostream& out, std::ostream& orf) const
         const char *path = impl_->d_fileNames[i];
         AliasDepString c(path);
 
-        if (impl_->d_ignoreNames.lookup(c) >= 0) {
+        if (impl_->d_ignoreNames.Lookup(c) >= 0) {
             continue; // ignore this file
         }
 
         // strip off suffix and path from component file name and check aliases
         removeSuffix(c);
         const char *actualComponent = stripDir(c);
-        const char *compAlias = impl_->d_aliases.lookup(actualComponent);
+        const char *compAlias = impl_->d_aliases.Lookup(actualComponent);
         const char *component = compAlias ? compAlias : actualComponent;
 
         FileDepIterator it(path);      // hook up with first dependency.
@@ -424,7 +424,7 @@ int AliasDep::extract(std::ostream& out, std::ostream& orf) const
         AliasDepString h(it());
         removeSuffix(h);
         const char *actualHeader = stripDir(h);
-        const char *headerAlias = impl_->d_aliases.lookup(actualHeader);
+        const char *headerAlias = impl_->d_aliases.Lookup(actualHeader);
         const char *header = headerAlias ? headerAlias : actualHeader;
 
         if (0 == strcmp(component, header)) {
