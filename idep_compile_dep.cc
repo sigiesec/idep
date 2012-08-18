@@ -28,8 +28,8 @@ static const char *stripDotSlash(const char *originalPath) {
     return originalPath;
 }
 
-static int isAbsolutePath(const char *originalPath) {
-    return '/' == *originalPath;
+static bool IsAbsolutePath(const char* original_path) {
+    return '/' == *original_path;
 }
 
 static int isAsciiFile(const char *fileName) {
@@ -78,10 +78,10 @@ template <typename Func> static int loadFromFile(const char *file, idep_CompileD
     return GOOD;
 }
 
-static const char *search(idep_String *s, const char *includeDir, 
-                                                            const char *file) 
-{
-    assert(!isAbsolutePath(file));
+static const char* search(idep_String* s,
+                          const char* includeDir,
+                          const char* file) {
+    assert(!IsAbsolutePath(file));
     (*s = includeDir) += file;
     const char *dirFile = stripDotSlash(*s);
     return ifstream(dirFile) ? dirFile : 0;
@@ -90,7 +90,7 @@ static const char *search(idep_String *s, const char *includeDir,
 static const char *search(idep_String *s, const idep_NameArray& a, 
                                                             const char *file)
 {
-    if (isAbsolutePath(file)) {
+    if (IsAbsolutePath(file)) {
         *s = file;
         const char *absFile = *s;
         return ifstream(absFile) ? absFile : 0;
@@ -335,19 +335,16 @@ int idep_CompileDep::calculate(ostream& orf, int recursionFlag)
     return status;
 }
 
-                // -*-*-*- free operators -*-*-*-
-
-ostream &operator<<(ostream& o, const idep_CompileDep&(dep)) 
+std::ostream& operator<<(std::ostream& o, const idep_CompileDep&(dep))
 {
     const char *INDENT = "    ";
     for (idep_RootFileIter rit(dep); rit; ++rit) {
         idep_NameArray a;
         o << rit() << endl;
         for (idep_HeaderFileIter hit(rit); hit; ++hit) {
-            if (isAbsolutePath(hit())) {
+            if (IsAbsolutePath(hit())) {
                 a.append(hit());
-            }  
-            else {
+            } else {
                 o << INDENT << hit() << endl;
             }
         }
