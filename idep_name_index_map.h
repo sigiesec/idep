@@ -11,7 +11,7 @@ class idep_NameIndexMap {
  public:
   // Create a new mapping; optionally specify the expected number of
   // entires.  By default, a moderately large hash table will be created.
-  explicit idep_NameIndexMap(int maxEntriesHint = 0);
+  explicit idep_NameIndexMap(int max_entries_hint = 0);
   ~idep_NameIndexMap();
 
   // Add a name to the mapping and return its index only if the name is

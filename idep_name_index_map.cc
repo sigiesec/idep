@@ -101,8 +101,8 @@ int NameIndexMapImpl::insert(idep_NameIndexMapLink *& slot, const char *nm)
 
                 // -*-*-*- idep_NameIndexMap -*-*-*-
 
-idep_NameIndexMap::idep_NameIndexMap(int maxEntriesHint)
-: d_this(new NameIndexMapImpl(maxEntriesHint))
+idep_NameIndexMap::idep_NameIndexMap(int max_entries_hint)
+: d_this(new NameIndexMapImpl(max_entries_hint))
 {
 }
 

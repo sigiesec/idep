@@ -11,7 +11,7 @@ class NameArray {
  public:
   // Create a variable length array of const character strings.
   // The array will be allocated assuming a maximum expected number
-  // of entries specified by the optional maxEntriesHint argument.
+  // of entries specified by |max_entries_hint|.
   // By default a fairly small array will be allocated.
   explicit NameArray(int max_entries_hint = 0);
 

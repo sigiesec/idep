@@ -90,8 +90,8 @@ void BinaryRelation::compress()
 
                 // -*-*-*- public functions -*-*-*-
 
-BinaryRelation::BinaryRelation(int initialEntries, int maxEntriesHint) 
-: d_size(maxEntriesHint > 0 ? maxEntriesHint : START_SIZE) 
+BinaryRelation::BinaryRelation(int initialEntries, int max_entries_hint) 
+: d_size(max_entries_hint > 0 ? max_entries_hint : START_SIZE) 
 , d_length(initialEntries > 0 ? initialEntries : 0)
 {
     if (d_size < d_length) {

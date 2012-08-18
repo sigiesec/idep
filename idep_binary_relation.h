@@ -24,7 +24,7 @@ class BinaryRelation {
 
   public:
     // CREATORS
-    BinaryRelation(int initialEntries = 0, int maxEntriesHint = 0);
+    BinaryRelation(int initialEntries = 0, int max_entries_hint = 0);
         // Create a binary relation that can be extended as needed.
         // By default, the initial number of entires in the relation
         // is 0.  If the final number of entries is known and is not
