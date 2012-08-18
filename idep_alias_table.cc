@@ -110,7 +110,7 @@ const char* AliasTable::lookup(const char *alias) const
 std::ostream& operator<<(std::ostream &o, const AliasTable& table)
 {
     int fieldWidth = 0;
-    idep_AliasTableIter it(table);
+    AliasTableIterator it(table);
     for (it.reset(); it; ++it) {
         int len = strlen(it.alias());
         if (fieldWidth < len) {
@@ -124,47 +124,47 @@ std::ostream& operator<<(std::ostream &o, const AliasTable& table)
     return o;
 }
 
-idep_AliasTableIter::idep_AliasTableIter(const AliasTable& t)
+AliasTableIterator::AliasTableIterator(const AliasTable& t)
 : d_table(t)
 {
     reset();
 }
 
-idep_AliasTableIter::~idep_AliasTableIter() 
+AliasTableIterator::~AliasTableIterator()
 {
 }
 
-void idep_AliasTableIter::reset() 
+void AliasTableIterator::reset()
 {
     d_link_p = 0;
     d_index = -1;
     ++*this;
 }
 
-void idep_AliasTableIter::operator++() 
-{ 
+void AliasTableIterator::operator++()
+{
     if (d_link_p) {
         d_link_p = d_link_p->d_next_p;
-    }   
+    }
     while (!d_link_p && *this) {
         ++d_index;
         if (*this) {
-            d_link_p = d_table.d_table_p[d_index]; 
+            d_link_p = d_table.d_table_p[d_index];
         }
-    }    
-}    
+    }
+}
 
-idep_AliasTableIter::operator const void *() const 
-{ 
+AliasTableIterator::operator const void *() const
+{
     return d_index < d_table.d_size ? this : 0;
 }
 
-const char *idep_AliasTableIter::alias() const 
-{ 
+const char* AliasTableIterator::alias() const
+{
     return d_link_p->d_alias_p;
 }
 
-const char *idep_AliasTableIter::originalName() const 
-{ 
+const char* AliasTableIterator::originalName() const
+{
     return d_link_p->d_originalName_p;
 }

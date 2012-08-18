@@ -25,7 +25,7 @@ class AliasTable {
   const char* lookup(const char* alias) const;
 
  private:
-  friend class idep_AliasTableIter;
+  friend class AliasTableIterator;
 
   // Hash Table.
   idep_AliasTableLink **d_table_p;
@@ -43,11 +43,11 @@ class AliasTable {
 std::ostream& operator<<(std::ostream& output, const AliasTable& table);
 
 // Iterate through the collection of name mappings.
-class idep_AliasTableIter {
+class AliasTableIterator {
  public:
   // Create an iterator for the specified table.
-  idep_AliasTableIter(const AliasTable& table);
-  ~idep_AliasTableIter();
+  AliasTableIterator(const AliasTable& table);
+  ~AliasTableIterator();
 
   // Reset this iterator to the start of the iteration.
   void reset();
@@ -75,8 +75,8 @@ class idep_AliasTableIter {
   int d_index;
 
   // Disallow copy and assign.
-  idep_AliasTableIter(const idep_AliasTableIter&);
-  idep_AliasTableIter& operator=(const idep_AliasTableIter&);
+  AliasTableIterator(const AliasTableIterator&);
+  AliasTableIterator& operator=(const AliasTableIterator&);
 };
 
 #endif  // IDEP_ALIAS_TABLE_H_

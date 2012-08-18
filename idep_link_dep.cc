@@ -1052,7 +1052,7 @@ std::ostream& operator<<(std::ostream& o, const idep_LinkDep& dep) {
 }
 
 struct idep_AliasIter_i {
-    idep_AliasTableIter d_iter;
+    AliasTableIterator d_iter;
 
     idep_AliasIter_i(const AliasTable& table);
 };
