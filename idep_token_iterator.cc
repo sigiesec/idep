@@ -14,37 +14,34 @@ const char NULL_CHAR = '\0';
 
 namespace idep {
 
-struct idep_TokenIter_i {
+struct TokenIteratorImpl {
     istream& d_in;
     char *d_buf_p;
     int d_size;
     int d_length;
     int d_newlineFlag;
 
-    idep_TokenIter_i(istream& in);
-    ~idep_TokenIter_i();
+    TokenIteratorImpl(std::istream& in);
+    ~TokenIteratorImpl();
     void grow();
     void addChar(char ch);
     void advance();
 };
 
-idep_TokenIter_i::idep_TokenIter_i(istream& in)
+TokenIteratorImpl::TokenIteratorImpl(std::istream& in)
 : d_in(in)
 , d_buf_p(new char[START_SIZE])
 , d_size(START_SIZE)
 , d_length(0)
-, d_newlineFlag(0)
-{
+, d_newlineFlag(0) {
     assert(d_buf_p);
 }
 
-idep_TokenIter_i::~idep_TokenIter_i()
-{
+TokenIteratorImpl::~TokenIteratorImpl() {
     delete d_buf_p;
 }
 
-void idep_TokenIter_i::grow()
-{
+void TokenIteratorImpl::grow() {
     int newSize = d_size * GROW_FACTOR;
     char *tmp = d_buf_p;
     d_buf_p = new char[newSize];
@@ -54,77 +51,70 @@ void idep_TokenIter_i::grow()
     delete [] tmp;
 }
 
-void idep_TokenIter_i::addChar(char ch)
-{
-    if (d_length >= d_size) {
+void TokenIteratorImpl::addChar(char ch) {
+    if (d_length >= d_size)
         grow();
-    }
+
     assert(d_length < d_size);
     d_buf_p[d_length++] = ch;
 }
 
-TokenIterator::TokenIterator(istream& in)
-: d_this(new idep_TokenIter_i(in))
-{
-    ++*this; // load first occurrence
+TokenIterator::TokenIterator(std::istream& in)
+    : impl_(new TokenIteratorImpl(in)) {
+    ++*this; // load first occurrence.
 }
 
-TokenIterator::~TokenIterator()
-{
-    delete d_this;
+TokenIterator::~TokenIterator() {
+    delete impl_;
 }
 
 void TokenIterator::operator++()
 {
     assert(*this);
 
-    d_this->d_length = 0;
+    impl_->d_length = 0;
 
-    if (d_this->d_newlineFlag) {                   // left over newline
-        d_this->d_newlineFlag = 0;
-        d_this->addChar(NEWLINE_CHAR);
+    if (impl_->d_newlineFlag) {                   // left over newline
+        impl_->d_newlineFlag = 0;
+        impl_->addChar(NEWLINE_CHAR);
     }
     else {
         char c;
-        while (d_this->d_in && !d_this->d_in.get(c).eof()) {
-            if (d_this->d_length > 0) {            // "word" in progress
+        while (impl_->d_in && !impl_->d_in.get(c).eof()) {
+            if (impl_->d_length > 0) {            // "word" in progress
                 if (isspace(c)) {
                     if (NEWLINE_CHAR == c) {
-                        d_this->d_newlineFlag = 1; // note newline for later
+                        impl_->d_newlineFlag = 1; // note newline for later
                     }
                     break;                         // end of "word" in any case
                 }
-                d_this->addChar(c);                // start of "word"
+                impl_->addChar(c);                // start of "word"
             }
             else {                                 // nothing found yet
                 if (isspace(c)) {
                     if (NEWLINE_CHAR == c) {
-                        d_this->addChar(NEWLINE_CHAR);
+                        impl_->addChar(NEWLINE_CHAR);
                         break;                     // found a newline
                     }
                     continue;                      // found an ordinary space
                 }
-                d_this->addChar(c);                // add character to "word"
+                impl_->addChar(c);                // add character to "word"
             }
         }
     }
 
-    if (d_this->d_length > 0) {
-        d_this->addChar(NULL_CHAR);                // always append a null char
-    }
-    else { 
-        d_this->d_length = -1;                     // or make iterator invalid
-    }
-}    
-
-
-TokenIterator::operator const void *() const 
-{ 
-    return d_this->d_length >= 0 ? this : 0;
+    if (impl_->d_length > 0)
+        impl_->addChar(NULL_CHAR);                // always append a null char
+    else
+        impl_->d_length = -1;                     // or make iterator invalid
 }
 
-const char *TokenIterator::operator()() const {
-    return d_this->d_buf_p;
+TokenIterator::operator const void *() const {
+    return impl_->d_length >= 0 ? this : 0;
+}
+
+const char* TokenIterator::operator()() const {
+    return impl_->d_buf_p;
 }
 
 }  // namespace idep
