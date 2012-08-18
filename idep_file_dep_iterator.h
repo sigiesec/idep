@@ -18,10 +18,10 @@ class FileDepIterator {
   ~FileDepIterator();
 
   // Return to the first dependency in the file (if one exists).
-  void reset();
+  void Reset();
 
   // Return non-zero if the specified file is valid/readable; else 0.
-  bool isValidFile() const;
+  bool IsValidFile() const;
 
   // Advance to next dependency in the file.  The behavior of this
   // function is undefined if the iteration state is invalid.

@@ -149,7 +149,7 @@ static int getDep (int index)
         s_dependencies_p->set(index, otherIndex, 1);
     }
 
-    if (!it.isValidFile()) {
+    if (!it.IsValidFile()) {
        err(*s_err_p) << "unable to open file \""
          << (*s_files_p)[index] << "\" for read access." << std::endl; 
         status = BAD;

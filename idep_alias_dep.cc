@@ -355,7 +355,7 @@ int AliasDep::verify(ostream& orf) const
             }
         }
 
-        if (!it.isValidFile()) { // if the file was never valid to begin with
+        if (!it.IsValidFile()) { // if the file was never valid to begin with
             err(orf) << "unable to open file \""
                     << path << "\" for read access." << endl;
             status = IOERROR;
@@ -413,7 +413,7 @@ int AliasDep::extract(ostream& out, ostream& orf) const
 
         idep::FileDepIterator it(path);      // hook up with first dependency.
 
-        if (!it.isValidFile()) {        // unable to read file
+        if (!it.IsValidFile()) {        // unable to read file
             err(orf) << "unable to open file \""
                     << path << "\" for read access." << endl;
             status = IOERROR;

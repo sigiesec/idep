@@ -121,7 +121,7 @@ FileDepIteratorImpl::FileDepIteratorImpl(const char *fileName)
 FileDepIterator::FileDepIterator(const char *fileName)
 : impl_(new FileDepIteratorImpl(fileName))
 {
-    if (!isValidFile()) {
+    if (!IsValidFile()) {
         impl_->d_header_p = 0; // iteration state is invalid
     }
     ++*this; // load first occurrence
@@ -132,9 +132,9 @@ FileDepIterator::~FileDepIterator()
     delete impl_;
 }
 
-void FileDepIterator::reset() 
+void FileDepIterator::Reset() 
 {
-    if (isValidFile()) {
+    if (IsValidFile()) {
         impl_->d_file.seekg(ios::beg); // rewind to beginning of file
         impl_->d_file.clear(impl_->d_file.rdstate() & ios::badbit); 
         impl_->d_header_p = impl_->d_buf;
@@ -142,7 +142,7 @@ void FileDepIterator::reset()
     ++*this; // load first occurrence
 }
 
-bool FileDepIterator::isValidFile() const 
+bool FileDepIterator::IsValidFile() const 
 { 
     return impl_->d_isValidFile;
 }
