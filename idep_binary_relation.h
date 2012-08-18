@@ -4,7 +4,6 @@
 // This leaf component defines 1 class:
 //   idep_BinRel: Square matrix of bits with transitive closure capability.
 #include<ostream>
-using namespace std;
 
 class idep_BinRel {
     char **d_rel_p;     // array of pointers into a contiguous byte array
@@ -75,7 +74,7 @@ class idep_BinRel {
         // defined.
 };
 
-ostream& operator<<(ostream& out, const idep_BinRel& rel);
+std::ostream& operator<<(std::ostream& out, const idep_BinRel& rel);
    // Output this binary relation in row/column format with the upper left 
    // corner as the origin to the specified output stream (out).
 

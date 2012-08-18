@@ -32,7 +32,7 @@ static bool IsAbsolutePath(const char* original_path) {
 
 static int isAsciiFile(const char *fileName) {
     enum { NO = 0, YES = 1 };
-    ifstream in(fileName);
+    std::ifstream in(fileName);
     if (!in) {
         return NO;
     }
@@ -48,7 +48,7 @@ static int isAsciiFile(const char *fileName) {
 }
 
 //typedef void (idep_CompileDep::*Func)(const char *); // TODO 
-template <typename Func> static void loadFromStream(istream& in, idep_CompileDep *dep) 
+template <typename Func> static void loadFromStream(std::istream& in, idep_CompileDep *dep) 
 { 
     assert(in);
     for (idep::TokenIterator it(in); it; ++it) {
@@ -70,9 +70,9 @@ template <typename Func> static int loadFromFile(const char *file, idep_CompileD
     if (!isAsciiFile(file)) {
         return BAD;
     }
-    ifstream in(file);
+    std::ifstream in(file);
     assert(in);
-    loadFromStream<Func>(in, dep); 
+    loadFromStream<Func>(in, dep);
     return GOOD;
 }
 
@@ -82,7 +82,7 @@ static const char* search(idep_String* s,
     assert(!IsAbsolutePath(file));
     (*s = includeDir) += file;
     const char *dirFile = stripDotSlash(*s);
-    return ifstream(dirFile) ? dirFile : 0;
+    return std::ifstream(dirFile) ? dirFile : 0;
 }
 
 static const char *search(idep_String *s, const idep_NameArray& a, 
@@ -91,7 +91,7 @@ static const char *search(idep_String *s, const idep_NameArray& a,
     if (IsAbsolutePath(file)) {
         *s = file;
         const char *absFile = *s;
-        return ifstream(absFile) ? absFile : 0;
+        return std::ifstream(absFile) ? absFile : 0;
     }
 
     const char *dirFile = 0;
@@ -116,7 +116,7 @@ static idep_BinRel *s_dependencies_p;   // set just before first call to getDep
 static idep_NameIndexMap *s_files_p;    // set just before first call to getDep
 static idep_NameArray *s_includes_p;    // set just before first call to getDep
 static int s_recurse;                   // set just before first call to getDep
-static ostream *s_err_p;                // set just before first call to getDep
+static std::ostream *s_err_p;                // set just before first call to getDep
 
 static int getDep (int index) 
 {
@@ -257,16 +257,16 @@ int idep_CompileDep::readRootFiles(const char *file)
 
 void idep_CompileDep::inputRootFiles()
 {
-    if (cin) {
+    if (std::cin) {
       //todo 
-      //      loadFromStream(cin, this, idep_CompileDep::addRootFile); 
-      loadFromStream<addRootFileFunctor>(cin, this); 
-      
-        cin.clear(std::_S_goodbit);             // reset eof for standard input
+      //      loadFromStream(cin, this, idep_CompileDep::addRootFile);
+      loadFromStream<addRootFileFunctor>(std::cin, this); 
+
+      std::cin.clear(std::_S_goodbit);             // reset eof for standard input
     }
 }
 
-int idep_CompileDep::calculate(ostream& orf, int recursionFlag)
+int idep_CompileDep::calculate(std::ostream& orf, int recursionFlag)
 {
     enum { BAD = -1, GOOD = 0 } status = GOOD;
 

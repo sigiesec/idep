@@ -1,10 +1,10 @@
 #include "idep_binary_relation.h"
 
-#include <memory.h>     // memcpy() memset() memcmp()
-#include <iostream>
 #include <assert.h>
+#include <memory.h>     // memcpy() memset() memcmp()
 
-using namespace std;
+#include <iostream>
+
 // IMPLEMENTATION NOTE: MEMORY LAYOUT
 // +---------+          +---------+             +---+---+---+---+
 // |         |--------->|         |------------>|   |   |   |   |
@@ -107,7 +107,7 @@ idep_BinRel::idep_BinRel(const idep_BinRel& rel)
 , d_rel_p(alloc(rel.d_size))
 { 
   // TODO 
-  copy(d_rel_p, d_rel_p + d_size, rel.d_rel_p);
+  copy(d_rel_p, d_rel_p + d_size, rel.d_size);
 }
 
 idep_BinRel& idep_BinRel::operator=(const idep_BinRel& rel) 
@@ -119,7 +119,7 @@ idep_BinRel& idep_BinRel::operator=(const idep_BinRel& rel)
             d_rel_p = alloc(d_size);
         }
         //TODO
-	copy(d_rel_p, d_rel_p + d_size, rel.d_rel_p);
+	copy(d_rel_p, d_rel_p + d_size, rel.d_size);
 	//	copy(d_rel_p, rel.d_rel_p, d_size);
         d_length = rel.d_length;
     }
@@ -223,7 +223,7 @@ std::ostream& operator<<(std::ostream& o, const idep_BinRel& rel)
     const char *SP = rel.length() < 30 ? " " : "";
     for (r = 0; r < rel.length(); ++r) {
         if (r && 0 == r % GAP_GRID) { 
-            o << endl;
+            o << std::endl;
         }
         
         for (c = 0; c < rel.length(); ++c) {
@@ -232,7 +232,7 @@ std::ostream& operator<<(std::ostream& o, const idep_BinRel& rel)
             }
             o << (rel.get(r,c) ? '1' : '_') << SP;
         }
-        o << endl;
+        o << std::endl;
     }
     return o;
 }
