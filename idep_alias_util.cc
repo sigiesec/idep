@@ -40,11 +40,10 @@ static int tryToAlias(idep_AliasTable* table,
 
 namespace idep {
 
-int AliasUtil::readAliases(idep_AliasTable* table,
+int AliasUtil::ReadAliases(idep_AliasTable* table,
                            std::ostream& orf,
                            std::istream& in,
-                           const char* inputName)
-{
+                           const char* inputName) {
     // The following is a state-machine description of the alias language:
 
     enum State {
@@ -194,16 +193,15 @@ int AliasUtil::readAliases(idep_AliasTable* table,
 }
 
 
-int AliasUtil::readAliases(idep_AliasTable *table,
+int AliasUtil::ReadAliases(idep_AliasTable* table,
                            std::ostream& orf,
-                           const char *fileName)
-{
+                           const char* fileName) {
     enum { IOERROR = -1 };
     std::ifstream in(fileName);
     if (!in) {
         return IOERROR;
     }
-    return readAliases(table, orf, in, fileName);
+    return ReadAliases(table, orf, in, fileName);
 }
 
 }  // namespace idep

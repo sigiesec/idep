@@ -190,7 +190,7 @@ const char *AliasDep::addAlias(const char *alias, const char *component)
 
 int AliasDep::readAliases(ostream& orf, const char *file)
 {
-    return idep::AliasUtil::readAliases(&impl_->d_aliases, orf, file);
+    return idep::AliasUtil::ReadAliases(&impl_->d_aliases, orf, file);
 }
 
 void AliasDep::addFileName(const char *fileName)

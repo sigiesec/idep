@@ -700,21 +700,21 @@ const char *idep_LinkDep::addAlias(const char *alias, const char *component)
 
 int idep_LinkDep::readAliases(ostream& orf, const char *file)
 {
-    return idep::AliasUtil::readAliases(&d_this->d_aliases, orf, file);
+    return idep::AliasUtil::ReadAliases(&d_this->d_aliases, orf, file);
 }
 
 void idep_LinkDep::addUnaliasDirectory(const char *dirName)
 {
-    if (*dirName) {                             
+    if (*dirName) {
         int len = strlen(dirName);
         if ('/' == dirName[len-1]) {            // already ends in '/'
             const char *n = stripDotSlash(dirName);
-            if (*n) {                           // avoid adding empty dir 
+            if (*n) {                           // avoid adding empty dir
                 d_this->d_unaliases.add(n);
             }
         }
         else {                                  // add trailing '/'
-            char *buf = new char[len+2];                
+            char *buf = new char[len+2];
             memcpy (buf, dirName, len);
             buf[len] = '/';
             buf[len+1] = '\0';
