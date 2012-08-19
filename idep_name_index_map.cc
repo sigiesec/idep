@@ -102,58 +102,50 @@ int NameIndexMapImpl::insert(NameIndexMapLink *& slot, const char *nm)
                 // -*-*-*- NameIndexMap -*-*-*-
 
 NameIndexMap::NameIndexMap(int max_entries_hint)
-: impl_(new NameIndexMapImpl(max_entries_hint))
-{
+    : impl_(new NameIndexMapImpl(max_entries_hint)) {
 }
 
-NameIndexMap::~NameIndexMap()
-{
+NameIndexMap::~NameIndexMap() {
     delete impl_;
 }
 
-int NameIndexMap::add(const char* name)
-{
+int NameIndexMap::Add(const char* name) {
     NameIndexMapLink *& slot = impl_->findSlot(name);
     return find(slot, name) ? BAD_INDEX : impl_->insert(slot, name);
 }
 
-int NameIndexMap::entry(const char* name)
-{
+int NameIndexMap::Entry(const char* name) {
     NameIndexMapLink *& slot = impl_->findSlot(name);
     const NameIndexMapLink *link = find(slot, name);
     return link ? link->d_index : impl_->insert(slot, name);
 }
 
-const char *NameIndexMap::operator[](int i) const
-{
-    return impl_->d_array[i];
+const char* NameIndexMap::operator[](int index) const {
+    return impl_->d_array[index];
 }
 
-int NameIndexMap::Length() const
-{
+int NameIndexMap::Length() const {
     return impl_->d_array.Length();
 }
 
-int NameIndexMap::Lookup(const char* name) const
-{
+int NameIndexMap::Lookup(const char* name) const {
     NameIndexMapLink *& slot = impl_->findSlot(name);
     const NameIndexMapLink* link = find(slot, name);
     return link ? link->d_index : BAD_INDEX;
 }
 
-std::ostream& operator<<(std::ostream& out, const NameIndexMap& map)
-{
-    int fieldWidth = 10;
-    int maxIndex = map.Length() - 1;
+std::ostream& operator<<(std::ostream& out, const NameIndexMap& map) {
+    int field_width = 10;
+    int max_index = map.Length() - 1;
     assert (sizeof (long int) >= 4);
     long int x = 1000 * 1000 * 1000;    // requires 4-byte integer.
-    while (fieldWidth > 1 && 0 == maxIndex / x) {
-        --fieldWidth;
+    while (field_width > 1 && 0 == max_index / x) {
+        --field_width;
         x /= 10;
     }
 
     for (int i = 0; i < map.Length(); ++i) {
-        out.width(fieldWidth);
+        out.width(field_width);
         out << i << ". " << map[i] << std::endl;
     }
 

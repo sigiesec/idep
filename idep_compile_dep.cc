@@ -117,10 +117,9 @@ static idep::NameArray *s_includes_p;    // set just before first call to getDep
 static int s_recurse;                   // set just before first call to getDep
 static std::ostream *s_err_p;                // set just before first call to getDep
 
-static int getDep (int index) 
-{
+static int getDep(int index) {
     enum { BAD = -1, GOOD = 0 } status = GOOD;
-     
+
     std::string buffer; // string buffer, do not use directly
 
     idep::FileDepIterator it((*s_files_p)[index]);
@@ -128,18 +127,18 @@ static int getDep (int index)
         const char *dirFile = search(&buffer, *s_includes_p, it());
         if (!dirFile) {
             err(*s_err_p) << "include directory for file \""
-                 << it() << "\" not specified." << std::endl; 
+                 << it() << "\" not specified." << std::endl;
             status = BAD;
             continue;
         }
 
         int length = s_files_p->Length();
-        int otherIndex = s_files_p->entry(dirFile);
+        int otherIndex = s_files_p->Entry(dirFile);
 
         if (s_files_p->Length() > length) {
             // first time looking at this file
             s_dependencies_p->appendEntry();
-                
+
             if (s_recurse && getDep(otherIndex)) {
                 status = BAD;
             }
@@ -150,13 +149,13 @@ static int getDep (int index)
 
     if (!it.IsValidFile()) {
        err(*s_err_p) << "unable to open file \""
-         << (*s_files_p)[index] << "\" for read access." << std::endl; 
+         << (*s_files_p)[index] << "\" for read access." << std::endl;
         status = BAD;
     }
 
     return status;
 }
-                    
+
                 // -*-*-*- idep_CompileDep_i -*-*-*-
 
 struct idep_CompileDep_i {
@@ -287,12 +286,12 @@ int idep_CompileDep::calculate(std::ostream& orf, int recursionFlag)
         const char *dirFile = search(&s, d_this->d_includeDirectories, file);
 
         if (!dirFile) {
-            err(orf) << "root file \"" << file 
+            err(orf) << "root file \"" << file
                     << "\" not found." << std::endl;
             status = BAD;
         }
-        else if (d_this->d_fileNames_p->add(dirFile) < 0) { 
-            err(orf) << "root file \"" << file 
+        else if (d_this->d_fileNames_p->Add(dirFile) < 0) {
+            err(orf) << "root file \"" << file
                     << "\" redundantly specified." << std::endl;
             status = BAD;
         }
@@ -301,8 +300,8 @@ int idep_CompileDep::calculate(std::ostream& orf, int recursionFlag)
             d_this->d_dependencies_p->appendEntry();
         }
     }
-        
-    // We must now investigate the compile-time dependencies for each 
+
+    // We must now investigate the compile-time dependencies for each
     // translation unit recursively.  First we will set up several
     // file-scope pointers to reduce recursive overhead.
 

@@ -180,7 +180,7 @@ int idep_LinkDep_i::entry(const char *name, int suffixFlag)
     }
 
     int length = d_componentNames_p->Length();
-    int index = d_componentNames_p->entry(componentName);
+    int index = d_componentNames_p->Entry(componentName);
     if (d_componentNames_p->Length() > length) {
         d_dependencies_p->appendEntry();
     }
@@ -709,7 +709,7 @@ void idep_LinkDep::addUnaliasDirectory(const char *dirName)
         if ('/' == dirName[len-1]) {            // already ends in '/'
             const char *n = stripDotSlash(dirName);
             if (*n) {                           // avoid adding empty dir
-                d_this->d_unaliases.add(n);
+                d_this->d_unaliases.Add(n);
             }
         }
         else {                                  // add trailing '/'
@@ -719,7 +719,7 @@ void idep_LinkDep::addUnaliasDirectory(const char *dirName)
             buf[len+1] = '\0';
             const char *n = stripDotSlash(buf);
             if (*n) {                           // avoid adding empty dir
-                d_this->d_unaliases.add(n);
+                d_this->d_unaliases.Add(n);
             }
             delete [] buf;
         }
@@ -737,7 +737,7 @@ int idep_LinkDep::readUnaliasDirectories(const char *file)
 
     for (idep::TokenIterator it(in); it; ++it) {
         if ('\n' != *it()) {
-            d_this->d_unaliases.add(it());
+            d_this->d_unaliases.Add(it());
         }
     }
 

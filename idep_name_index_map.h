@@ -20,12 +20,12 @@ class NameIndexMap {
 
   // Add a name to the mapping and return its index only if the name is
   // not already present; otherwise return -1.
-  int add(const char* name);
+  int Add(const char* name);
 
   // Add a name to the table if necessary; always return a valid index.
   // Note: entry() is usually more efficient than Lookup() followed by
   // an occasional add().
-  int entry(const char* name);
+  int Entry(const char* name);
 
   // Return the name associated with the specified index or 0 if the
   // specified index is out of the range [0 .. N], where N = length - 1.

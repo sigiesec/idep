@@ -164,7 +164,7 @@ AliasDep::~AliasDep()
 
 void AliasDep::addIgnoreName(const char *fileName)
 {
-    impl_->d_ignoreNames.add(fileName);
+    impl_->d_ignoreNames.Add(fileName);
 }
 
 int AliasDep::readIgnoreNames(const char *file)
@@ -187,7 +187,7 @@ int AliasDep::readAliases(std::ostream& orf, const char *file)
 
 void AliasDep::addFileName(const char *fileName)
 {
-    impl_->d_fileNames.add(fileName);
+    impl_->d_fileNames.Add(fileName);
 }
 
 int AliasDep::readFileNames(const char *file)
@@ -228,7 +228,7 @@ int AliasDep::unpaired(std::ostream& out, std::ostream& ing, int suffixFlag) con
             componentName = s;
         }
 
-        int componentIndex = components.entry(componentName);
+        int componentIndex = components.Entry(componentName);
         if (components.Length() > numComponents) {      // new component
             ++numComponents;
 
@@ -243,7 +243,7 @@ int AliasDep::unpaired(std::ostream& out, std::ostream& ing, int suffixFlag) con
     for (int i = 0; i < numComponents; ++i) {
         assert(hits[i] > 0);
         if (1 == hits[i]) {
-            printNames.add(suffixFlag ? impl_->d_fileNames[cmap[i]]
+            printNames.Add(suffixFlag ? impl_->d_fileNames[cmap[i]]
                                       : components[i]);
         }
         if (hits[i] > 2) {
@@ -450,7 +450,7 @@ int AliasDep::extract(std::ostream& out, std::ostream& orf) const
         // We have no reason *not* to think this is a valid match (yet).
         // Record this header as being associated with the this .c file.
 
-        int hIndex = uniqueHeaders.entry(header); // obtaine index of header
+        int hIndex = uniqueHeaders.Entry(header); // obtaine index of header
         ++hits[hIndex];                           // record frequency
         hmap[i] = hIndex;                         // set .c -> header index
     }
