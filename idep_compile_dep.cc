@@ -112,7 +112,7 @@ static const char* search(std::string* s,
 // several invariant arguments on the program stack.
 
 static idep::BinaryRelation *s_dependencies_p;   // set just before first call to getDep
-static idep_NameIndexMap *s_files_p;    // set just before first call to getDep
+static NameIndexMap *s_files_p;    // set just before first call to getDep
 static idep::NameArray *s_includes_p;    // set just before first call to getDep
 static int s_recurse;                   // set just before first call to getDep
 static std::ostream *s_err_p;                // set just before first call to getDep
@@ -163,7 +163,7 @@ struct idep_CompileDep_i {
     idep::NameArray d_includeDirectories;      // e.g., ".", "/usr/include"
     idep::NameArray d_rootFiles;               // files to be analyzed
 
-    idep_NameIndexMap *d_fileNames_p;         // keys for relation
+    NameIndexMap *d_fileNames_p;         // keys for relation
     idep::BinaryRelation *d_dependencies_p;            // compile-time dependencies
     int d_numRootFiles;                       // number of roots in relation
 
@@ -274,7 +274,7 @@ int idep_CompileDep::calculate(std::ostream& orf, int recursionFlag)
     delete d_this->d_dependencies_p;
 
     // allocate new data structures for this calculation
-    d_this->d_fileNames_p = new idep_NameIndexMap;
+    d_this->d_fileNames_p = new NameIndexMap;
     d_this->d_dependencies_p = new idep::BinaryRelation;     
     d_this->d_numRootFiles = 0;
 

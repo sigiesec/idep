@@ -145,9 +145,9 @@ class AliasDepString {     // auxiliary class to manage modifiable char *
 };
 
 struct AliasDepImpl {
-    idep_NameIndexMap d_ignoreNames;          // e.g., idep_compile_dep_unittest.cc
+    NameIndexMap d_ignoreNames;          // e.g., idep_compile_dep_unittest.cc
     AliasTable d_aliases;                // e.g., my_inta -> my_intarray
-    idep_NameIndexMap d_fileNames;            // files to be analyzed
+    NameIndexMap d_fileNames;            // files to be analyzed
 };
 
                 // -*-*-*- AliasDep -*-*-*-
@@ -209,11 +209,11 @@ int AliasDep::unpaired(std::ostream& out, std::ostream& ing, int suffixFlag) con
     AliasDepIntArray hits(maxLength);  // records num files per component
     AliasDepIntArray cmap(maxLength);  // map component to (last) file
     zero(&hits);
-    idep_NameIndexMap components;
+    NameIndexMap components;
     int numComponents = 0;
 
-    idep_NameIndexMap printNames;   // Used to sort names for ease of use
-                                    // during cut and past in the editor.
+    NameIndexMap printNames;   // Used to sort names for ease of use
+                               // during cut and past in the editor.
 
     for (int i = 0; i < maxLength; ++i) {
         AliasDepString s(impl_->d_fileNames[i]);
@@ -379,7 +379,7 @@ int AliasDep::extract(std::ostream& out, std::ostream& orf) const
     enum { INVALID_INDEX = -1 };
     int errorCount = 0; // keep track of number of readable faulty files
 
-    idep_NameIndexMap uniqueHeaders;       // used to detect multiple .c files
+    NameIndexMap uniqueHeaders;       // used to detect multiple .c files
     int length = impl_->d_fileNames.Length();
     AliasDepIntArray hits(length);    // records frequency of headers
     zero(&hits);

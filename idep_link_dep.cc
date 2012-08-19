@@ -87,11 +87,11 @@ static double ccdBalencedBinaryTree(int n)  {
 }
 
 struct idep_LinkDep_i {
-    idep_NameIndexMap d_unaliases;          // e.g., ".", "/usr/include"
+    NameIndexMap d_unaliases;          // e.g., ".", "/usr/include"
     idep::AliasTable d_aliases;              // e.g., fooa -> fooarray
     idep::NameArray d_dependencyFiles;       // hold compile-time dependencies
 
-    idep_NameIndexMap *d_componentNames_p;  // keys for relation
+    NameIndexMap *d_componentNames_p;  // keys for relation
     idep::BinaryRelation *d_dependencies_p;          // compile-time dependencies
     int *d_map_p;                           // map to levelized order   
     int *d_levels_p;                        // number of components per level
@@ -317,7 +317,7 @@ int idep_LinkDep_i::calculate(std::ostream& orf, int canonicalFlag, int suffixFl
     delete d_cycleIndices_p;
 
     // allocate new data structures for this calculation
-    d_componentNames_p = new idep_NameIndexMap;
+    d_componentNames_p = new NameIndexMap;
     d_dependencies_p = new idep::BinaryRelation;     
     d_map_p = 0;                // allocated later when length is known
     d_levels_p = 0;             // allocated later when length is known
@@ -1089,13 +1089,13 @@ const char *idep_AliasIter::toName() const
                 // -*-*-*- idep_UnaliasIter_i -*-*-*-
 
 struct idep_UnaliasIter_i {
-    const idep_NameIndexMap& d_array;
+    const NameIndexMap& d_array;
     int d_index;
 
-    idep_UnaliasIter_i(const idep_NameIndexMap& array);
+    idep_UnaliasIter_i(const NameIndexMap& array);
 };
 
-idep_UnaliasIter_i::idep_UnaliasIter_i(const idep_NameIndexMap& array) 
+idep_UnaliasIter_i::idep_UnaliasIter_i(const NameIndexMap& array) 
 : d_array(array)
 , d_index(0)
 {

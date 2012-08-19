@@ -99,49 +99,49 @@ int NameIndexMapImpl::insert(NameIndexMapLink *& slot, const char *nm)
     return index;
 }
 
-                // -*-*-*- idep_NameIndexMap -*-*-*-
+                // -*-*-*- NameIndexMap -*-*-*-
 
-idep_NameIndexMap::idep_NameIndexMap(int max_entries_hint)
+NameIndexMap::NameIndexMap(int max_entries_hint)
 : impl_(new NameIndexMapImpl(max_entries_hint))
 {
 }
 
-idep_NameIndexMap::~idep_NameIndexMap()
+NameIndexMap::~NameIndexMap()
 {
     delete impl_;
 }
 
-int idep_NameIndexMap::add(const char* name)
+int NameIndexMap::add(const char* name)
 {
     NameIndexMapLink *& slot = impl_->findSlot(name);
     return find(slot, name) ? BAD_INDEX : impl_->insert(slot, name);
 }
 
-int idep_NameIndexMap::entry(const char* name)
+int NameIndexMap::entry(const char* name)
 {
     NameIndexMapLink *& slot = impl_->findSlot(name);
     const NameIndexMapLink *link = find(slot, name);
     return link ? link->d_index : impl_->insert(slot, name);
 }
 
-const char *idep_NameIndexMap::operator[](int i) const
+const char *NameIndexMap::operator[](int i) const
 {
     return impl_->d_array[i];
 }
 
-int idep_NameIndexMap::Length() const
+int NameIndexMap::Length() const
 {
     return impl_->d_array.Length();
 }
 
-int idep_NameIndexMap::Lookup(const char* name) const
+int NameIndexMap::Lookup(const char* name) const
 {
     NameIndexMapLink *& slot = impl_->findSlot(name);
     const NameIndexMapLink* link = find(slot, name);
     return link ? link->d_index : BAD_INDEX;
 }
 
-std::ostream& operator<<(std::ostream& out, const idep_NameIndexMap& map)
+std::ostream& operator<<(std::ostream& out, const NameIndexMap& map)
 {
     int fieldWidth = 10;
     int maxIndex = map.Length() - 1;

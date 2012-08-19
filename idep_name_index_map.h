@@ -9,12 +9,12 @@ class NameIndexMapImpl;
 
 // This component defines 1 fully insulated class:
 // Efficient two-way mapping between strings and indices.
-class idep_NameIndexMap {
+class NameIndexMap {
  public:
   // Create a new mapping; optionally specify the expected number of
   // entires.  By default, a moderately large hash table will be created.
-  explicit idep_NameIndexMap(int max_entries_hint = 0);
-  ~idep_NameIndexMap();
+  explicit NameIndexMap(int max_entries_hint = 0);
+  ~NameIndexMap();
 
   // Add a name to the mapping and return its index only if the name is
   // not already present; otherwise return -1.
@@ -38,11 +38,11 @@ class idep_NameIndexMap {
  private:
   NameIndexMapImpl* impl_;
 
-  DISALLOW_COPY_AND_ASSIGN(idep_NameIndexMap);
+  DISALLOW_COPY_AND_ASSIGN(NameIndexMap);
 };
 
 // Print the logical contents of this mapping to the specified output stream
 // (out) in some reasonable format.
-std::ostream& operator<<(std::ostream& out, const idep_NameIndexMap& map);
+std::ostream& operator<<(std::ostream& out, const NameIndexMap& map);
 
 #endif  // IDEP_NAME_INDEX_MAP_H_
