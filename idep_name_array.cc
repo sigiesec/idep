@@ -1,19 +1,19 @@
 #include "idep_name_array.h"
 
 #include <assert.h>
-#include <memory.h>     // memcpy()
-#include <string.h>     // strlen()
+#include <memory.h>
+#include <string.h>
 
 #include <iostream>
 
 enum { START_SIZE = 1, GROW_FACTOR = 2 };
 
-static char* newStrCpy(const char* oldStr) {
-  int size = strlen(oldStr) + 1;
-  char *newStr = new char[size];
-  assert(newStr);
-  memcpy(newStr, oldStr, size);
-  return newStr;
+static char* NewStrCpy(const char* old_str) {
+  int size = strlen(old_str) + 1;
+  char* new_str = new char[size];
+  assert(new_str);
+  memcpy(new_str, old_str, size);
+  return new_str;
 }
 
 namespace idep {
@@ -35,19 +35,19 @@ int NameArray::Append(const char* name) {
   if (length_ >= size_) {
     int oldSize = size_;
     size_ *= GROW_FACTOR;
-    char **tmp = array_;
+    char** tmp = array_;
     array_ = new char *[size_];
     assert (array_);
     memcpy (array_, tmp, oldSize * sizeof *array_);
-    delete [] tmp;
+    delete[] tmp;
   }
   assert(length_ < size_);
-  array_[length_++] = newStrCpy(name);
+  array_[length_++] = NewStrCpy(name);
   return length_ - 1;
 }
 
-const char* NameArray::operator[](int i) const {
-  return i < length_ && i >= 0 ? array_[i] : 0;
+const char* NameArray::operator[](int index) const {
+  return (index < length_ && index >= 0) ? array_[index] : 0;
 }
 
 int NameArray::Length() const {
@@ -55,17 +55,17 @@ int NameArray::Length() const {
 }
 
 std::ostream& operator<<(std::ostream& out, const NameArray& array) {
-  int fieldWidth = 10;
-  int maxIndex = array.Length() - 1;
-  assert (sizeof (long int) >= 4);
+  int field_width = 10;
+  int max_index = array.Length() - 1;
+  assert(sizeof (long int) >= 4);
   long int x = 1000 * 1000 * 1000;    // requires 4-byte integer.
-  while (fieldWidth > 1 && 0 == maxIndex / x) {
-    --fieldWidth;
+  while (field_width > 1 && 0 == max_index / x) {
+    --field_width;
     x /= 10;
   }
 
   for (int i = 0; i < array.Length(); ++i) {
-    out.width(fieldWidth);
+    out.width(field_width);
     out << i << ". " << array[i] << std::endl;
   }
 
