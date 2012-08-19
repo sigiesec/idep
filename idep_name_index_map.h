@@ -5,6 +5,8 @@
 
 #include "basictypes.h"
 
+namespace idep {
+
 class NameIndexMapImpl;
 
 // This component defines 1 fully insulated class:
@@ -44,5 +46,7 @@ class NameIndexMap {
 // Print the logical contents of this mapping to the specified output stream
 // (out) in some reasonable format.
 std::ostream& operator<<(std::ostream& out, const NameIndexMap& map);
+
+}  // namespace idep
 
 #endif  // IDEP_NAME_INDEX_MAP_H_

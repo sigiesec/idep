@@ -19,48 +19,48 @@ static unsigned hash(register const char* name) {
     return sum; // unsigned ensures positive value for use with (%) operator.
 }
 
+namespace idep {
+
 struct NameIndexMapLink {
- const char *d_name_p;                       // name
- int d_index;                                // index of name
- NameIndexMapLink *d_next_p;            // pointer to next link
+ const char *d_name_p;
+ int d_index;                 // index of name
+ NameIndexMapLink *d_next_p;  // pointer to next link
 
  NameIndexMapLink(const char* name,
-                       int index,
-                       NameIndexMapLink* d_next_p);
+                  int index,
+                  NameIndexMapLink* d_next_p);
 };
 
 NameIndexMapLink::NameIndexMapLink(const char* name,
-                                             int index,
-                                             NameIndexMapLink *next)
+                                   int index,
+                                   NameIndexMapLink *next)
     : d_name_p(name),
       d_index(index),
       d_next_p(next) {
 }
 
-static const NameIndexMapLink *find(const NameIndexMapLink *p,
-                                         const char *name)
-{
-    while (p && 0 != strcmp(p->d_name_p, name)) {
+static const NameIndexMapLink* find(const NameIndexMapLink* p,
+                                    const char* name) {
+    while (p && 0 != strcmp(p->d_name_p, name))
         p = p->d_next_p;
-    }
     return p;
 }
 
 struct NameIndexMapImpl {
-    idep::NameArray d_array;                     // array of names
-    NameIndexMapLink **d_table_p;          // hash table of names
-    int d_tableSize;                            // size of hash table
+    idep::NameArray d_array;       // array of names
+    NameIndexMapLink **d_table_p;  // hash table of names
+    int d_tableSize;               // size of hash table
 
+    // Create a map representation assuming the specified (max) size.
     NameIndexMapImpl(int size);
-        // create a map representation assuming the specified (max) size
 
     ~NameIndexMapImpl();
 
-    NameIndexMapLink *& findSlot(const char *name);
-        // find the appropriate slot for this name
+    // Find the appropriate slot for this name.
+    NameIndexMapLink *& findSlot(const char* name);
 
-    int insert(NameIndexMapLink *& slot, const char *name);
-        // insert name into specified slot
+    // Insert name into specified slot.
+    int insert(NameIndexMapLink *& slot, const char* name);
 };
 
 NameIndexMapImpl::NameIndexMapImpl(int size)
@@ -159,3 +159,5 @@ std::ostream& operator<<(std::ostream& out, const NameIndexMap& map)
 
     return out;
 }
+
+}  // namespace idep
