@@ -58,7 +58,7 @@ int AliasUtil::ReadAliases(AliasTable* table,
         IDENT_BL,       //    ident - blank line terminated
         NUM_STATES      // must be last entry
     } state = START;
- 
+
     enum Input {
         CONTINUE,       // continuation character by it self
         NEWLINE,        // end of line
@@ -66,7 +66,7 @@ int AliasUtil::ReadAliases(AliasTable* table,
         NUM_INPUTS      // must be last entry
     } input;
 
-    enum Action { 
+    enum Action {
         NOP,            // do nothing
         BEG_CUR,        // set component name to current token
         BEG_PRE,        // set component name to previous token
@@ -195,13 +195,13 @@ int AliasUtil::ReadAliases(AliasTable* table,
 
 int AliasUtil::ReadAliases(AliasTable* table,
                            std::ostream& orf,
-                           const char* fileName) {
-    enum { IOERROR = -1 };
-    std::ifstream in(fileName);
-    if (!in) {
-        return IOERROR;
-    }
-    return ReadAliases(table, orf, in, fileName);
+                           const char* file_name) {
+  enum { IOERROR = -1 };
+  std::ifstream in(file_name);
+  if (!in)
+    return IOERROR;
+
+  return ReadAliases(table, orf, in, file_name);
 }
 
 }  // namespace idep

@@ -64,7 +64,7 @@ class AliasUtil {
                          const char* input_name);
   static int ReadAliases(AliasTable* table,
                          std::ostream& err,
-                         const char* file);
+                         const char* file_name);
 };
 
 }  // namespace idep
