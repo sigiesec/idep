@@ -2,18 +2,16 @@
 
 #include <assert.h>
 #include <ctype.h>
-#include <fstream>
 #include <memory.h>
 #include <string.h>
 
-using namespace std;
+#include <fstream>
 
-enum { MAX_LINE_LENGTH  = 2048 };       // Arbitrary maximum length for
-                                        // line containing an include 
-                                        // directive.  Note that other 
-                                        // lines may be longer.
+// Arbitrary maximum length for line containing an include directive. Note that
+// other lines may be longer.
+enum { MAX_LINE_LENGTH  = 2048 };
 
-static int loadBuf(istream& in, char *buf, int bufSize) {
+static int loadBuf(std::istream& in, char* buf, int bufSize) {
     enum { END_OF_INPUT = -1, SUCCESS = 0, OVERFLOW = 1 };
 
     // The getline (istream) method returns the line as a string but extracts
@@ -103,68 +101,60 @@ const char *extractDependency(char *buffer) {
 namespace idep {
 
 struct FileDepIteratorImpl {
-    ifstream d_file;
-    char d_buf[MAX_LINE_LENGTH];
-    const char *d_header_p;
-    bool d_isValidFile;
+  std::ifstream d_file;
+  char d_buf[MAX_LINE_LENGTH];
+  const char *d_header_p;
+  bool d_isValidFile;
 
-    FileDepIteratorImpl(const char *fileName);
+  FileDepIteratorImpl(const char* file_name);
 };
 
-FileDepIteratorImpl::FileDepIteratorImpl(const char *fileName)
-: d_file(fileName)
-, d_header_p(d_buf)             // buffer is not yet initialized
-{
-    d_isValidFile = d_file != NULL;   // depends on result of initialization
+FileDepIteratorImpl::FileDepIteratorImpl(const char* file_name)
+    : d_file(file_name),
+      d_header_p(d_buf)  /* Buffer is not yet initialized. */ {
+  d_isValidFile = d_file != NULL;  // Depends on result of initialization.
 }
 
 FileDepIterator::FileDepIterator(const char *fileName)
-: impl_(new FileDepIteratorImpl(fileName))
-{
-    if (!IsValidFile()) {
-        impl_->d_header_p = 0; // iteration state is invalid
-    }
-    ++*this; // load first occurrence
+    : impl_(new FileDepIteratorImpl(fileName)) {
+  if (!IsValidFile())
+    impl_->d_header_p = 0; // Iteration state is invalid.
+
+  ++*this; // load first occurrence
 }
 
-FileDepIterator::~FileDepIterator()
-{
+FileDepIterator::~FileDepIterator() {
     delete impl_;
 }
 
-void FileDepIterator::Reset() 
-{
-    if (IsValidFile()) {
-        impl_->d_file.seekg(ios::beg); // rewind to beginning of file
-        impl_->d_file.clear(impl_->d_file.rdstate() & ios::badbit); 
-        impl_->d_header_p = impl_->d_buf;
+void FileDepIterator::Reset() {
+  if (IsValidFile()) {
+    impl_->d_file.seekg(std::ios::beg); // rewind to beginning of file
+    impl_->d_file.clear(impl_->d_file.rdstate() & std::ios::badbit);
+    impl_->d_header_p = impl_->d_buf;
+  }
+  ++*this; // load first occurrence
+}
+
+bool FileDepIterator::IsValidFile() const {
+  return impl_->d_isValidFile;
+}
+
+void FileDepIterator::operator++() {
+  impl_->d_header_p = 0;
+  while (loadBuf(impl_->d_file, impl_->d_buf, sizeof impl_->d_buf) >= 0) {
+    if (impl_->d_header_p = extractDependency(impl_->d_buf)) { // `=' ok
+      break;
     }
-    ++*this; // load first occurrence
+  }
 }
 
-bool FileDepIterator::IsValidFile() const 
-{ 
-    return impl_->d_isValidFile;
+FileDepIterator::operator const void *() const {
+  return impl_->d_header_p ? this : 0;
 }
 
-void FileDepIterator::operator++() 
-{ 
-    impl_->d_header_p = 0;
-    while (loadBuf(impl_->d_file, impl_->d_buf, sizeof impl_->d_buf) >= 0) {
-        if (impl_->d_header_p = extractDependency(impl_->d_buf)) { // `=' ok
-            break;
-        }
-    };
-}    
-
-FileDepIterator::operator const void *() const 
-{ 
-    return impl_->d_header_p ? this : 0;
-}
-
-const char* FileDepIterator::operator()() const 
-{ 
-    return impl_->d_header_p;
+const char* FileDepIterator::operator()() const {
+  return impl_->d_header_p;
 }
 
 }  // namespace idep

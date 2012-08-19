@@ -16,7 +16,7 @@ class FileDepIterator {
   // in the order in which they appear in the file.  Dependencies that
   // are conditionally compiled or commented out with multi-line
   // /* ... */ comments will none-the-less be returned by this iterator.
-  FileDepIterator(const char* fileName);
+  FileDepIterator(const char* file_name);
   ~FileDepIterator();
 
   // Return to the first dependency in the file (if one exists).
