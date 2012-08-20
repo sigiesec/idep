@@ -4,33 +4,30 @@
 
 // This file contains a main program to exercise the idep_link_dep component.
 
-#define NL "\n"
-static const char *help()
-{
-return NL
-"ldep: Analyze the link-time dependencies among a collection of components." NL
-""                                                                           NL
-"  The following command line interface is supported:"                       NL
-""                                                                           NL
-"    ldep [-U<dir>] [-u<un>] [-a<aliases>] [-d<deps>] [-l|-L] [-x|-X] [-s]"  NL
-""                                                                           NL
-"      -U<dir>     Specify directory not to group as a package."             NL
-"      -u<un>      Specify file containing directories not to group."        NL
-"      -a<aliases> Specify file containg list of component name aliases."    NL
-"      -d<deps>    Specify file containg list of compile-time dependencies." NL
-"      -l          Long listing: provide non-redundant list of dependencies."NL
-"      -L          Long listing: provide complete list of dependencies."     NL
-"      -x          Suppress printing any alias/unalias information."         NL
-"      -X          Suppress printing all but the levelized component names." NL
-"      -s          Do _not_ remove suffixes; consider each file separately." NL
-""                                                                           NL
-"    This command takes no arguments.  The dependencies themselves will"     NL
-"    come from standard input unless the -d option has been invoked."        NL
-""                                                                           NL
-"  TYPICAL USAGE:"                                                           NL
-""                                                                           NL
-"    ldep -aaliases -ddependencies"                                          NL
-NL;
+static const char* help() {
+return
+"\nldep: Analyze the link-time dependencies among a collection of components.\n"
+"\n"
+"  The following command line interface is supported:\n"
+"\n"
+"    ldep [-U<dir>] [-u<un>] [-a<aliases>] [-d<deps>] [-l|-L] [-x|-X] [-s]\n"
+"\n"
+"      -U<dir>     Specify directory not to group as a package.\n"
+"      -u<un>      Specify file containing directories not to group.\n"
+"      -a<aliases> Specify file containg list of component name aliases.\n"
+"      -d<deps>    Specify file containg list of compile-time dependencies.\n"
+"      -l          Long listing: provide non-redundant list of dependencies.\n"
+"      -L          Long listing: provide complete list of dependencies.\n"
+"      -x          Suppress printing any alias/unalias information.\n"
+"      -X          Suppress printing all but the levelized component names.\n"
+"      -s          Do _not_ remove suffixes; consider each file separately.\n"
+"\n"
+"    This command takes no arguments.  The dependencies themselves will\n"
+"    come from standard input unless the -d option has been invoked.\n"
+"\n"
+"  TYPICAL USAGE:\n"
+"\n"
+"    ldep -aaliases -ddependencies\n\n";
 }
 
 static enum { IOERROR = -1, SUCCESS = 0, DESIGN_ERROR = 1 } s_status = SUCCESS;
