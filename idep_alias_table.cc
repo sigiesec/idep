@@ -16,40 +16,39 @@ static unsigned hash(register const char* name) // Note: returns unsigned!
     }
     return sum; // unsigned ensures positive value for use with (%) operator.
 }
- 
-static char *newStrCpy(const char *oldStr)
-{
-    int size = strlen(oldStr) + 1;
-    char *newStr = new char[size];
-    assert(newStr);
-    memcpy(newStr, oldStr, size);
-    return newStr;
+
+static char* NewStrCpy(const char* old_str) {
+  int size = strlen(old_str) + 1;
+  char* new_str = new char[size];
+  assert(new_str);
+  memcpy(new_str, old_str, size);
+  return new_str;
 }
 
 namespace idep {
 
 struct AliasTableLink {
-    char *d_alias_p;                            // "from" (alias) name
-    char *d_originalName_p;                     // "to" (original) name
-    AliasTableLink *d_next_p;              // pointer to next link
+  char* d_alias_p;                       // "from" (alias) name
+  char* d_originalName_p;                // "to" (original) name
+  AliasTableLink* d_next_p;              // pointer to next link
 
-    AliasTableLink(const char *alias, const char *orignalName, 
-                                                AliasTableLink *next);
-    ~AliasTableLink();
+  AliasTableLink(const char* alias,
+                 const char* original_name,
+                 AliasTableLink* next);
+  ~AliasTableLink();
 };
 
-AliasTableLink::AliasTableLink(const char *alias, 
-                         const char *originalName, AliasTableLink* next) 
-: d_alias_p(newStrCpy(alias)) 
-, d_originalName_p(newStrCpy(originalName)) 
-, d_next_p(next) 
-{ 
+AliasTableLink::AliasTableLink(const char* alias,
+                               const char* original_name,
+                               AliasTableLink* next)
+    : d_alias_p(NewStrCpy(alias)),
+      d_originalName_p(NewStrCpy(original_name)),
+      d_next_p(next) {
 }
 
-AliasTableLink::~AliasTableLink() 
-{
-    delete [] d_alias_p;
-    delete [] d_originalName_p;
+AliasTableLink::~AliasTableLink()  {
+  delete[] d_alias_p;
+  delete[] d_originalName_p;
 }
 
 AliasTable::AliasTable(int size)
@@ -59,8 +58,7 @@ AliasTable::AliasTable(int size)
   memset(table_, 0, size_ * sizeof *table_);
 };
 
-AliasTable::~AliasTable() 
-{
+AliasTable::~AliasTable() {
     for (int i = 0; i < size_; ++i) {
         AliasTableLink* p = table_[i];
         while (p) {
@@ -73,7 +71,7 @@ AliasTable::~AliasTable()
 }
 
 int AliasTable::Add(const char* alias, const char* original_name)  {
-    enum { FOUND_DIFFERENT = -1, NOT_FOUND = 0, FOUND_IDENTICAL = 1 }; 
+    enum { FOUND_DIFFERENT = -1, NOT_FOUND = 0, FOUND_IDENTICAL = 1 };
 
     AliasTableLink *&slot = table_[hash(alias) % size_];
     AliasTableLink *p = slot;
