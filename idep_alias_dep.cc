@@ -93,12 +93,11 @@ static int loadFromFile(const char *file, AliasDep *dep, Func add)
     return GOOD;
 }
 
-static char *newStrCpy(const char *name)
-{
-    int size = strlen(name) + 1;
-    char *buf = new char[size];
-    memcpy(buf, name, size);
-    return buf;
+static char* NewStrCpy(const char* old_str) {
+  int size = strlen(old_str) + 1;
+  char* new_str = new char[size];
+  memcpy(new_str, old_str, size);
+  return new_str;
 }
 
 static char *removeSuffix(char *dirPath)
@@ -139,7 +138,7 @@ class AliasDepString {     // auxiliary class to manage modifiable char *
     AliasDepString(const AliasDepString&);
     AliasDepString& operator=(const AliasDepString&);
   public:
-    AliasDepString(const char *s) : d_string_p(newStrCpy(s)){}
+    AliasDepString(const char *s) : d_string_p(NewStrCpy(s)){}
     ~AliasDepString() { delete [] d_string_p; }
     operator char *() { return d_string_p; }
 };
