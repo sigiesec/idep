@@ -47,9 +47,9 @@ static const NameIndexMapLink* find(const NameIndexMapLink* p,
 }
 
 struct NameIndexMapImpl {
-    idep::NameArray d_array;       // array of names
-    NameIndexMapLink **d_table_p;  // hash table of names
-    int d_tableSize;               // size of hash table
+    NameArray array_;
+    NameIndexMapLink** table_;  // hash table of names
+    int table_size_;            // size of hash table
 
     // Create a map representation assuming the specified (max) size.
     NameIndexMapImpl(int size);
@@ -64,34 +64,34 @@ struct NameIndexMapImpl {
 };
 
 NameIndexMapImpl::NameIndexMapImpl(int size)
-    : d_array(size),
-      d_tableSize(size > 0 ? size : DEFAULT_TABLE_SIZE) {
-    d_table_p = new NameIndexMapLink *[d_tableSize];
-    assert(d_table_p);
-    memset(d_table_p, 0, d_tableSize * sizeof *d_table_p);
+    : array_(size),
+      table_size_(size > 0 ? size : DEFAULT_TABLE_SIZE) {
+    table_ = new NameIndexMapLink *[table_size_];
+    assert(table_);
+    memset(table_, 0, table_size_ * sizeof *table_);
 }
 
 NameIndexMapImpl::~NameIndexMapImpl() {
-  for (int i = 0; i < d_tableSize; ++i) {
-    NameIndexMapLink *p = d_table_p[i];
+  for (int i = 0; i < table_size_; ++i) {
+    NameIndexMapLink* p = table_[i];
     while (p) {
-      NameIndexMapLink *q = p;
+      NameIndexMapLink* q = p;
       p = p->next_;
       delete q;
     }
   }
-  delete[] d_table_p;
+  delete[] table_;
 }
 
 NameIndexMapLink *& NameIndexMapImpl::findSlot(const char* name) {
-  int index = hash(name) % d_tableSize;
-  assert(index >= 0 && index < d_tableSize);
-  return d_table_p[index];
+  int index = hash(name) % table_size_;
+  assert(index >= 0 && index < table_size_);
+  return table_[index];
 }
 
 int NameIndexMapImpl::insert(NameIndexMapLink *& slot, const char* nm) {
-  int index = d_array.Append(nm); // index is into a managed string array
-  slot = new NameIndexMapLink(d_array[index], index, slot);
+  int index = array_.Append(nm); // index is into a managed string array
+  slot = new NameIndexMapLink(array_[index], index, slot);
   return index;
 }
 
@@ -115,11 +115,11 @@ int NameIndexMap::Entry(const char* name) {
 }
 
 const char* NameIndexMap::operator[](int index) const {
-  return impl_->d_array[index];
+  return impl_->array_[index];
 }
 
 int NameIndexMap::Length() const {
-  return impl_->d_array.Length();
+  return impl_->array_.Length();
 }
 
 int NameIndexMap::Lookup(const char* name) const {
