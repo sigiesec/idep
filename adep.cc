@@ -45,34 +45,32 @@ static std::ostream& PrintError() {
 }
 
 static int missing(const char *argName, char option) {
-    PrintError() << "missing `" << argName << "' argument for -"
-          << option << " option." << std::endl;
-    return s_status;
+  PrintError() << "missing `" << argName << "' argument for -"
+      << option << " option." << std::endl;
+  return s_status;
 }
 
 static int extra(const char *text, char option) {
-    PrintError() << "extra text \"" << text << "\" encountered after -"
-          << option << " option." << std::endl;
-    return s_status;
+  PrintError() << "extra text \"" << text << "\" encountered after -"
+      << option << " option." << std::endl;
+  return s_status;
 }
 
 static int unreadable(const char *dirFile, char option) {
-    PrintError() << "unable to read \"" << dirFile << "\" for -"
-          << option << " option." << std::endl;
+  PrintError() << "unable to read \"" << dirFile << "\" for -"
+      << option << " option." << std::endl;
+  return s_status;
+}
+
+static int incorrect(const char *file, char option) {
+  PrintError() << "file \"" << file << "\" contained invalid contents for -"
+      << option << " option." << std::endl;
     return s_status;
 }
 
-static int incorrect(const char *file, char option)
-{
-    PrintError() << "file \"" << file << "\" contained invalid contents for -"
-          << option << " option." << std::endl;
-    return s_status;
-}
-
-static const char *getArg(int *i, int argc, const char *argv[])
-{
-    return 0 != argv[*i][2] ? argv[*i] + 2 :
-           ++*i >= argc || '-' == argv[*i][0] ? "" : argv[*i];
+static const char *getArg(int *i, int argc, const char *argv[]) {
+  return 0 != argv[*i][2] ? argv[*i] + 2 :
+      ++*i >= argc || '-' == argv[*i][0] ? "" : argv[*i];
 }
 
 int main(int argc, char* argv[]) {
