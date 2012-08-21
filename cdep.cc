@@ -58,7 +58,7 @@ static const char* getArg(int* i, int argc, const char* argv[]) {
 
 int main(int argc, char* argv[]) {
   int argCount = 0;        // record the number of files on the command line
-  int fileFlag = 0;        // -f<file> sets this to 1
+  bool file_flag = false;        // -f<file> sets this to 1
   int recursionFlag = 1;   // -x sets this to 0
   idep_CompileDep environment;
   for (int i = 1; i < argc; ++i) {
@@ -94,7 +94,7 @@ int main(int argc, char* argv[]) {
           if (0 != environment.readRootFiles(arg))
             return unreadable(arg, option);
 
-          fileFlag = 1;
+          file_flag = true;
         }
         break;
         case 'x': {
@@ -119,7 +119,7 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  if (!fileFlag && !argCount)
+  if (!file_flag && !argCount)
     environment.inputRootFiles();
 
   if (environment.calculate(std::cerr, recursionFlag))
