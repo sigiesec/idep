@@ -1,53 +1,56 @@
-#ifndef IDEP_NAMEARRAY_H_
-#define IDEP_NAMEARRAY_H_
-
-// This leaf component defines 1 class:
-//   idep_NameDep: extensible array of managed character string names.
+#ifndef IDEP_NAME_ARRAY_H_
+#define IDEP_NAME_ARRAY_H_
 
 #include <ostream>
-#include <istream>
-using namespace std;
 
+#include "basictypes.h"
 
-class idep_NameArray {
-    char **d_array_p;   // array of dynamically allocated character strings
-    int d_size;         // physical size of array
-    int d_length;       // logical size of array
+namespace idep {
 
-  private:
-    idep_NameArray(const idep_NameArray&);              // not implemented
-    idep_NameArray& operator=(const idep_NameArray&);   // not implemented
+// This leaf component defines 1 class:
+// Extensible array of managed character string names.
+class NameArray {
+ public:
+  // Create a variable length array of const character strings.
+  // The array will be allocated assuming a maximum expected number
+  // of entries specified by |max_entries_hint|.
+  // By default a fairly small array will be allocated.
+  explicit NameArray(int max_entries_hint = 0);
 
-  public:
-    // CREATORS
-    idep_NameArray(int maxEntriesHint = 0);
-        // Create a variable length array of const character strings.
-        // The array will be allocated assuming a maximum expected number
-        // of entries specified by the optional maxEntriesHint argument.
-        // By default a fairly small array will be allocated.
+  // Destroy this array including its contained copies of string names.
+  ~NameArray();
 
-    ~idep_NameArray();
-        // Destroy this array including its contained copies of string names.
+  // Append a copy of the specified string to the end of the array.
+  // The value of the new index is returned.  No attempt is made to
+  // check for repeated string values.
+  int Append(const char* new_name);
 
-    // MANIPULATORS
-    int append(const char *newName);
-        // Append a copy of the specified string to the end of the array.
-        // The value of the new index is returned.  No attempt is made to
-        // check for repeated string values.
+  // Return a pointer to the specified string.  Strings are stored at
+  // at consecutive non-negative index locations beginning with 0 up
+  // to one less than the current length.  If the index is out of range,
+  // a null pointer will be returned.
+  const char* operator[](int index) const;
 
-    // ACCESSORS
-    const char *operator[] (int index) const;
-        // Return a pointer to the specified string.  Strings are stored at
-        // at consecutive non-negative index locations beginning with 0 up
-        // to one less than the current length.  If the index is out of range,
-        // a null pointer will be returned.
+  // Return the number of names currently stored in this array.
+  int Length() const;
 
-    // Return the number of names currently stored in this array.
-    int length() const;
+ private:
+  // Array of dynamically allocated character strings.
+  char** array_;
+
+  // Physical size of array.
+  int size_;
+
+  // Logical size of array.
+  int length_;
+
+  DISALLOW_COPY_AND_ASSIGN(NameArray);
 };
 
-ostream& operator<<(ostream& out, const idep_NameArray& array);
-    // Print the logical contents of this name array to the specified
-    // output stream (out) in some suitable format. 
+// Print the logical contents of this name array to the specified
+// output stream (out) in some suitable format.
+std::ostream& operator<<(std::ostream& out, const NameArray& array);
 
-#endif  // IDEP_NAMEARRAY_H_
+}  // namespace idep
+
+#endif  // IDEP_NAME_ARRAY_H_

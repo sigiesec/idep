@@ -1,12 +1,12 @@
-#ifndef IDEP_ALIASUTIL_H_
-#define IDEP_ALIASUTIL_H_
+#ifndef IDEP_ALIAS_UTIL_H_
+#define IDEP_ALIAS_UTIL_H_
 
 #include <ostream>
 #include <istream>
 
-class idep_AliasTable;
-
 namespace idep {
+
+class AliasTable;
 
 // Load an alias table with information read from a file.
 class AliasUtil {
@@ -58,15 +58,15 @@ class AliasUtil {
   // that where inconsistent with existing alias definitions.  All such
   // errors are also reported explicitly to the specified output stream
   // (err).
-  static int readAliases(idep_AliasTable* table,
+  static int ReadAliases(AliasTable* table,
                          std::ostream& err,
                          std::istream& in,
-                         const char* inputName);
-  static int readAliases(idep_AliasTable* table,
+                         const char* input_name);
+  static int ReadAliases(AliasTable* table,
                          std::ostream& err,
-                         const char* file);
+                         const char* file_name);
 };
 
 }  // namespace idep
 
-#endif  // IDEP_ALIASUTIL_H_
+#endif  // IDEP_ALIAS_UTIL_H_

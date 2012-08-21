@@ -1,130 +1,117 @@
 #include "idep_token_iterator.h"
 
+#include <assert.h>
 #include <ctype.h>      // isspace()
 #include <memory.h>     // memcpy()
-#include <iostream>
-#include <assert.h>
 
-using namespace std;
+#include <iostream>
 
 enum { START_SIZE = 1, GROW_FACTOR = 2 };
 
-const char NEWLINE_CHAR = '\n';
-const char NULL_CHAR = '\0';
+const char kNewLineChar = '\n';
+const char kNullChar= '\0';
 
 namespace idep {
 
-struct idep_TokenIter_i {
-    istream& d_in;
-    char *d_buf_p;
-    int d_size;
-    int d_length;
-    int d_newlineFlag;
+struct TokenIteratorImpl {
+  TokenIteratorImpl(std::istream& in);
+  ~TokenIteratorImpl();
 
-    idep_TokenIter_i(istream& in);
-    ~idep_TokenIter_i();
-    void grow();
-    void addChar(char ch);
-    void advance();
+  void Grow();
+  void AddChar(char ch);
+  void Advance();
+
+  std::istream& in_;
+  char* buf_;
+  int size_;
+  int length_;
+  int newline_flag_;
 };
 
-idep_TokenIter_i::idep_TokenIter_i(istream& in)
-: d_in(in)
-, d_buf_p(new char[START_SIZE])
-, d_size(START_SIZE)
-, d_length(0)
-, d_newlineFlag(0)
-{
-    assert(d_buf_p);
+TokenIteratorImpl::TokenIteratorImpl(std::istream& in)
+    : in_(in),
+      buf_(new char[START_SIZE]),
+      size_(START_SIZE),
+      length_(0),
+      newline_flag_(0) {
+  assert(buf_);
 }
 
-idep_TokenIter_i::~idep_TokenIter_i()
-{
-    delete d_buf_p;
+TokenIteratorImpl::~TokenIteratorImpl() {
+  delete buf_;
 }
 
-void idep_TokenIter_i::grow()
-{
-    int newSize = d_size * GROW_FACTOR;
-    char *tmp = d_buf_p;
-    d_buf_p = new char[newSize];
-    assert(d_buf_p);
-    memcpy(d_buf_p, tmp, d_size);
-    d_size = newSize;
-    delete [] tmp;
+void TokenIteratorImpl::Grow() {
+  int new_size = size_ * GROW_FACTOR;
+  char* tmp = buf_;
+  buf_ = new char[new_size];
+  assert(buf_);
+  memcpy(buf_, tmp, size_);
+  size_ = new_size;
+  delete[] tmp;
 }
 
-void idep_TokenIter_i::addChar(char ch)
-{
-    if (d_length >= d_size) {
-        grow();
-    }
-    assert(d_length < d_size);
-    d_buf_p[d_length++] = ch;
+void TokenIteratorImpl::AddChar(char ch) {
+  if (length_ >= size_)
+    Grow();
+
+  assert(length_ < size_);
+  buf_[length_++] = ch;
 }
 
-TokenIterator::TokenIterator(istream& in)
-: d_this(new idep_TokenIter_i(in))
-{
-    ++*this; // load first occurrence
+TokenIterator::TokenIterator(std::istream& in)
+    : impl_(new TokenIteratorImpl(in)) {
+  ++*this; // load first occurrence.
 }
 
-TokenIterator::~TokenIterator()
-{
-    delete d_this;
+TokenIterator::~TokenIterator() {
+  delete impl_;
 }
 
-void TokenIterator::operator++()
-{
-    assert(*this);
+void TokenIterator::operator++() {
+  assert(*this);
 
-    d_this->d_length = 0;
+  impl_->length_ = 0;
 
-    if (d_this->d_newlineFlag) {                   // left over newline
-        d_this->d_newlineFlag = 0;
-        d_this->addChar(NEWLINE_CHAR);
-    }
-    else {
-        char c;
-        while (d_this->d_in && !d_this->d_in.get(c).eof()) {
-            if (d_this->d_length > 0) {            // "word" in progress
-                if (isspace(c)) {
-                    if (NEWLINE_CHAR == c) {
-                        d_this->d_newlineFlag = 1; // note newline for later
-                    }
-                    break;                         // end of "word" in any case
-                }
-                d_this->addChar(c);                // start of "word"
-            }
-            else {                                 // nothing found yet
-                if (isspace(c)) {
-                    if (NEWLINE_CHAR == c) {
-                        d_this->addChar(NEWLINE_CHAR);
-                        break;                     // found a newline
-                    }
-                    continue;                      // found an ordinary space
-                }
-                d_this->addChar(c);                // add character to "word"
-            }
+  if (impl_->newline_flag_) {                   // left over newline
+    impl_->newline_flag_ = 0;
+    impl_->AddChar(kNewLineChar);
+  } else {
+    char c;
+    while (impl_->in_ && !impl_->in_.get(c).eof()) {
+      if (impl_->length_ > 0) {            // "word" in progress
+        if (isspace(c)) {
+          if (kNewLineChar == c) {
+            impl_->newline_flag_ = 1; // note newline for later
+          }
+          break;                         // end of "word" in any case
         }
+        impl_->AddChar(c);                // start of "word"
+      } else {                                 // nothing found yet
+        if (isspace(c)) {
+          if (kNewLineChar== c) {
+            impl_->AddChar(kNewLineChar);
+            break;                     // found a newline
+          }
+          continue;                      // found an ordinary space
+        }
+        impl_->AddChar(c);                // add character to "word"
+      }
     }
+  }
 
-    if (d_this->d_length > 0) {
-        d_this->addChar(NULL_CHAR);                // always append a null char
-    }
-    else { 
-        d_this->d_length = -1;                     // or make iterator invalid
-    }
-}    
-
-
-TokenIterator::operator const void *() const 
-{ 
-    return d_this->d_length >= 0 ? this : 0;
+  if (impl_->length_ > 0)
+    impl_->AddChar(kNullChar);               // always append a null char
+  else
+    impl_->length_ = -1;                     // or make iterator invalid
 }
 
-const char *TokenIterator::operator()() const {
-    return d_this->d_buf_p;
+TokenIterator::operator const void *() const {
+  return impl_->length_ >= 0 ? this : 0;
+}
+
+const char* TokenIterator::operator()() const {
+  return impl_->buf_;
 }
 
 }  // namespace idep

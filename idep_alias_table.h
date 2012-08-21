@@ -3,53 +3,55 @@
 
 #include <ostream>
 
-class idep_AliasTableLink;
-class idep_AliasTableIter;
+#include "basictypes.h"
+
+namespace idep {
+
+class AliasTableLink;
 
 // This leaf component defines 2 classes:
-//       idep_AliasTable: supports efficient (hashed) name to name mapping
-//   idep_AliasTableIter: iterate through the collection of name mappings
-class idep_AliasTable {
+// Supports efficient (hashed) name to name mapping.
+class AliasTable {
  public:
   // Create a new table; optionally specify expected number of entries.
-  explicit idep_AliasTable(int sizeHint = 0);
-  ~idep_AliasTable();
+  explicit AliasTable(int size_hint = 0);
+  ~AliasTable();
 
   // Add an alias to the table.  Returns 0 on success, 1 if the
   // identical alias/originalName was already present, -1 if an
   // alias with a different original name was present.  Under
   // no circumstances will an alias be overwritten with a new
   // original name.  (Neither alias nor originalName may be 0.)
-  int add(const char* alias, const char* originalName);
+  int Add(const char* alias, const char* original_name);
 
   // Return the original name if the alias exists, else 0.
-  const char* lookup(const char* alias) const;
+  const char* Lookup(const char* alias) const;
 
  private:
-  friend class idep_AliasTableIter;
+  friend class AliasTableIterator;
 
   // Hash Table.
-  idep_AliasTableLink **d_table_p;
-  // Size of hash table.
-  int d_size;
+  AliasTableLink** table_;
 
-  // Disallow copy and assign.
-  idep_AliasTable(const idep_AliasTable&);
-  idep_AliasTable& operator=(const idep_AliasTable&);
+  // Size of hash table.
+  int size_;
+
+  DISALLOW_COPY_AND_ASSIGN(AliasTable);
 };
 
 // Write the entire logical contents of the specified alias table in some
 // reasonable format to the specified output stream.
-std::ostream& operator<<(std::ostream& output, const idep_AliasTable& table);
+std::ostream& operator<<(std::ostream& output, const AliasTable& table);
 
-class idep_AliasTableIter {
+// Iterate through the collection of name mappings.
+class AliasTableIterator {
  public:
   // Create an iterator for the specified table.
-  idep_AliasTableIter(const idep_AliasTable& table);
-  ~idep_AliasTableIter();
+  AliasTableIterator(const AliasTable& table);
+  ~AliasTableIterator();
 
   // Reset this iterator to the start of the iteration.
-  void reset();
+  void Reset();
 
   // Advance state of iteration to next alias/originalName pair.
   void operator++();
@@ -58,24 +60,24 @@ class idep_AliasTableIter {
   operator const void *() const;
 
   // Return current alias name.
-  const char *alias() const;
+  const char* GetAlias() const;
 
   // Return the (original) name corresponding to current alias name.
-  const char *originalName() const;
+  const char* GetOriginalName() const;
 
  private:
   // Reference to const alias table.
-  const idep_AliasTable& d_table;
+  const AliasTable& table_;
 
   // Pointer to current link in table.
-  idep_AliasTableLink *d_link_p;
+  AliasTableLink* d_link_p;
 
   // Index of current slot.
   int d_index;
 
-  // Disallow copy and assign.
-  idep_AliasTableIter(const idep_AliasTableIter&);
-  idep_AliasTableIter& operator=(const idep_AliasTableIter&);
+  DISALLOW_COPY_AND_ASSIGN(AliasTableIterator);
 };
+
+}  // namespace idep
 
 #endif  // IDEP_ALIAS_TABLE_H_

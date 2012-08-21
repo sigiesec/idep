@@ -2,18 +2,16 @@
 
 #include <assert.h>
 #include <ctype.h>
-#include <fstream>
 #include <memory.h>
 #include <string.h>
 
-using namespace std;
+#include <fstream>
 
-enum { MAX_LINE_LENGTH  = 2048 };       // Arbitrary maximum length for
-                                        // line containing an include 
-                                        // directive.  Note that other 
-                                        // lines may be longer.
+// Arbitrary maximum length for line containing an include directive. Note that
+// other lines may be longer.
+enum { MAX_LINE_LENGTH  = 2048 };
 
-static int loadBuf(istream& in, char *buf, int bufSize) {
+static int loadBuf(std::istream& in, char* buf, int bufSize) {
     enum { END_OF_INPUT = -1, SUCCESS = 0, OVERFLOW = 1 };
 
     // The getline (istream) method returns the line as a string but extracts
@@ -100,72 +98,63 @@ const char *extractDependency(char *buffer) {
     return p;
 }
 
-                // -*-*-*- idep_FileDepIter_i -*-*-*-
+namespace idep {
 
-struct idep_FileDepIter_i {
-    ifstream d_file;
-    char d_buf[MAX_LINE_LENGTH];
-    const char *d_header_p;
-    int d_isValidFile;
-    
-    idep_FileDepIter_i(const char *fileName);
+struct FileDepIteratorImpl {
+  std::ifstream d_file;
+  char d_buf[MAX_LINE_LENGTH];
+  const char *d_header_p;
+  bool d_isValidFile;
+
+  FileDepIteratorImpl(const char* file_name);
 };
 
-idep_FileDepIter_i::idep_FileDepIter_i(const char *fileName)
-: d_file(fileName)
-, d_header_p(d_buf)             // buffer is not yet initialized
-{
-    d_isValidFile = !!d_file;   // depends on result of initialization
+FileDepIteratorImpl::FileDepIteratorImpl(const char* file_name)
+    : d_file(file_name),
+      d_header_p(d_buf)  /* Buffer is not yet initialized. */ {
+  d_isValidFile = d_file != NULL;  // Depends on result of initialization.
 }
 
-                // -*-*-*- idep_FileDepIter -*-*-*-
+FileDepIterator::FileDepIterator(const char *fileName)
+    : impl_(new FileDepIteratorImpl(fileName)) {
+  if (!IsValidFile())
+    impl_->d_header_p = 0; // Iteration state is invalid.
 
-idep_FileDepIter::idep_FileDepIter(const char *fileName)
-: d_this(new idep_FileDepIter_i(fileName))
-{
-    if (!isValidFile()) {       
-        d_this->d_header_p = 0; // iteration state is invalid
+  ++*this; // load first occurrence
+}
+
+FileDepIterator::~FileDepIterator() {
+    delete impl_;
+}
+
+void FileDepIterator::Reset() {
+  if (IsValidFile()) {
+    impl_->d_file.seekg(std::ios::beg); // rewind to beginning of file
+    impl_->d_file.clear(impl_->d_file.rdstate() & std::ios::badbit);
+    impl_->d_header_p = impl_->d_buf;
+  }
+  ++*this; // load first occurrence
+}
+
+bool FileDepIterator::IsValidFile() const {
+  return impl_->d_isValidFile;
+}
+
+void FileDepIterator::operator++() {
+  impl_->d_header_p = 0;
+  while (loadBuf(impl_->d_file, impl_->d_buf, sizeof impl_->d_buf) >= 0) {
+    if (impl_->d_header_p = extractDependency(impl_->d_buf)) { // `=' ok
+      break;
     }
-    ++*this; // load first occurrence
+  }
 }
 
-idep_FileDepIter::~idep_FileDepIter()
-{
-    delete d_this;
+FileDepIterator::operator const void *() const {
+  return impl_->d_header_p ? this : 0;
 }
 
-void idep_FileDepIter::reset() 
-{
-    if (isValidFile()) {
-        d_this->d_file.seekg(ios::beg); // rewind to beginning of file
-        d_this->d_file.clear(d_this->d_file.rdstate() & ios::badbit); 
-        d_this->d_header_p = d_this->d_buf;
-    }
-    ++*this; // load first occurrence
+const char* FileDepIterator::operator()() const {
+  return impl_->d_header_p;
 }
 
-void idep_FileDepIter::operator++() 
-{ 
-    d_this->d_header_p = 0;
-    while (loadBuf(d_this->d_file, d_this->d_buf, sizeof d_this->d_buf) >= 0) {
-        if (d_this->d_header_p = extractDependency(d_this->d_buf)) { // `=' ok
-            break;
-        }
-    };
-}    
-
-int idep_FileDepIter::isValidFile() const 
-{ 
-    return d_this->d_isValidFile;
-}
-
-idep_FileDepIter::operator const void *() const 
-{ 
-    return d_this->d_header_p ? this : 0;
-}
-
-const char *idep_FileDepIter::operator ()() const 
-{ 
-    return d_this->d_header_p;
-}
-
+}  // namespace idep

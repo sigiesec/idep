@@ -5,7 +5,6 @@
 #include "idep_binary_relation.h"
 #include "idep_name_array.h"
 #include "idep_name_index_map.h"
-#include "idep_string.h"
 #include "idep_token_iterator.h"
 
 #include <assert.h>
@@ -88,12 +87,12 @@ static double ccdBalencedBinaryTree(int n)  {
 }
 
 struct idep_LinkDep_i {
-    idep_NameIndexMap d_unaliases;          // e.g., ".", "/usr/include"
-    idep_AliasTable d_aliases;              // e.g., fooa -> fooarray
-    idep_NameArray d_dependencyFiles;       // hold compile-time dependencies
+    idep::NameIndexMap d_unaliases;          // e.g., ".", "/usr/include"
+    idep::AliasTable d_aliases;              // e.g., fooa -> fooarray
+    idep::NameArray d_dependencyFiles;       // hold compile-time dependencies
 
-    idep_NameIndexMap *d_componentNames_p;  // keys for relation
-    idep_BinRel *d_dependencies_p;          // compile-time dependencies
+    idep::NameIndexMap *d_componentNames_p;  // keys for relation
+    idep::BinaryRelation *d_dependencies_p;          // compile-time dependencies
     int *d_map_p;                           // map to levelized order   
     int *d_levels_p;                        // number of components per level
     int *d_levelNumbers_p;                  // level number for each component
@@ -112,7 +111,7 @@ struct idep_LinkDep_i {
     int entry(const char *name, int suffixFlag);
     void loadDependencies(istream& in, int suffixFlag);
     void createCycleArray();
-    int calculate(ostream& orf, int canonicalFlag, int suffixFlag);
+    int calculate(std::ostream& orf, int canonicalFlag, int suffixFlag);
 };
 
 idep_LinkDep_i::idep_LinkDep_i() 
@@ -152,7 +151,7 @@ int idep_LinkDep_i::entry(const char *name, int suffixFlag)
 
     if (!isLocal(buf)) {
         removeFileName(buf);
-        if (d_unaliases.lookup(buf) >= 0) {             // found unalias
+        if (d_unaliases.Lookup(buf) >= 0) {             // found unalias
             memcpy(buf, name, size);                    // restore buffer
         }
     }
@@ -161,7 +160,7 @@ int idep_LinkDep_i::entry(const char *name, int suffixFlag)
         removeSuffix(buf);
     }
 
-    const char *componentName = d_aliases.lookup(buf);
+    const char *componentName = d_aliases.Lookup(buf);
     if (!componentName) {
         const char SLASH_CHAR = '/';
         const char NULL_CHAR = '\0';
@@ -169,7 +168,7 @@ int idep_LinkDep_i::entry(const char *name, int suffixFlag)
         int last = len - 1;
         if (SLASH_CHAR == buf[last]) {             // If the input ends in '/' 
             buf[last] = NULL_CHAR;                 // try removing the '/' and
-            componentName = d_aliases.lookup(buf); // checking for that alias.
+            componentName = d_aliases.Lookup(buf); // checking for that alias.
             if (!componentName) {
                 buf[last] = SLASH_CHAR; // restore
             }
@@ -180,9 +179,9 @@ int idep_LinkDep_i::entry(const char *name, int suffixFlag)
         componentName = buf;
     }
 
-    int length = d_componentNames_p->length();
-    int index = d_componentNames_p->entry(componentName);
-    if (d_componentNames_p->length() > length) {
+    int length = d_componentNames_p->Length();
+    int index = d_componentNames_p->Entry(componentName);
+    if (d_componentNames_p->Length() > length) {
         d_dependencies_p->appendEntry();
     }
 
@@ -303,7 +302,7 @@ void idep_LinkDep_i::createCycleArray()
     }
 }
 
-int idep_LinkDep_i::calculate(ostream& orf, int canonicalFlag, int suffixFlag)
+int idep_LinkDep_i::calculate(std::ostream& orf, int canonicalFlag, int suffixFlag)
 {
     enum { IOERRR = -1 };
 
@@ -318,8 +317,8 @@ int idep_LinkDep_i::calculate(ostream& orf, int canonicalFlag, int suffixFlag)
     delete d_cycleIndices_p;
 
     // allocate new data structures for this calculation
-    d_componentNames_p = new idep_NameIndexMap;
-    d_dependencies_p = new idep_BinRel;     
+    d_componentNames_p = new idep::NameIndexMap;
+    d_dependencies_p = new idep::BinaryRelation;
     d_map_p = 0;                // allocated later when length is known
     d_levels_p = 0;             // allocated later when length is known
     d_levelNumbers_p = 0;       // allocated later when length is known
@@ -333,11 +332,11 @@ int idep_LinkDep_i::calculate(ostream& orf, int canonicalFlag, int suffixFlag)
     // Now try to read dependencies from specified set of files.
     // If an I/O error occurs, abort; otherwise keep on processing.
 
-    for (int i = 0; i < d_dependencyFiles.length(); ++i) {
+    for (int i = 0; i < d_dependencyFiles.Length(); ++i) {
         const int INSANITY = 1000;
-        if (d_dependencies_p->length() > INSANITY) {
+        if (d_dependencies_p->Length() > INSANITY) {
             orf << "SANITY CHECK: Number of components is currently " 
-               << d_dependencies_p->length() << " !!!!" << endl;
+               << d_dependencies_p->Length() << " !!!!" << endl;
 
         }
         enum { IOERROR = -1 };
@@ -360,8 +359,8 @@ int idep_LinkDep_i::calculate(ostream& orf, int canonicalFlag, int suffixFlag)
 
     // We can now allocate fixed size arrays:
 
-    d_numComponents = d_dependencies_p->length();
-    assert (d_componentNames_p->length() == d_numComponents);
+    d_numComponents = d_dependencies_p->Length();
+    assert (d_componentNames_p->Length() == d_numComponents);
 
     // Create the level array for component name indices.  We will fill in the 
     // level array with the number of components on each level.  
@@ -619,7 +618,7 @@ int idep_LinkDep_i::calculate(ostream& orf, int canonicalFlag, int suffixFlag)
     delete [] current;
 
     // Calculate CCD and cache the value in a data member of the object.
-    idep_BinRel tmp = *d_dependencies_p; // temporary for calculating CCD
+    idep::BinaryRelation tmp = *d_dependencies_p; // temporary for calculating CCD
     for (int i = 0; i < d_numComponents; ++i) {
         if (0 == d_levelNumbers_p[i]) { 
             for (int j = 0; j < d_numComponents; ++j) {
@@ -650,7 +649,7 @@ int idep_LinkDep_i::calculate(ostream& orf, int canonicalFlag, int suffixFlag)
         // transitive entries from that relation, the results are then mapped 
         // back to the d_dependencies_p relation.
 
-        idep_BinRel tmp(d_numComponents);
+        idep::BinaryRelation tmp(d_numComponents);
 
         for (int i = 0; i < d_numComponents; ++i) {
             int u = d_map_p[i];
@@ -690,38 +689,37 @@ idep_LinkDep::~idep_LinkDep()
 
 void idep_LinkDep::addDependencyFile(const char *fileName)
 {
-    d_this->d_dependencyFiles.append(fileName);
+    d_this->d_dependencyFiles.Append(fileName);
 }
 
-const char *idep_LinkDep::addAlias(const char *alias, const char *component)
-{
-    return d_this->d_aliases.add(alias, component) < 0 ?
-                                        d_this->d_aliases.lookup(alias) : 0;
+const char* idep_LinkDep::addAlias(const char* alias, const char* component) {
+  return d_this->d_aliases.Add(alias, component) < 0 ?
+      d_this->d_aliases.Lookup(alias) : 0;
 }
 
-int idep_LinkDep::readAliases(ostream& orf, const char *file)
+int idep_LinkDep::readAliases(std::ostream& orf, const char *file)
 {
-    return idep::AliasUtil::readAliases(&d_this->d_aliases, orf, file);
+    return idep::AliasUtil::ReadAliases(&d_this->d_aliases, orf, file);
 }
 
 void idep_LinkDep::addUnaliasDirectory(const char *dirName)
 {
-    if (*dirName) {                             
+    if (*dirName) {
         int len = strlen(dirName);
         if ('/' == dirName[len-1]) {            // already ends in '/'
             const char *n = stripDotSlash(dirName);
-            if (*n) {                           // avoid adding empty dir 
-                d_this->d_unaliases.add(n);
+            if (*n) {                           // avoid adding empty dir
+                d_this->d_unaliases.Add(n);
             }
         }
         else {                                  // add trailing '/'
-            char *buf = new char[len+2];                
+            char *buf = new char[len+2];
             memcpy (buf, dirName, len);
             buf[len] = '/';
             buf[len+1] = '\0';
             const char *n = stripDotSlash(buf);
             if (*n) {                           // avoid adding empty dir
-                d_this->d_unaliases.add(n);
+                d_this->d_unaliases.Add(n);
             }
             delete [] buf;
         }
@@ -739,14 +737,14 @@ int idep_LinkDep::readUnaliasDirectories(const char *file)
 
     for (idep::TokenIterator it(in); it; ++it) {
         if ('\n' != *it()) {
-            d_this->d_unaliases.add(it());
+            d_this->d_unaliases.Add(it());
         }
     }
 
     return GOOD;
 }
 
-int idep_LinkDep::calculate(ostream& orf, int canonicalFlag, int suffixFlag)
+int idep_LinkDep::calculate(std::ostream& orf, int canonicalFlag, int suffixFlag)
 {
     return d_this->calculate(orf, canonicalFlag, suffixFlag);
 }
@@ -797,7 +795,7 @@ double idep_LinkDep::nccd() const
         ccd()/ccdBalencedBinaryTree(numLocalComponents()) : 0.0;
 }
  
-void idep_LinkDep::printAliases(ostream& o) const
+void idep_LinkDep::printAliases(std::ostream& o) const
 {
     idep_AliasIter it(*this);
     if (it) {
@@ -819,7 +817,7 @@ void idep_LinkDep::printAliases(ostream& o) const
     }
 }
 
-void idep_LinkDep::printUnaliases(ostream& o) const
+void idep_LinkDep::printUnaliases(std::ostream& o) const
 {
     idep_UnaliasIter it(*this);
     if (it) {
@@ -831,7 +829,7 @@ void idep_LinkDep::printUnaliases(ostream& o) const
     }
 }
 
-void idep_LinkDep::printCycles(ostream& ing) const
+void idep_LinkDep::printCycles(std::ostream& ing) const
 {
     const char *const SPACE = "    ";
     for (idep_CycleIter cit(*this); cit; ++cit) {
@@ -845,7 +843,7 @@ void idep_LinkDep::printCycles(ostream& ing) const
     }
 }
 
-void idep_LinkDep::printLevels(ostream& o, int longFlag, int supressFlag) const
+void idep_LinkDep::printLevels(std::ostream& o, int longFlag, int supressFlag) const
 {
     if (!supressFlag) {
         o << "LEVELS:" << endl;
@@ -950,7 +948,7 @@ inline const char* AppendSIfNecessary(int n) {
 }
     // Helps get singular and plural right.
 
-void idep_LinkDep::printSummary(ostream& o) const
+void idep_LinkDep::printSummary(std::ostream& o) const
 {
     std::_Ios_Fmtflags iostate = o.setf(ios::left, ios::adjustfield);
     const int FIELD_BUFFER_SIZE = 100;   // Not completely arbitrary -- this
@@ -1053,12 +1051,12 @@ std::ostream& operator<<(std::ostream& o, const idep_LinkDep& dep) {
 }
 
 struct idep_AliasIter_i {
-    idep_AliasTableIter d_iter;
+    idep::AliasTableIterator d_iter;
 
-    idep_AliasIter_i(const idep_AliasTable& table);
+    idep_AliasIter_i(const idep::AliasTable& table);
 };
 
-idep_AliasIter_i::idep_AliasIter_i(const idep_AliasTable& table)
+idep_AliasIter_i::idep_AliasIter_i(const idep::AliasTable& table)
     : d_iter(table) {
 }
 
@@ -1080,24 +1078,24 @@ idep_AliasIter::operator const void *() const {
 }
 
 const char* idep_AliasIter::fromName() const {
-    return d_this->d_iter.alias();
+    return d_this->d_iter.GetAlias();
 }
 
 const char *idep_AliasIter::toName() const
 {
-    return d_this->d_iter.originalName();
+    return d_this->d_iter.GetOriginalName();
 }
 
                 // -*-*-*- idep_UnaliasIter_i -*-*-*-
 
 struct idep_UnaliasIter_i {
-    const idep_NameIndexMap& d_array;
+    const idep::NameIndexMap& d_array;
     int d_index;
 
-    idep_UnaliasIter_i(const idep_NameIndexMap& array);
+    idep_UnaliasIter_i(const idep::NameIndexMap& array);
 };
 
-idep_UnaliasIter_i::idep_UnaliasIter_i(const idep_NameIndexMap& array) 
+idep_UnaliasIter_i::idep_UnaliasIter_i(const idep::NameIndexMap& array)
 : d_array(array)
 , d_index(0)
 {
@@ -1105,7 +1103,7 @@ idep_UnaliasIter_i::idep_UnaliasIter_i(const idep_NameIndexMap& array)
 
                 // -*-*-*- idep_UnaliasIter -*-*-*-
 
-idep_UnaliasIter::idep_UnaliasIter(const idep_LinkDep& dep) 
+idep_UnaliasIter::idep_UnaliasIter(const idep_LinkDep& dep)
 : d_this(new idep_UnaliasIter_i(dep.d_this->d_unaliases))
 {
 }
@@ -1124,7 +1122,7 @@ void idep_UnaliasIter::operator++()
  
 idep_UnaliasIter::operator const void *() const
 {
-    return d_this->d_index < d_this->d_array.length() ? this : 0;
+    return d_this->d_index < d_this->d_array.Length() ? this : 0;
 }
  
 const char *idep_UnaliasIter::operator()() const

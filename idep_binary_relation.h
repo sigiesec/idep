@@ -1,138 +1,124 @@
-#ifndef IDEP_BINREL_H_
-#define IDEP_BINREL_H_
+#ifndef IDEP_BINARY_RELATION_H_
+#define IDEP_BINARY_RELATION_H_
+
+#include <ostream>
+
+namespace idep {
 
 // This leaf component defines 1 class:
-//   idep_BinRel: Square matrix of bits with transitive closure capability.
-#include<ostream>
-using namespace std;
+// Square matrix of bits with transitive closure capability.
+class BinaryRelation {
+ public:
+  // Create a binary relation that can be extended as needed.
+  // By default, the initial number of entires in the relation
+  // is 0.  If the final number of entries is known and is not
+  // the same as initialEntries, that value may optionally be
+  // specified as the second argument (as a "hint").
+  BinaryRelation(int initial_entries = 0, int max_entries_hint = 0);
 
-class idep_BinRel {
-    char **d_rel_p;     // array of pointers into a contiguous byte array
-    int d_size;         // physical size of array
-    int d_length;       // logical size of array
+  BinaryRelation(const BinaryRelation& rel);
+  ~BinaryRelation();
 
-  private:
-    void grow();
-      // Increase the physical size of this relation.
+  BinaryRelation& operator=(const BinaryRelation& rel);
 
-    void compress();
-      // Make the physical size same as Logical size (unless that is 0).
+  // Set the specified row/col of this relation to the specified 
+  // binary value.
+  void set(int row, int col, int bit);
 
-    void warshall(int bit);
-      // Perform Warshall's algorithm either forward or backward. 
+  void set(int row, int col);
+  // Set the specified row/col of this relation to 1.
 
-  public:
-    // CREATORS
-    idep_BinRel(int initialEntries = 0, int maxEntriesHint = 0);
-        // Create a binary relation that can be extended as needed.
-        // By default, the initial number of entires in the relation
-        // is 0.  If the final number of entries is known and is not
-        // the same as initialEntries, that value may optionally be
-        // specified as the second argument (as a "hint").
+  void clr(int row, int col);
+  // Set specified row/col of this relation to 0.
 
-    idep_BinRel(const idep_BinRel& rel);
-    ~idep_BinRel();
+  void makeTransitive();
+  // Apply Warshall's algorithm to this relation.  The result is the
+  // reflexive transitive closure of the original relation.
 
-    // MANIPULATORS
-    idep_BinRel& operator=(const idep_BinRel& rel);
+  void makeNonTransitive();
+  // Remove all redundant relationships such that the transitive
+  // closure would be left unaffected.  In cases where there is
+  // a cyclic dependency, the solution is not unique.  To work 
+  // properly, the relation must already be fully transitive 
+  // (see makeTransitive).
 
-    void set(int row, int col, int bit);
-        // Set the specified row/col of this relation to the specified 
-        // binary value.
+  int appendEntry();
+  // Append an entry to this relation and return its integer index.
+  // The logical size is increased by 1 with all new entries 0'ed.
 
-    void set(int row, int col);
-        // Set the specified row/col of this relation to 1.
+  // ACCESSORS
+  int get(int row, int col) const;
+  // Get the boolean value at the specified row/col of this relation.
 
-    void clr(int row, int col);
-        // Set specified row/col of this relation to 0.
+  int cmp(const BinaryRelation& rel) const;
+  // Return 0 if and only if the specified relation has the same
+  // length and logical values as this relation.
 
-    void makeTransitive();
-        // Apply Warshall's algorithm to this relation.  The result is the
-        // reflexive transitive closure of the original relation.
+  // Return number of rows and columns in this relation.  The length
+  // represents the cardinality of the set on which this relation is
+  // defined.
+  int Length() const;
 
-    void makeNonTransitive();
-        // Remove all redundant relationships such that the transitive
-        // closure would be left unaffected.  In cases where there is
-        // a cyclic dependency, the solution is not unique.  To work 
-        // properly, the relation must already be fully transitive 
-        // (see makeTransitive).
+ private:
+  // Increase the physical size of this relation.
+  void grow();
 
-    int appendEntry();
-        // Append an entry to this relation and return its integer index.
-        // The logical size is increased by 1 with all new entries 0'ed.
+  // Make the physical size same as Logical size (unless that is 0).
+  void compress();
 
-    // ACCESSORS
-    int get(int row, int col) const;
-        // Get the boolean value at the specified row/col of this relation.
+  // Perform Warshall's algorithm either forward or backward. 
+  void warshall(int bit);
 
-    int cmp(const idep_BinRel& rel) const;
-        // Return 0 if and only if the specified relation has the same
-        // length and logical values as this relation.
-
-    int length() const;
-        // Return number of rows and columns in this relation.  The length
-        // represents the cardinality of the set on which this relation is
-        // defined.
+  char **d_rel_p;     // array of pointers into a contiguous byte array
+  int d_size;         // physical size of array
+  int d_length;       // logical size of array
 };
 
-ostream& operator<<(ostream& out, const idep_BinRel& rel);
-   // Output this binary relation in row/column format with the upper left 
-   // corner as the origin to the specified output stream (out).
+// Output this binary relation in row/column format with the upper left 
+// corner as the origin to the specified output stream (out).
+std::ostream& operator<<(std::ostream& out, const BinaryRelation& rel);
 
-int operator==(const idep_BinRel& left, const idep_BinRel& right);
-   // Return 1 if two relations are equal, and 0 otherwise (see cmp).
+// Return 1 if two relations are equal, and 0 otherwise (see cmp).
+int operator==(const BinaryRelation& left, const BinaryRelation& right);
 
-int operator!=(const idep_BinRel& left, const idep_BinRel& right);
-   // Return 1 if two relations are not equal, and 0 otherwise (see cmp).
+// Return 1 if two relations are not equal, and 0 otherwise (see cmp).
+int operator!=(const BinaryRelation& left, const BinaryRelation& right);
 
-
-// #########################################################################
-// The following consists of inline function definitions for this component. 
-// #########################################################################
-
-inline
-int idep_BinRel::appendEntry() 
-{
+inline int BinaryRelation::appendEntry() {
     if (d_length >= d_size) {
         grow();
     }
     return d_length++;
 }
 
-inline
-void idep_BinRel::set(int row, int col, int bit) 
-{
+inline void BinaryRelation::set(int row, int col, int bit) {
     d_rel_p[row][col] = !!bit;
 }
 
-inline
-void idep_BinRel::set(int row, int col) 
-{
+inline void BinaryRelation::set(int row, int col) {
     d_rel_p[row][col] = 1;
 }
 
-inline
-void idep_BinRel::clr(int row, int col) 
-{
+inline void BinaryRelation::clr(int row, int col) {
     d_rel_p[row][col] = 0;
 }
 
-inline
-int idep_BinRel::get(int row, int col) const
-{
+inline int BinaryRelation::get(int row, int col) const {
     return d_rel_p[row][col];
 }
 
-inline int idep_BinRel::length() const {
+inline int BinaryRelation::Length() const {
     return d_length;
 }
 
-inline int operator==(const idep_BinRel& left, const idep_BinRel& right) {
+inline int operator==(const BinaryRelation& left, const BinaryRelation& right) {
     return left.cmp(right) == 0;
 }
 
-inline int operator!=(const idep_BinRel& left, const idep_BinRel& right) {
+inline int operator!=(const BinaryRelation& left, const BinaryRelation& right) {
     return left.cmp(right) != 0;
 }
 
-#endif  // IDEP_BINREL_H_
+}  // namespace idep
+
+#endif  // IDEP_BINARY_RELATION_H_

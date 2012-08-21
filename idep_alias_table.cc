@@ -1,10 +1,10 @@
 #include "idep_alias_table.h"
 
-#include <string.h>     // strcmp() strlen()
-#include <memory.h>     // memcpy()
-#include <iostream>
 #include <assert.h>
-using namespace std;
+#include <memory.h>     // memcpy()
+#include <string.h>     // strcmp() strlen()
+
+#include <iostream>
 
 enum { DEFAULT_TABLE_SIZE = 521 };
 
@@ -16,158 +16,139 @@ static unsigned hash(register const char* name) // Note: returns unsigned!
     }
     return sum; // unsigned ensures positive value for use with (%) operator.
 }
- 
-static char *newStrCpy(const char *oldStr)
-{
-    int size = strlen(oldStr) + 1;
-    char *newStr = new char[size];
-    assert(newStr);
-    memcpy(newStr, oldStr, size);
-    return newStr;
+
+static char* NewStrCpy(const char* old_str) {
+  int size = strlen(old_str) + 1;
+  char* new_str = new char[size];
+  assert(new_str);
+  memcpy(new_str, old_str, size);
+  return new_str;
 }
 
-                // -*-*-*- idep_AliasTableLink -*-*-*-
+namespace idep {
 
-struct idep_AliasTableLink {
-    char *d_alias_p;                            // "from" (alias) name
-    char *d_originalName_p;                     // "to" (original) name
-    idep_AliasTableLink *d_next_p;              // pointer to next link
-    
-    idep_AliasTableLink(const char *alias, const char *orignalName, 
-                                                idep_AliasTableLink *next);
-    ~idep_AliasTableLink();
+struct AliasTableLink {
+  char* d_alias_p;                       // "from" (alias) name
+  char* d_originalName_p;                // "to" (original) name
+  AliasTableLink* d_next_p;              // pointer to next link
+
+  AliasTableLink(const char* alias,
+                 const char* original_name,
+                 AliasTableLink* next);
+  ~AliasTableLink();
 };
 
-idep_AliasTableLink::idep_AliasTableLink(const char *alias, 
-                         const char *originalName, idep_AliasTableLink* next) 
-: d_alias_p(newStrCpy(alias)) 
-, d_originalName_p(newStrCpy(originalName)) 
-, d_next_p(next) 
-{ 
+AliasTableLink::AliasTableLink(const char* alias,
+                               const char* original_name,
+                               AliasTableLink* next)
+    : d_alias_p(NewStrCpy(alias)),
+      d_originalName_p(NewStrCpy(original_name)),
+      d_next_p(next) {
 }
 
-idep_AliasTableLink::~idep_AliasTableLink() 
-{
-    delete [] d_alias_p;
-    delete [] d_originalName_p;
+AliasTableLink::~AliasTableLink()  {
+  delete[] d_alias_p;
+  delete[] d_originalName_p;
 }
 
-                // -*-*-*- idep_AliasTable -*-*-*-
-
-
-idep_AliasTable::idep_AliasTable(int size) 
-: d_size(size > 0 ? size : DEFAULT_TABLE_SIZE)
-{
-    d_table_p = new idep_AliasTableLink *[d_size];
-    assert (d_table_p);
-    memset (d_table_p, 0, d_size * sizeof *d_table_p);
+AliasTable::AliasTable(int size)
+    : size_(size > 0 ? size : DEFAULT_TABLE_SIZE) {
+  table_ = new AliasTableLink *[size_];
+  assert(table_);
+  memset(table_, 0, size_ * sizeof *table_);
 };
 
-idep_AliasTable::~idep_AliasTable() 
-{
-    for (int i = 0; i < d_size; ++i) {
-        idep_AliasTableLink *p = d_table_p[i];
+AliasTable::~AliasTable() {
+    for (int i = 0; i < size_; ++i) {
+        AliasTableLink* p = table_[i];
         while (p) {
-            idep_AliasTableLink *q = p;
+            AliasTableLink *q = p;
             p = p->d_next_p;
             delete q;
         }
     }
-    delete [] d_table_p;
+    delete[] table_;
 }
 
-int idep_AliasTable::add(const char *alias, const char *originalName) 
-{
-    enum { FOUND_DIFFERENT = -1, NOT_FOUND = 0, FOUND_IDENTICAL = 1 }; 
+int AliasTable::Add(const char* alias, const char* original_name)  {
+    enum { FOUND_DIFFERENT = -1, NOT_FOUND = 0, FOUND_IDENTICAL = 1 };
 
-    idep_AliasTableLink *&slot = d_table_p[hash(alias) % d_size];
-    idep_AliasTableLink *p = slot;
+    AliasTableLink *&slot = table_[hash(alias) % size_];
+    AliasTableLink *p = slot;
 
     while (p && 0 != strcmp(p->d_alias_p, alias)) {
         p = p->d_next_p;
     }
     if (!p) {
-        slot = new idep_AliasTableLink(alias, originalName, slot);
+        slot = new AliasTableLink(alias, original_name, slot);
         return NOT_FOUND;
-    } 
-    else if (0 == strcmp(p->d_originalName_p, originalName)) {
+    } else if (0 == strcmp(p->d_originalName_p, original_name)) {
         return FOUND_IDENTICAL;
-    }
-    else {
+    } else {
         return FOUND_DIFFERENT;
     }
 }
 
-const char *idep_AliasTable::lookup(const char *alias) const
-{
-    idep_AliasTableLink *p = d_table_p[hash(alias) % d_size];
+const char* AliasTable::Lookup(const char* alias) const {
+    AliasTableLink* p = table_[hash(alias) % size_];
     while (p && 0 != strcmp(p->d_alias_p, alias)) {
         p = p->d_next_p;
     }
     return p ? p->d_originalName_p : 0;
 }
 
-std::ostream& operator<<(std::ostream &o, const idep_AliasTable& table)
-{
+std::ostream& operator<<(std::ostream &o, const AliasTable& table) {
     int fieldWidth = 0;
-    idep_AliasTableIter it(table);
-    for (it.reset(); it; ++it) {
-        int len = strlen(it.alias());
+    AliasTableIterator it(table);
+    for (it.Reset(); it; ++it) {
+        int len = strlen(it.GetAlias());
         if (fieldWidth < len) {
             fieldWidth = len;
         }
     }
-    for (it.reset(); it; ++it) {
+    for (it.Reset(); it; ++it) {
         o.width(fieldWidth);
-        o << it.alias() << " -> " << it.originalName() << endl;
+        o << it.GetAlias() << " -> " << it.GetOriginalName() << std::endl;
     }
     return o;
 }
 
-                // -*-*-*- idep_AliasTableIter -*-*-*-
-
-idep_AliasTableIter::idep_AliasTableIter(const idep_AliasTable& t) 
-: d_table(t)
-{
-    reset();
+AliasTableIterator::AliasTableIterator(const AliasTable& t)
+    : table_(t) {
+  Reset();
 }
 
-idep_AliasTableIter::~idep_AliasTableIter() 
-{
+AliasTableIterator::~AliasTableIterator() {
 }
 
-void idep_AliasTableIter::reset() 
-{
-    d_link_p = 0;
-    d_index = -1;
-    ++*this;
+void AliasTableIterator::Reset() {
+  d_link_p = 0;
+  d_index = -1;
+  ++*this;
 }
 
-void idep_AliasTableIter::operator++() 
-{ 
+void AliasTableIterator::operator++() {
     if (d_link_p) {
         d_link_p = d_link_p->d_next_p;
-    }   
+    }
     while (!d_link_p && *this) {
         ++d_index;
         if (*this) {
-            d_link_p = d_table.d_table_p[d_index]; 
+            d_link_p = table_.table_[d_index];
         }
-    }    
-}    
-
-idep_AliasTableIter::operator const void *() const 
-{ 
-    return d_index < d_table.d_size ? this : 0;
+    }
 }
 
-const char *idep_AliasTableIter::alias() const 
-{ 
+AliasTableIterator::operator const void *() const {
+    return d_index < table_.size_ ? this : 0;
+}
+
+const char* AliasTableIterator::GetAlias() const {
     return d_link_p->d_alias_p;
 }
 
-const char *idep_AliasTableIter::originalName() const 
-{ 
+const char* AliasTableIterator::GetOriginalName() const {
     return d_link_p->d_originalName_p;
 }
 
+}  // namespace idep

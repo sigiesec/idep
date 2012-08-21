@@ -1,21 +1,19 @@
 #include "idep_compile_dep.h"
 
+#include <assert.h>
+#include <ctype.h>
+#include <string.h>
+
+#include <fstream>
+#include <iostream>
+
 #include "idep_binary_relation.h"
 #include "idep_file_dep_iterator.h"
 #include "idep_name_array.h"
 #include "idep_name_index_map.h"
-#include "idep_string.h"
 #include "idep_token_iterator.h"
 
-#include <assert.h>
-#include <ctype.h>
-#include <fstream>
-#include <iostream>
-#include <string.h>
-
-using namespace std;
-
-static ostream& err(ostream& orf) {
+static std::ostream& err(std::ostream& orf) {
     return orf << "Error: ";
 }
 
@@ -28,13 +26,13 @@ static const char *stripDotSlash(const char *originalPath) {
     return originalPath;
 }
 
-static int isAbsolutePath(const char *originalPath) {
-    return '/' == *originalPath;
+static bool IsAbsolutePath(const char* original_path) {
+    return '/' == *original_path;
 }
 
 static int isAsciiFile(const char *fileName) {
     enum { NO = 0, YES = 1 };
-    ifstream in(fileName);
+    std::ifstream in(fileName);
     if (!in) {
         return NO;
     }
@@ -50,7 +48,7 @@ static int isAsciiFile(const char *fileName) {
 }
 
 //typedef void (idep_CompileDep::*Func)(const char *); // TODO 
-template <typename Func> static void loadFromStream(istream& in, idep_CompileDep *dep) 
+template <typename Func> static void loadFromStream(std::istream& in, idep_CompileDep *dep) 
 { 
     assert(in);
     for (idep::TokenIterator it(in); it; ++it) {
@@ -72,39 +70,38 @@ template <typename Func> static int loadFromFile(const char *file, idep_CompileD
     if (!isAsciiFile(file)) {
         return BAD;
     }
-    ifstream in(file);
+    std::ifstream in(file);
     assert(in);
-    loadFromStream<Func>(in, dep); 
+    loadFromStream<Func>(in, dep);
     return GOOD;
 }
 
-static const char *search(idep_String *s, const char *includeDir, 
-                                                            const char *file) 
-{
-    assert(!isAbsolutePath(file));
+static const char* search(std::string* s,
+                          const char* includeDir,
+                          const char* file) {
+    assert(!IsAbsolutePath(file));
     (*s = includeDir) += file;
-    const char *dirFile = stripDotSlash(*s);
-    return ifstream(dirFile) ? dirFile : 0;
+    const char *dirFile = stripDotSlash((*s).c_str());
+    return std::ifstream(dirFile) ? dirFile : 0;
 }
 
-static const char *search(idep_String *s, const idep_NameArray& a, 
-                                                            const char *file)
-{
-    if (isAbsolutePath(file)) {
+static const char* search(std::string* s,
+                          const idep::NameArray& a,
+                          const char* file) {
+    if (IsAbsolutePath(file)) {
         *s = file;
-        const char *absFile = *s;
-        return ifstream(absFile) ? absFile : 0;
+        const char *absFile = (*s).c_str();
+        return std::ifstream(absFile) ? absFile : 0;
     }
 
-    const char *dirFile = 0;
-    for (int i = 0; i < a.length(); ++i) {
-        dirFile = search(s, a[i], file);
-        if (dirFile) {
+    const char* dir_file = 0;
+    for (int i = 0; i < a.Length(); ++i) {
+        dir_file = search(s, a[i], file);
+        if (dir_file)
             break;
-        }
     }
 
-    return dirFile;
+    return dir_file;
 }
 
                 // -*-*-*- static recursive functions -*-*-*-
@@ -114,35 +111,34 @@ static const char *search(idep_String *s, const idep_NameArray& a,
 // in order to avoid the unnecessary time and space costs of passing 
 // several invariant arguments on the program stack.
 
-static idep_BinRel *s_dependencies_p;   // set just before first call to getDep
-static idep_NameIndexMap *s_files_p;    // set just before first call to getDep
-static idep_NameArray *s_includes_p;    // set just before first call to getDep
+static idep::BinaryRelation *s_dependencies_p;   // set just before first call to getDep
+static idep::NameIndexMap *s_files_p;    // set just before first call to getDep
+static idep::NameArray *s_includes_p;    // set just before first call to getDep
 static int s_recurse;                   // set just before first call to getDep
-static ostream *s_err_p;                // set just before first call to getDep
+static std::ostream *s_err_p;                // set just before first call to getDep
 
-static int getDep (int index) 
-{
+static int getDep(int index) {
     enum { BAD = -1, GOOD = 0 } status = GOOD;
-     
-    idep_String buffer; // string buffer, do not use directly
 
-    idep_FileDepIter it((*s_files_p)[index]);
+    std::string buffer; // string buffer, do not use directly
+
+    idep::FileDepIterator it((*s_files_p)[index]);
     for (it; it; ++it) {
         const char *dirFile = search(&buffer, *s_includes_p, it());
         if (!dirFile) {
             err(*s_err_p) << "include directory for file \""
-                 << it() << "\" not specified." << endl; 
+                 << it() << "\" not specified." << std::endl;
             status = BAD;
             continue;
         }
 
-        int length = s_files_p->length();
-        int otherIndex = s_files_p->entry(dirFile);
+        int length = s_files_p->Length();
+        int otherIndex = s_files_p->Entry(dirFile);
 
-        if (s_files_p->length() > length) {
+        if (s_files_p->Length() > length) {
             // first time looking at this file
             s_dependencies_p->appendEntry();
-                
+
             if (s_recurse && getDep(otherIndex)) {
                 status = BAD;
             }
@@ -151,23 +147,23 @@ static int getDep (int index)
         s_dependencies_p->set(index, otherIndex, 1);
     }
 
-    if (!it.isValidFile()) {
+    if (!it.IsValidFile()) {
        err(*s_err_p) << "unable to open file \""
-         << (*s_files_p)[index] << "\" for read access." << endl; 
+         << (*s_files_p)[index] << "\" for read access." << std::endl;
         status = BAD;
     }
 
     return status;
 }
-                    
+
                 // -*-*-*- idep_CompileDep_i -*-*-*-
 
 struct idep_CompileDep_i {
-    idep_NameArray d_includeDirectories;      // e.g., ".", "/usr/include"
-    idep_NameArray d_rootFiles;               // files to be analyzed
+    idep::NameArray d_includeDirectories;      // e.g., ".", "/usr/include"
+    idep::NameArray d_rootFiles;               // files to be analyzed
 
-    idep_NameIndexMap *d_fileNames_p;         // keys for relation
-    idep_BinRel *d_dependencies_p;            // compile-time dependencies
+    idep::NameIndexMap *d_fileNames_p;         // keys for relation
+    idep::BinaryRelation *d_dependencies_p;            // compile-time dependencies
     int d_numRootFiles;                       // number of roots in relation
 
     idep_CompileDep_i();
@@ -226,14 +222,14 @@ void idep_CompileDep::addIncludeDirectory(const char *dirName)
     if (*dirName) {
         int len = strlen(dirName);
         if ('/' == dirName[len-1]) {            // already ends in '/'
-            d_this->d_includeDirectories.append(dirName);               
+            d_this->d_includeDirectories.Append(dirName);
         }
         else {                                  // add trailing '/'
             char *buf = new char[len+2];
             memcpy(buf, dirName, len);
             buf[len] = '/';
             buf[len+1] = '\0';
-            d_this->d_includeDirectories.append(buf);           
+            d_this->d_includeDirectories.Append(buf);
             delete [] buf;
         }
     }
@@ -247,7 +243,7 @@ int idep_CompileDep::readIncludeDirectories(const char *file)
 
 void idep_CompileDep::addRootFile(const char *fileName)
 {
-    d_this->d_rootFiles.append(fileName);               
+    d_this->d_rootFiles.Append(fileName);
 }
 
 int idep_CompileDep::readRootFiles(const char *file)
@@ -259,44 +255,44 @@ int idep_CompileDep::readRootFiles(const char *file)
 
 void idep_CompileDep::inputRootFiles()
 {
-    if (cin) {
+    if (std::cin) {
       //todo 
-      //      loadFromStream(cin, this, idep_CompileDep::addRootFile); 
-      loadFromStream<addRootFileFunctor>(cin, this); 
-      
-        cin.clear(std::_S_goodbit);             // reset eof for standard input
+      //      loadFromStream(cin, this, idep_CompileDep::addRootFile);
+      loadFromStream<addRootFileFunctor>(std::cin, this); 
+
+      std::cin.clear(std::_S_goodbit);             // reset eof for standard input
     }
 }
 
-int idep_CompileDep::calculate(ostream& orf, int recursionFlag)
+int idep_CompileDep::calculate(std::ostream& orf, int recursionFlag)
 {
     enum { BAD = -1, GOOD = 0 } status = GOOD;
 
     // clean up any previous calculation artifacts
-    delete d_this->d_fileNames_p;       
+    delete d_this->d_fileNames_p;
     delete d_this->d_dependencies_p;
 
     // allocate new data structures for this calculation
-    d_this->d_fileNames_p = new idep_NameIndexMap;
-    d_this->d_dependencies_p = new idep_BinRel;     
+    d_this->d_fileNames_p = new idep::NameIndexMap;
+    d_this->d_dependencies_p = new idep::BinaryRelation;
     d_this->d_numRootFiles = 0;
 
 
     // place all root files at the start of the relation
 
-    for (int i = 0; i < d_this->d_rootFiles.length(); ++i) {
-        idep_String s;
+    for (int i = 0; i < d_this->d_rootFiles.Length(); ++i) {
+        std::string s;
         const char *file = d_this->d_rootFiles[i];
         const char *dirFile = search(&s, d_this->d_includeDirectories, file);
 
         if (!dirFile) {
-            err(orf) << "root file \"" << file 
-                    << "\" not found." << endl;
+            err(orf) << "root file \"" << file
+                    << "\" not found." << std::endl;
             status = BAD;
         }
-        else if (d_this->d_fileNames_p->add(dirFile) < 0) { 
-            err(orf) << "root file \"" << file 
-                    << "\" redundantly specified." << endl;
+        else if (d_this->d_fileNames_p->Add(dirFile) < 0) {
+            err(orf) << "root file \"" << file
+                    << "\" redundantly specified." << std::endl;
             status = BAD;
         }
         else {
@@ -304,8 +300,8 @@ int idep_CompileDep::calculate(ostream& orf, int recursionFlag)
             d_this->d_dependencies_p->appendEntry();
         }
     }
-        
-    // We must now investigate the compile-time dependencies for each 
+
+    // We must now investigate the compile-time dependencies for each
     // translation unit recursively.  First we will set up several
     // file-scope pointers to reduce recursive overhead.
 
@@ -323,7 +319,7 @@ int idep_CompileDep::calculate(ostream& orf, int recursionFlag)
         const char *name = (*d_this->d_fileNames_p)[i];
         if (getDep(i)) {
             err(orf) << "could not determine all dependencies for \""
-                    << name << "\"." << endl;
+                    << name << "\"." << std::endl;
             status = BAD;
         }
     }
@@ -335,26 +331,23 @@ int idep_CompileDep::calculate(ostream& orf, int recursionFlag)
     return status;
 }
 
-                // -*-*-*- free operators -*-*-*-
-
-ostream &operator<<(ostream& o, const idep_CompileDep&(dep)) 
+std::ostream& operator<<(std::ostream& o, const idep_CompileDep&(dep))
 {
     const char *INDENT = "    ";
     for (idep_RootFileIter rit(dep); rit; ++rit) {
-        idep_NameArray a;
-        o << rit() << endl;
+        idep::NameArray a;
+        o << rit() << std::endl;
         for (idep_HeaderFileIter hit(rit); hit; ++hit) {
-            if (isAbsolutePath(hit())) {
-                a.append(hit());
-            }  
-            else {
-                o << INDENT << hit() << endl;
+            if (IsAbsolutePath(hit())) {
+                a.Append(hit());
+            } else {
+                o << INDENT << hit() << std::endl;
             }
         }
-        for (int i = 0; i < a.length(); ++i) {
-           o << INDENT << a[i] << endl;
+        for (int i = 0; i < a.Length(); ++i) {
+           o << INDENT << a[i] << std::endl;
         }
-        o << endl;
+        o << std::endl;
     }
     return o;
 }
@@ -431,25 +424,25 @@ idep_HeaderFileIter::~idep_HeaderFileIter()
 }
 
 
-void idep_HeaderFileIter::operator++() 
+void idep_HeaderFileIter::operator++()
 {
     assert(*this);
-    idep_BinRel *rel = d_this->d_iter.d_dep.d_dependencies_p;
-    
+    idep::BinaryRelation *rel = d_this->d_iter.d_dep.d_dependencies_p;
+
     do {
         ++d_this->d_index;
     }
-    while (   d_this->d_index < rel->length() 
+    while (d_this->d_index < rel->Length()
            && !rel->get(d_this->d_iter.d_index, d_this->d_index)
     );
 }
- 
+
 idep_HeaderFileIter::operator const void *() const
 {
-    idep_BinRel *rel = d_this->d_iter.d_dep.d_dependencies_p;
-    return d_this->d_index < rel->length() ? this : 0;
+    idep::BinaryRelation *rel = d_this->d_iter.d_dep.d_dependencies_p;
+    return d_this->d_index < rel->Length() ? this : 0;
 }
- 
+
 const char *idep_HeaderFileIter::operator()() const
 {
     return (*d_this->d_iter.d_dep.d_fileNames_p)[d_this->d_index];

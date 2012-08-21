@@ -4,63 +4,60 @@
 
 // This file contains a main program to exercise the idep_link_dep component.
 
-#define NL "\n"
-static const char *help()
-{
-return NL
-"ldep: Analyze the link-time dependencies among a collection of components." NL
-""                                                                           NL
-"  The following command line interface is supported:"                       NL
-""                                                                           NL
-"    ldep [-U<dir>] [-u<un>] [-a<aliases>] [-d<deps>] [-l|-L] [-x|-X] [-s]"  NL
-""                                                                           NL
-"      -U<dir>     Specify directory not to group as a package."             NL
-"      -u<un>      Specify file containing directories not to group."        NL
-"      -a<aliases> Specify file containg list of component name aliases."    NL
-"      -d<deps>    Specify file containg list of compile-time dependencies." NL
-"      -l          Long listing: provide non-redundant list of dependencies."NL
-"      -L          Long listing: provide complete list of dependencies."     NL
-"      -x          Suppress printing any alias/unalias information."         NL
-"      -X          Suppress printing all but the levelized component names." NL
-"      -s          Do _not_ remove suffixes; consider each file separately." NL
-""                                                                           NL
-"    This command takes no arguments.  The dependencies themselves will"     NL
-"    come from standard input unless the -d option has been invoked."        NL
-""                                                                           NL
-"  TYPICAL USAGE:"                                                           NL
-""                                                                           NL
-"    ldep -aaliases -ddependencies"                                          NL
-NL;
+static const char* help() {
+return
+"\nldep: Analyze the link-time dependencies among a collection of components.\n"
+"\n"
+"  The following command line interface is supported:\n"
+"\n"
+"    ldep [-U<dir>] [-u<un>] [-a<aliases>] [-d<deps>] [-l|-L] [-x|-X] [-s]\n"
+"\n"
+"      -U<dir>     Specify directory not to group as a package.\n"
+"      -u<un>      Specify file containing directories not to group.\n"
+"      -a<aliases> Specify file containg list of component name aliases.\n"
+"      -d<deps>    Specify file containg list of compile-time dependencies.\n"
+"      -l          Long listing: provide non-redundant list of dependencies.\n"
+"      -L          Long listing: provide complete list of dependencies.\n"
+"      -x          Suppress printing any alias/unalias information.\n"
+"      -X          Suppress printing all but the levelized component names.\n"
+"      -s          Do _not_ remove suffixes; consider each file separately.\n"
+"\n"
+"    This command takes no arguments.  The dependencies themselves will\n"
+"    come from standard input unless the -d option has been invoked.\n"
+"\n"
+"  TYPICAL USAGE:\n"
+"\n"
+"    ldep -aaliases -ddependencies\n\n";
 }
 
 static enum { IOERROR = -1, SUCCESS = 0, DESIGN_ERROR = 1 } s_status = SUCCESS;
 
-static ostream& err() {
-    s_status = IOERROR;
-    return cerr << "Error: ";
+static std::ostream& PrintError() {
+  s_status = IOERROR;
+  return std::cerr << "error: ";
 }
 
 static int missing(const char *argName, char option) {
-    err() << "missing `" << argName << "' argument for -"
-          << option << " option." << endl;
+    PrintError() << "missing `" << argName << "' argument for -"
+          << option << " option." << std::endl;
     return s_status;
 }
 
 static int extra(const char *text, char option) {
-    err() << "extra text \"" << text << "\" encountered after -"
-          << option << " option." << endl;
+    PrintError() << "extra text \"" << text << "\" encountered after -"
+          << option << " option." << std::endl;
     return s_status;
 }
 
 static int unreadable(const char *dirFile, char option) {
-    err() << "unable to read \"" << dirFile << "\" for -"
-          << option << " option." << endl;
+    PrintError() << "unable to read \"" << dirFile << "\" for -"
+          << option << " option." << std::endl;
     return s_status;
 }
 
 static int incorrect(const char *file, char option) {
-    err() << "file \"" << file << "\" contained invalid contents for -"
-          << option << " option." << endl;
+    PrintError() << "file \"" << file << "\" contained invalid contents for -"
+          << option << " option." << std::endl;
     return s_status;
 }
 
@@ -69,7 +66,7 @@ static const char *getArg(int *i, int argc, const char *argv[]) {
            ++*i >= argc || '-' == argv[*i][0] ? "" : argv[*i];
 }
 
-int main (int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     int fileFlag = 0;        // -d<file> sets this to 1
     int longListingFlag = 0; // both -l and -L set this to 1
     int canonicalFlag = 1;   // -L sets this to 0 and -l sets it back to 1
@@ -102,7 +99,7 @@ int main (int argc, char *argv[]) {
                 if (!*arg) {
                     return missing("file", option);
                 }
-                int s = environment.readAliases(cerr, arg);
+                int s = environment.readAliases(std::cerr, arg);
                 if (s < 0) {
                     return unreadable(arg, option);
                 }
@@ -156,15 +153,15 @@ int main (int argc, char *argv[]) {
                 suppression = 2;
               } break;
               default: {
-                 err() << "unknown option \"" << word << "\"." << endl 
-                       << help(); 
+                 PrintError() << "unknown option \"" << word << "\"." << std::endl
+                       << help();
                  return s_status;
               } break;
             }
         }
         else {
-             err() << "illegal argument \"" << word << "\"." << endl 
-                   << help(); 
+             PrintError() << "illegal argument \"" << word << "\"." << std::endl
+                   << help();
              return s_status;
         }
     }
@@ -173,19 +170,19 @@ int main (int argc, char *argv[]) {
         environment.addDependencyFile(""); // "" is synonym for standard input
     }
 
-    int result = environment.calculate(cerr, canonicalFlag, suffixFlag);
+    int result = environment.calculate(std::cerr, canonicalFlag, suffixFlag);
 
     s_status = result < 0 ? IOERROR : result > 0 ? DESIGN_ERROR : SUCCESS; 
 
     if (s_status >= 0) {
         if (0 == suppression) {
-            environment.printAliases(cout);
-            environment.printUnaliases(cout);
+            environment.printAliases(std::cout);
+            environment.printUnaliases(std::cout);
         }
-        environment.printCycles(cerr);
-        environment.printLevels(cout, longListingFlag, suppression >= 2);
+        environment.printCycles(std::cerr);
+        environment.printLevels(std::cout, longListingFlag, suppression >= 2);
         if (suppression <= 1) {
-            environment.printSummary(cout);
+            environment.printSummary(std::cout);
         }
     }
 

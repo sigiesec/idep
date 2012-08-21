@@ -2,12 +2,10 @@
 
 #include <iostream>
 
-using namespace std;
-
 // This file contains a main program to exercise the idep_aliasdep component.
 
 #define NL "\n"
-static const char *help() {
+static const char* help() {
 return NL
 "adep - create aliases to group files into cohesive components."             NL
 ""                                                                           NL
@@ -41,50 +39,48 @@ NL;
 
 static enum { IOERROR = -1, GOOD = 0, BAD = 1 } s_status = GOOD;
 
-static ostream& err() {
-    s_status = IOERROR;
-    return cerr << "Error: ";
+static std::ostream& PrintError() {
+  s_status = IOERROR;
+  return std::cerr << "error: ";
 }
 
 static int missing(const char *argName, char option) {
-    err() << "missing `" << argName << "' argument for -"
-          << option << " option." << endl;
-    return s_status;
+  PrintError() << "missing `" << argName << "' argument for -"
+      << option << " option." << std::endl;
+  return s_status;
 }
 
 static int extra(const char *text, char option) {
-    err() << "extra text \"" << text << "\" encountered after -"
-          << option << " option." << endl;
-    return s_status;
+  PrintError() << "extra text \"" << text << "\" encountered after -"
+      << option << " option." << std::endl;
+  return s_status;
 }
 
 static int unreadable(const char *dirFile, char option) {
-    err() << "unable to read \"" << dirFile << "\" for -"
-          << option << " option." << endl;
+  PrintError() << "unable to read \"" << dirFile << "\" for -"
+      << option << " option." << std::endl;
+  return s_status;
+}
+
+static int incorrect(const char *file, char option) {
+  PrintError() << "file \"" << file << "\" contained invalid contents for -"
+      << option << " option." << std::endl;
     return s_status;
 }
 
-static int incorrect(const char *file, char option)
-{
-    err() << "file \"" << file << "\" contained invalid contents for -"
-          << option << " option." << endl;
-    return s_status;
+static const char *getArg(int *i, int argc, const char *argv[]) {
+  return 0 != argv[*i][2] ? argv[*i] + 2 :
+      ++*i >= argc || '-' == argv[*i][0] ? "" : argv[*i];
 }
 
-static const char *getArg(int *i, int argc, const char *argv[])
-{
-    return 0 != argv[*i][2] ? argv[*i] + 2 :
-           ++*i >= argc || '-' == argv[*i][0] ? "" : argv[*i];
-}
-
-int main (int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     int argCount = 0;        // record the number of files on the command line
     int fileFlag = 0;        // -f<file> sets this to 1
     int suffixFlag = 1;      // -s sets this to 0
     int verifyFlag = 0;      // -v sets this to 1
     int extractFlag = 0;     // -e sets this to 1
 
-    idep_AliasDep environment;
+    idep::AliasDep environment;
     for (int i = 1; i < argc; ++i) {
         const char *word = argv[i];
         if  ('-' == word[0]) {
@@ -111,7 +107,7 @@ int main (int argc, char *argv[]) {
                 if (!*arg) {
                     return missing("file", option);
                 }
-                int s = environment.readAliases(cerr, arg);
+                int s = environment.readAliases(std::cerr, arg);
                 if (s < 0) {
                     return unreadable(arg, option);
                 }
@@ -151,8 +147,8 @@ int main (int argc, char *argv[]) {
                 extractFlag = 1;
               } break;
               default: {
-                 err() << "unknown option \"" << word << "\"." << endl
-                       << help();
+                 PrintError() << "unknown option \"" << word << "\"." << std::endl
+                              << help();
                  return s_status;
               } break;
             }
@@ -167,10 +163,10 @@ int main (int argc, char *argv[]) {
         environment.inputFileNames();
     }
 
-    int result = extractFlag ? environment.extract(cout, cerr)
+    int result = extractFlag ? environment.extract(std::cout, std::cerr)
                              : verifyFlag
-                             ? environment.verify(cerr)
-                             : environment.unpaired(cout, cerr, suffixFlag);
+                             ? environment.verify(std::cerr)
+                             : environment.unpaired(std::cout, std::cerr, suffixFlag);
 
     s_status = result < 0 ? IOERROR : result > 0 ? BAD : GOOD;
 

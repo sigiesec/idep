@@ -11,8 +11,7 @@
 //    idep_ComponentIter: iterate over components on a given level
 //   idep_DependencyIter: iterate over dependencies for a given component
 
-#include<ostream>
-using namespace std;
+#include <ostream>
 
 class idep_AliasIter;
 class idep_UnaliasIter;
@@ -55,7 +54,7 @@ class idep_LinkDep {
         // a previously corresponding component name for this alias that is
         // not identical to the once specified here.
  
-    int readAliases(ostream& err, const char *file);
+    int readAliases(std::ostream& err, const char *file);
         // Read a list of component aliases from the specified file.  Each
         // contiguous sequence of non-whitespace characters represents a name.
         // Names are also arranged into sequences.  The first name in a name
@@ -84,7 +83,7 @@ class idep_LinkDep {
         // This function returns 0 unless the specified file is unreadable 
         // or contains non-ascii characters.
 
-    int calculate(ostream& err, int canonicalFlag = 1, int suffixFlag = 0);
+    int calculate(std::ostream& err, int canonicalFlag = 1, int suffixFlag = 0);
         // Calculate link-time component dependencies.  This function returns 
         // 0 on success, non-zero on error.  If an io-error occurs, the result 
         // will be negative, and this object will be left in an invalid state.
@@ -140,19 +139,19 @@ class idep_LinkDep {
         // Return the Normalized Cumulative Component Dependency (NCCD) for 
         // this subsystem ignoring level 0 entities.
 
-    void printAliases(ostream& out) const;
+    void printAliases(std::ostream& out) const;
         // Format all aliases in this environment to the specified output
         // stream.
 
-    void printUnaliases(ostream& out) const;
+    void printUnaliases(std::ostream& out) const;
         // Format all unaliases in this environment to the specified output 
         // stream.
 
-    void printCycles(ostream& out) const;
+    void printCycles(std::ostream& out) const;
         // Format all cyclically-dependent components to the specified 
         // output stream.
 
-    void printLevels(ostream& out, int longFlag = 0, 
+    void printLevels(std::ostream& out, int longFlag = 0, 
                                    int supressFlag = 0) const;
         // Format all components in levelized order to the specified output 
         // stream.  If the optional longFlag argument is specified with a
@@ -164,7 +163,7 @@ class idep_LinkDep {
         // not 0, only the component names will be supplied with levels 
         // delimited only by the extra blank line.
 
-    void printSummary(ostream& out) const;
+    void printSummary(std::ostream& out) const;
         // Format statistics characterizing dependencies within this package
         // to the specified output stream.  These statistics include
         // the following:
@@ -204,7 +203,7 @@ class idep_LinkDep {
         //               cycles.
 };
 
-ostream& operator<<(ostream& out, const idep_LinkDep& dep);
+std::ostream& operator<<(std::ostream& out, const idep_LinkDep& dep);
         // Format all available information in the specified environment (dep)
         // to the specified output stream (out) including the following:
         //   unaliases: directories not to group 

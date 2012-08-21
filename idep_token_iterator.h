@@ -3,9 +3,11 @@
 
 #include <istream>
 
+#include "basictypes.h"
+
 namespace idep {
 
-class idep_TokenIter_i;
+class TokenIteratorImpl;
 
 // Iterate over the tokens in an input stream.
 class TokenIterator {
@@ -26,14 +28,12 @@ class TokenIterator {
 
   // Return the current token (i.e., "word" or newline).  The behavior
   // is undefined if the iteration state is not valid.
-  const char *operator()() const;
+  const char* operator()() const;
 
  private:
-  idep_TokenIter_i *d_this;
+  TokenIteratorImpl* impl_;
 
-  // Disallow copy and assign.
-  TokenIterator(const TokenIterator&);
-  TokenIterator& operator=(const TokenIterator&);
+  DISALLOW_COPY_AND_ASSIGN(TokenIterator);
 };
 
 }  // namespace idep
