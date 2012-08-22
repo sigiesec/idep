@@ -55,7 +55,7 @@ static const char* getArg(int* i, int argc, const char* argv[]) {
 int main(int argc, char* argv[]) {
   int file_count = 0;          // Record the number of files on the command line.
   bool file_flag = false;      // -f<file> sets this to true.
-  bool recursion_flag = true;  // -x sets this to false.
+  bool check_recursive = true;  // -x sets this to false.
   idep_CompileDep environment;
   for (int i = 1; i < argc; ++i) {
     const char* word = argv[i];
@@ -99,7 +99,7 @@ int main(int argc, char* argv[]) {
           if (*arg)
             return extra(arg, option);
 
-          recursion_flag = false;
+          check_recursive = false;
         }
         break;
         default: {
@@ -118,7 +118,7 @@ int main(int argc, char* argv[]) {
   if (!file_flag && !file_count)
     environment.inputRootFiles();
 
-  if (environment.calculate(std::cerr, recursion_flag))
+  if (environment.calculate(std::cerr, check_recursive))
     s_status = IOERROR;
 
   std::cout << environment;
