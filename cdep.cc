@@ -4,8 +4,7 @@
 
 // This file contains a main program to exercise the idep_compile_dep component.
 
-static const char* help() {
-return
+const char cdep_usage[] =
 "\ncdep: Extract compile-time dependencies from a collection of files.\n"
 "\n"
 "  The following command line interface is supported:\n"
@@ -24,7 +23,6 @@ return
 "  TYPICAL USAGE:\n"
 "\n"
 "    cdep -iincludes *.[ch]\n\n";
-}
 
 static enum { IOERROR = -1, GOOD = 0 } s_status = GOOD;
 
@@ -108,7 +106,7 @@ int main(int argc, char* argv[]) {
         break;
         default: {
           err() << "unknown option \"" << word << "\"." << std::endl
-                << help();
+                << cdep_usage;
           return s_status;
         }
         break;
