@@ -55,7 +55,7 @@ static const char* getArg(int* i, int argc, const char* argv[]) {
 }
 
 int main(int argc, char* argv[]) {
-  int argCount = 0;            // record the number of files on the command line
+  int file_count = 0;          // Record the number of files on the command line.
   bool file_flag = false;      // -f<file> sets this to true.
   bool recursion_flag = true;  // -x sets this to false.
   idep_CompileDep environment;
@@ -112,12 +112,12 @@ int main(int argc, char* argv[]) {
         break;
       }
     } else {
-      ++argCount;
+      ++file_count;
       environment.addRootFile(argv[i]);
     }
   }
 
-  if (!file_flag && !argCount)
+  if (!file_flag && !file_count)
     environment.inputRootFiles();
 
   if (environment.calculate(std::cerr, recursion_flag))
