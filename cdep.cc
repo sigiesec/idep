@@ -2,8 +2,6 @@
 
 #include <iostream>
 
-// This file contains a main program to exercise the idep_compile_dep component.
-
 const char cdep_usage[] =
 "\ncdep: Extract compile-time dependencies from a collection of files.\n"
 "\n"
