@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
   int file_count = 0;          // Record the number of files on the command line.
   bool file_flag = false;      // -f<file> sets this to true.
   bool check_recursive = true;  // -x sets this to false.
-  idep_CompileDep environment;
+  idep_CompileDep compile_dep;
   for (int i = 1; i < argc; ++i) {
     const char* word = argv[i];
     if  ('-' == word[0]) {
@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
           if (!*arg)
             return missing("dir", option);
 
-          environment.addIncludeDirectory(arg);
+          compile_dep.addIncludeDirectory(arg);
         }
         break;
         case 'i': {
@@ -77,25 +77,25 @@ int main(int argc, char* argv[]) {
           if (!*arg)
             return missing("file", option);
 
-          if (0 != environment.readIncludeDirectories(arg))
+          if (0 != compile_dep.readIncludeDirectories(arg))
             return unreadable(arg, option);
         }
         break;
         case 'f': {
-          const char ** p = (const char **)argv;
-          const char *arg = getArg(&i, argc, p);
+          const char** p = (const char **)argv;
+          const char* arg = getArg(&i, argc, p);
           if (!*arg)
             return missing("file", option);
 
-          if (0 != environment.readRootFiles(arg))
+          if (0 != compile_dep.readRootFiles(arg))
             return unreadable(arg, option);
 
           file_flag = true;
         }
         break;
         case 'x': {
-          const char ** p = (const char **)argv;
-          const char *arg = getArg(&i, argc, p);
+          const char** p = (const char **)argv;
+          const char* arg = getArg(&i, argc, p);
           if (*arg)
             return extra(arg, option);
 
@@ -111,17 +111,17 @@ int main(int argc, char* argv[]) {
       }
     } else {
       ++file_count;
-      environment.addRootFile(argv[i]);
+      compile_dep.addRootFile(argv[i]);
     }
   }
 
   if (!file_flag && !file_count)
-    environment.inputRootFiles();
+    compile_dep.inputRootFiles();
 
-  if (environment.calculate(std::cerr, check_recursive))
+  if (compile_dep.calculate(std::cerr, check_recursive))
     s_status = IOERROR;
 
-  std::cout << environment;
+  std::cout << compile_dep;
 
   return s_status;
 }
