@@ -58,7 +58,7 @@ class idep_CompileDep {
         // from <stdin>, which is reset on eof.  No check is done for
         // non-ascii characters.
 
-    int calculate(std::ostream& err, int recursionFlag = 1);
+    int calculate(std::ostream& err, bool recursion_flag);
         // Calculate compile-time dependencies among the specified set of
         // rootfiles.  Return 0 on success, non-zero on error.  Errors will
         // be printed to the indicated output stream (err).  By default,

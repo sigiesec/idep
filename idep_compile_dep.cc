@@ -114,7 +114,7 @@ static const char* search(std::string* s,
 static idep::BinaryRelation *s_dependencies_p;   // set just before first call to getDep
 static idep::NameIndexMap *s_files_p;    // set just before first call to getDep
 static idep::NameArray *s_includes_p;    // set just before first call to getDep
-static int s_recurse;                   // set just before first call to getDep
+static bool s_recurse;                   // set just before first call to getDep
 static std::ostream *s_err_p;                // set just before first call to getDep
 
 static int getDep(int index) {
@@ -264,8 +264,7 @@ void idep_CompileDep::inputRootFiles()
     }
 }
 
-int idep_CompileDep::calculate(std::ostream& orf, int recursionFlag)
-{
+int idep_CompileDep::calculate(std::ostream& orf, bool recursionFlag) {
     enum { BAD = -1, GOOD = 0 } status = GOOD;
 
     // clean up any previous calculation artifacts
@@ -324,9 +323,8 @@ int idep_CompileDep::calculate(std::ostream& orf, int recursionFlag)
         }
     }
 
-    if (recursionFlag) {
+    if (recursionFlag)
         d_this->d_dependencies_p->makeTransitive();
-    }
 
     return status;
 }
