@@ -58,16 +58,16 @@ class idep_CompileDep {
         // from <stdin>, which is reset on eof.  No check is done for
         // non-ascii characters.
 
-    int calculate(std::ostream& err, bool recursion_flag);
-        // Calculate compile-time dependencies among the specified set of
-        // rootfiles.  Return 0 on success, non-zero on error.  Errors will
-        // be printed to the indicated output stream (err).  By default,
-        // calculation of dependencies will recurse even for files (such as
-        // (compiler supplied headers) defined outside the current directory.
-        // Specifying 0 as the value of the optional second argument suppresses
-        // recursive investigation of dependencies within external files.
-        // Note that turning off recursion is potentially much faster, but
-        // provides an incomplete list of compile-time dependencies.
+    // Calculate compile-time dependencies among the specified set of
+    // rootfiles. Return true on success, false on error.  Errors will
+    // be printed to the indicated output stream (err).  By default,
+    // calculation of dependencies will recurse even for files (such as
+    // (compiler supplied headers) defined outside the current directory.
+    // Specifying 0 as the value of the optional second argument suppresses
+    // recursive investigation of dependencies within external files.
+    // Note that turning off recursion is potentially much faster, but
+    // provides an incomplete list of compile-time dependencies.
+    bool calculate(std::ostream& err, bool recursion_flag);
 };
 
 std::ostream& operator<<(std::ostream& o, const idep_CompileDep&);

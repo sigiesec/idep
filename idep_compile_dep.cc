@@ -264,8 +264,8 @@ void idep_CompileDep::inputRootFiles()
     }
 }
 
-int idep_CompileDep::calculate(std::ostream& orf, bool recursionFlag) {
-    enum { BAD = -1, GOOD = 0 } status = GOOD;
+bool idep_CompileDep::calculate(std::ostream& orf, bool recursionFlag) {
+    bool success = true;
 
     // clean up any previous calculation artifacts
     delete d_this->d_fileNames_p;
@@ -287,12 +287,12 @@ int idep_CompileDep::calculate(std::ostream& orf, bool recursionFlag) {
         if (!dirFile) {
             err(orf) << "root file \"" << file
                     << "\" not found." << std::endl;
-            status = BAD;
+            success = false;
         }
         else if (d_this->d_fileNames_p->Add(dirFile) < 0) {
             err(orf) << "root file \"" << file
                     << "\" redundantly specified." << std::endl;
-            status = BAD;
+            success = false;
         }
         else {
             ++d_this->d_numRootFiles;
@@ -319,14 +319,14 @@ int idep_CompileDep::calculate(std::ostream& orf, bool recursionFlag) {
         if (getDep(i)) {
             err(orf) << "could not determine all dependencies for \""
                     << name << "\"." << std::endl;
-            status = BAD;
+            success = false;
         }
     }
 
     if (recursionFlag)
         d_this->d_dependencies_p->makeTransitive();
 
-    return status;
+    return success;
 }
 
 std::ostream& operator<<(std::ostream& o, const idep_CompileDep&(dep))
