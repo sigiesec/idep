@@ -28,7 +28,7 @@ static enum { IOERROR = -1, GOOD = 0 } s_status = GOOD;
 
 static std::ostream& err() {
   s_status = IOERROR;
-  return std::cerr << "Error: ";
+  return std::cerr << "error: ";
 }
 
 static int missing(const char* argName, char option)  {
