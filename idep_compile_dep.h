@@ -6,7 +6,9 @@
 //     idep_RootFileIter: iterate over the specified root file names
 //   idep_HeaderFileIter: iterate over the dependencies of each root file
 
-#include<ostream>
+#include "basictypes.h"
+
+#include <ostream>
 
 class idep_RootFileIter;
 class idep_HeaderFileIter;
@@ -93,7 +95,7 @@ class idep_RootFileIter {
     ~idep_RootFileIter();
 
     // MANIPULATORS
-    void operator++(); 
+    void operator++();
 
     // ACCESSORS
     operator const void *() const;
@@ -103,25 +105,22 @@ class idep_RootFileIter {
 
 class idep_HeaderFileIter_i;
 class idep_HeaderFileIter {
-    idep_HeaderFileIter_i *d_this;
+ public:
+  idep_HeaderFileIter(const idep_RootFileIter& rootFileIter);
+  ~idep_HeaderFileIter();
 
-  private:
-    idep_HeaderFileIter(const idep_HeaderFileIter&);            // not impl.
-    idep_HeaderFileIter& operator=(const idep_HeaderFileIter&); // not impl.
+  void operator++();
 
-  public:
-    // CREATORS
-    idep_HeaderFileIter(const idep_RootFileIter& rootFileIter);
-    ~idep_HeaderFileIter();
+  operator const void *() const;
 
-    // MANIPULATORS
-    void operator++();
+  // Returns the name of the current file on which the current root
+  // file depends (either directly or indirectly) at compile time.
+  const char* operator()() const;
 
-    // ACCESSORS
-    operator const void *() const;
-    const char *operator()() const;
-        // Returns the name of the current file on which the current root
-        // file depends (either directly or indirectly) at compile time.
+ private:
+  idep_HeaderFileIter_i *d_this;
+
+  DISALLOW_COPY_AND_ASSIGN(idep_HeaderFileIter);
 };
 
 #endif  // IDEP_COMPILE_DEP_H_

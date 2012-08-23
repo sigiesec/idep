@@ -410,39 +410,31 @@ idep_HeaderFileIter_i::idep_HeaderFileIter_i(const idep_RootFileIter_i& iter)
 
                 // -*-*-*- idep_HeaderFileIter -*-*-*-
 
-idep_HeaderFileIter::idep_HeaderFileIter(const idep_RootFileIter& iter) 
-: d_this(new idep_HeaderFileIter_i(*iter.d_this))
-{
-    ++*this;
+idep_HeaderFileIter::idep_HeaderFileIter(const idep_RootFileIter& iter)
+    : d_this(new idep_HeaderFileIter_i(*iter.d_this)) {
+  ++*this;
 }
 
-idep_HeaderFileIter::~idep_HeaderFileIter()
-{
-    delete d_this;
+idep_HeaderFileIter::~idep_HeaderFileIter() {
+  delete d_this;
 }
 
+void idep_HeaderFileIter::operator++() {
+  assert(*this);
+  idep::BinaryRelation *rel = d_this->d_iter.d_dep.d_dependencies_p;
 
-void idep_HeaderFileIter::operator++()
-{
-    assert(*this);
-    idep::BinaryRelation *rel = d_this->d_iter.d_dep.d_dependencies_p;
-
-    do {
-        ++d_this->d_index;
-    }
-    while (d_this->d_index < rel->Length()
-           && !rel->get(d_this->d_iter.d_index, d_this->d_index)
-    );
+  do {
+    ++d_this->d_index;
+  } while (d_this->d_index < rel->Length() &&
+           !rel->get(d_this->d_iter.d_index, d_this->d_index)
+  );
 }
 
-idep_HeaderFileIter::operator const void *() const
-{
-    idep::BinaryRelation *rel = d_this->d_iter.d_dep.d_dependencies_p;
-    return d_this->d_index < rel->Length() ? this : 0;
+idep_HeaderFileIter::operator const void *() const {
+  idep::BinaryRelation *rel = d_this->d_iter.d_dep.d_dependencies_p;
+  return d_this->d_index < rel->Length() ? this : 0;
 }
 
-const char *idep_HeaderFileIter::operator()() const
-{
-    return (*d_this->d_iter.d_dep.d_fileNames_p)[d_this->d_index];
+const char* idep_HeaderFileIter::operator()() const {
+  return (*d_this->d_iter.d_dep.d_fileNames_p)[d_this->d_index];
 }
-
