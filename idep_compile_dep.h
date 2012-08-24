@@ -118,7 +118,7 @@ class idep_HeaderFileIter {
   const char* operator()() const;
 
  private:
-  idep_HeaderFileIter_i *d_this;
+  idep_HeaderFileIter_i* impl_;
 
   DISALLOW_COPY_AND_ASSIGN(idep_HeaderFileIter);
 };
