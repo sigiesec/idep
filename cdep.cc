@@ -64,11 +64,11 @@ int main(int argc, char* argv[]) {
       switch(option) {
         case 'I': {
           const char** p = (const char **)argv;
-          const char* arg = getArg(&i, argc, p);
-          if (!*arg)
+          const char* dir_name = getArg(&i, argc, p);
+          if (!*dir_name)
             return missing("dir", option);
 
-          compile_dep.addIncludeDirectory(arg);
+          compile_dep.AddIncludeDirectory(dir_name);
         }
         break;
         case 'i': {

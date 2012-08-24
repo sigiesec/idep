@@ -21,7 +21,7 @@ class idep_CompileDep {
 
   // Add a directory to be searched for include files.
   // Errors will be detected during the calculation process.
-  void addIncludeDirectory(const char *dirName);
+  void AddIncludeDirectory(const char* dir_name);
 
   // Add a list of include directories read from a specified file.
   // This function assumes that each contiguous sequence of

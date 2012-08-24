@@ -201,10 +201,10 @@ idep_CompileDep::~idep_CompileDep()
 
 struct addIncludeDirectoryFunctor
 {
-  static int call(idep_CompileDep * athis,const char *dirName)      
+  static int call(idep_CompileDep* athis, const char* dir_name)
   {
-    athis->addIncludeDirectory(dirName);
-  }  
+    athis->AddIncludeDirectory(dir_name);
+  }
 };
 
 struct addRootFileFunctor
@@ -217,16 +217,16 @@ struct addRootFileFunctor
 
 
 
-void idep_CompileDep::addIncludeDirectory(const char *dirName)
+void idep_CompileDep::AddIncludeDirectory(const char* dir_name)
 {
-    if (*dirName) {
-        int len = strlen(dirName);
-        if ('/' == dirName[len-1]) {            // already ends in '/'
-            d_this->d_includeDirectories.Append(dirName);
+    if (*dir_name) {
+        int len = strlen(dir_name);
+        if ('/' == dir_name[len - 1]) {            // already ends in '/'
+            d_this->d_includeDirectories.Append(dir_name);
         }
         else {                                  // add trailing '/'
             char *buf = new char[len+2];
-            memcpy(buf, dirName, len);
+            memcpy(buf, dir_name, len);
             buf[len] = '/';
             buf[len+1] = '\0';
             d_this->d_includeDirectories.Append(buf);
