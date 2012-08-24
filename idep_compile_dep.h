@@ -15,15 +15,6 @@ class idep_HeaderFileIter;
 
 class idep_CompileDep_i;
 class idep_CompileDep {
-    idep_CompileDep_i *d_this;
-
-    friend class idep_RootFileIter;
-    friend class idep_HeaderFileIter;
-
-  private:
-    idep_CompileDep(const idep_CompileDep&);            // not implemented
-    idep_CompileDep& operator=(const idep_CompileDep&); // not implemented
-
   public:
     // CREATORS
     idep_CompileDep();
@@ -70,6 +61,14 @@ class idep_CompileDep {
     // Note that turning off recursion is potentially much faster, but
     // provides an incomplete list of compile-time dependencies.
     bool calculate(std::ostream& err, bool recursion_flag);
+
+  private:
+    friend class idep_RootFileIter;
+    friend class idep_HeaderFileIter;
+
+    idep_CompileDep_i *d_this;
+
+    DISALLOW_COPY_AND_ASSIGN(idep_CompileDep);
 };
 
 std::ostream& operator<<(std::ostream& o, const idep_CompileDep&);
