@@ -34,8 +34,8 @@ static const char* stripDotSlash(const char* originalPath) {
   return originalPath;
 }
 
-static int isLocal(const char* dirFile) {
-  return !strchr(dirFile, '/');
+static bool IsLocal(const char* dir_file) {
+  return !strchr(dir_file, '/');
 }
 
 static char* removeFileName(char* dirPath) {
@@ -149,7 +149,7 @@ int idep_LinkDep_i::entry(const char *name, int suffixFlag)
     char *buf = new char[size];
     memcpy(buf, name, size);
 
-    if (!isLocal(buf)) {
+    if (!IsLocal(buf)) {
         removeFileName(buf);
         if (d_unaliases.Lookup(buf) >= 0) {             // found unalias
             memcpy(buf, name, size);                    // restore buffer
