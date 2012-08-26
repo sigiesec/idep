@@ -268,7 +268,7 @@ int AliasDep::unpaired(std::ostream& out, std::ostream& ing, int suffixFlag) con
                 int len = li < lj ? li : lj;    // min length
                 int cmp = strncmp(printNames[smap[i]],
                                   printNames[smap[j]], len);
-                swap = cmp < 0 || 0 == cmp && li > lj;  // longer first if tie
+                swap = (cmp < 0 || 0 == cmp) && li > lj;  // longer first if tie
             }
             if (swap) {                                 // swap if necessary
                 int tmp = smap[i];
