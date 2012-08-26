@@ -217,50 +217,45 @@ struct addRootFileFunctor
 
 
 
-void idep_CompileDep::AddIncludeDirectory(const char* dir_name)
-{
+void idep_CompileDep::AddIncludeDirectory(const char* dir_name) {
     if (*dir_name) {
         int len = strlen(dir_name);
         if ('/' == dir_name[len - 1]) {            // already ends in '/'
             d_this->d_includeDirectories.Append(dir_name);
-        }
-        else {                                  // add trailing '/'
-            char *buf = new char[len+2];
-            memcpy(buf, dir_name, len);
-            buf[len] = '/';
-            buf[len+1] = '\0';
-            d_this->d_includeDirectories.Append(buf);
-            delete [] buf;
-        }
+        } else {                                  // add trailing '/'
+          char* buf = new char[len + 2];
+          memcpy(buf, dir_name, len);
+          buf[len] = '/';
+          buf[len + 1] = '\0';
+          d_this->d_includeDirectories.Append(buf);
+          delete[] buf;
+       }
     }
 }
 
-int idep_CompileDep::readIncludeDirectories(const char *file)
-{
-  //TODO return 
-  loadFromFile<addIncludeDirectoryFunctor>(file, this); 
+int idep_CompileDep::ReadIncludeDirectories(const char* file) {
+  //TODO return
+  loadFromFile<addIncludeDirectoryFunctor>(file, this);
 }
 
-void idep_CompileDep::addRootFile(const char *fileName)
-{
-    d_this->d_rootFiles.Append(fileName);
+void idep_CompileDep::addRootFile(const char* file_name) {
+    d_this->d_rootFiles.Append(file_name);
 }
 
-int idep_CompileDep::readRootFiles(const char *file)
-{
-  //TODO return 
-  //  loadFromFile(file, this, &idep_CompileDep::addRootFile); 
-  loadFromFile<addRootFileFunctor>(file, this); 
+int idep_CompileDep::readRootFiles(const char* file) {
+  //TODO return
+  //  loadFromFile(file, this, &idep_CompileDep::addRootFile);
+  loadFromFile<addRootFileFunctor>(file, this);
 }
 
-void idep_CompileDep::inputRootFiles()
-{
+void idep_CompileDep::inputRootFiles() {
     if (std::cin) {
-      //todo 
+      //todo
       //      loadFromStream(cin, this, idep_CompileDep::addRootFile);
-      loadFromStream<addRootFileFunctor>(std::cin, this); 
+      loadFromStream<addRootFileFunctor>(std::cin, this);
 
-      std::cin.clear(std::_S_goodbit);             // reset eof for standard input
+      // Reset eof for standard input.
+      std::cin.clear(std::_S_goodbit);
     }
 }
 
@@ -367,7 +362,7 @@ idep_RootFileIter_i::idep_RootFileIter_i(const idep_CompileDep_i& dep)
 
                 // -*-*-*- idep_RootFileIter -*-*-*-
 
-idep_RootFileIter::idep_RootFileIter(const idep_CompileDep& dep) 
+idep_RootFileIter::idep_RootFileIter(const idep_CompileDep& dep)
 : d_this(new idep_RootFileIter_i(*dep.d_this))
 {
 }
@@ -377,17 +372,17 @@ idep_RootFileIter::~idep_RootFileIter()
     delete d_this;
 }
 
-void idep_RootFileIter::operator++() 
+void idep_RootFileIter::operator++()
 {
     assert(*this);
     ++d_this->d_index;
 }
- 
+
 idep_RootFileIter::operator const void *() const
 {
     return d_this->d_index < d_this->d_dep.d_numRootFiles ? this : 0;
 }
- 
+
 const char *idep_RootFileIter::operator()() const
 {
     return (*d_this->d_dep.d_fileNames_p)[d_this->d_index];

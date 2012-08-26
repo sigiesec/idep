@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
           if (!*arg)
             return missing("file", option);
 
-          if (0 != compile_dep.readIncludeDirectories(arg))
+          if (0 != compile_dep.ReadIncludeDirectories(arg))
             return unreadable(arg, option);
         }
         break;
