@@ -16,28 +16,30 @@ const char kCommentChar= '#';
 const char kContinueChar= '\\';
 const char kNewLineChar= '\n';
 
-static std::ostream& warning(std::ostream& orf, const char* file, int lineno) {
-    return orf << "Warning in " << file << '(' << lineno << "): ";
+static std::ostream& warning(std::ostream& orf,
+                             const char* file,
+                             int line_number) {
+  return orf << "Warning in " << file << '(' << line_number << "): ";
 }
 
-static std::ostream& err(std::ostream& orf, const char* file, int lineno) {
-    return orf << "Error in " << file << '(' << lineno << "): ";
+static std::ostream& err(std::ostream& orf, const char* file, int line_number) {
+  return orf << "Error in " << file << '(' << line_number << "): ";
 }
 
-static int tryToAlias(AliasTable* table,
+static int TryToAlias(AliasTable* table,
                       std::ostream& orf,
                       const char* input_name,
-                      int lineno,
-                      const char* componentName,
+                      int line_number,
+                      const char* component_name,
                       const char* alias) {
-    if (table->Add(alias, componentName) < 0) {
-        const char *previousName = table->Lookup(alias);
-        err(orf, input_name, lineno) << "two names for alias \"" 
-            << alias << "\":" << std::endl << "    \"" << previousName
-            << "\" and \"" << componentName << "\"" << std::endl;
-        return 1;
-    }
-    return 0;
+  if (table->Add(alias, component_name) < 0) {
+    const char* previous_name = table->Lookup(alias);
+    err(orf, input_name, line_number) << "two names for alias \""
+        << alias << "\":" << std::endl << "    \"" << previous_name
+        << "\" and \"" << component_name << "\"" << std::endl;
+    return 1;
+  }
+  return 0;
 }
 
 int AliasUtil::ReadAliases(AliasTable* table,
@@ -147,25 +149,25 @@ int AliasUtil::ReadAliases(AliasTable* table,
           } break;
           case BEG_PRE_CUR: {
             componentName = lastToken;
-            numBadAliases += tryToAlias(table, orf, input_name, lineno,
+            numBadAliases += TryToAlias(table, orf, input_name, lineno,
                                                         componentName.c_str(), it());
             warning(orf, input_name, lineno) << '"' << lastToken 
                 << "\" << used as component name." << std::endl;
           } break;
           case TRY_CUR: {
-            numBadAliases += tryToAlias(table, orf, input_name, lineno,
+            numBadAliases += TryToAlias(table, orf, input_name, lineno,
                                                         componentName.c_str(), it());
           } break;
           case TRY_PRE: {
-            numBadAliases += tryToAlias(table, orf, input_name, lineno,
+            numBadAliases += TryToAlias(table, orf, input_name, lineno,
                                                    componentName.c_str(), lastToken.c_str());
             warning(orf, input_name, lineno) << '"' << lastToken
                 << "\" << used as alias name." << std::endl;
           } break;
           case TRY_PRE_CUR: {
-            numBadAliases += tryToAlias(table, orf, input_name, lineno,
+            numBadAliases += TryToAlias(table, orf, input_name, lineno,
                                                    componentName.c_str(), lastToken.c_str());
-            numBadAliases += tryToAlias(table, orf, input_name, lineno,
+            numBadAliases += TryToAlias(table, orf, input_name, lineno,
                                                         componentName.c_str(), it());
             warning(orf, input_name, lineno) << '"' << lastToken
                 << "\" << used as alias name." << std::endl;
