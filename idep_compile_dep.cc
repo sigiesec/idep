@@ -30,21 +30,18 @@ static bool IsAbsolutePath(const char* original_path) {
     return '/' == *original_path;
 }
 
-static int isAsciiFile(const char *fileName) {
-    enum { NO = 0, YES = 1 };
-    std::ifstream in(fileName);
-    if (!in) {
-        return NO;
-    }
+static int IsAsciiFile(const char* file_name) {
+    std::ifstream in(file_name);
+    if (!in)
+        return false;
 
-    // check for non-ascii characters
+    // Check for non-ascii characters.
     char c;
     while (in && !in.get(c).eof()) {
-       if (!isascii(c)) {
-          return NO;
-       }
+       if (!isascii(c))
+          return false;
     }
-    return YES;
+    return true;
 }
 
 //typedef void (idep_CompileDep::*Func)(const char *); // TODO 
@@ -67,7 +64,7 @@ template <typename Func> static void loadFromStream(std::istream& in, idep_Compi
 template <typename Func> static int loadFromFile(const char *file, idep_CompileDep *dep) 
 {
     enum { BAD = -1, GOOD = 0 };
-    if (!isAsciiFile(file)) {
+    if (!IsAsciiFile(file)) {
         return BAD;
     }
     std::ifstream in(file);
