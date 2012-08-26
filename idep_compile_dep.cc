@@ -385,25 +385,24 @@ const char *idep_RootFileIter::operator()() const
     return (*d_this->d_dep.d_fileNames_p)[d_this->d_index];
 }
 
-                // -*-*-*- idep_HeaderFileIter_i -*-*-*-
+                // -*-*-*- HeaderFileIteratorImpl -*-*-*-
 
-struct idep_HeaderFileIter_i {
-    const idep_RootFileIter_i& d_iter;
-    int d_index;
+struct HeaderFileIteratorImpl {
+  const idep_RootFileIter_i& d_iter;
+  int d_index;
 
-    idep_HeaderFileIter_i(const idep_RootFileIter_i& iter);
+  HeaderFileIteratorImpl(const idep_RootFileIter_i& iter);
 };
 
-idep_HeaderFileIter_i::idep_HeaderFileIter_i(const idep_RootFileIter_i& iter) 
-: d_iter(iter)
-, d_index(-1)
-{
+HeaderFileIteratorImpl::HeaderFileIteratorImpl(const idep_RootFileIter_i& iter)
+    : d_iter(iter),
+      d_index(-1) {
 }
 
                 // -*-*-*- idep_HeaderFileIter -*-*-*-
 
 idep_HeaderFileIter::idep_HeaderFileIter(const idep_RootFileIter& iter)
-    : impl_(new idep_HeaderFileIter_i(*iter.d_this)) {
+    : impl_(new HeaderFileIteratorImpl(*iter.d_this)) {
   ++*this;
 }
 

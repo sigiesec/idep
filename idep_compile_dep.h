@@ -97,7 +97,7 @@ class idep_RootFileIter {
   DISALLOW_COPY_AND_ASSIGN(idep_RootFileIter);
 };
 
-class idep_HeaderFileIter_i;
+class HeaderFileIteratorImpl;
 class idep_HeaderFileIter {
  public:
   idep_HeaderFileIter(const idep_RootFileIter& rootFileIter);
@@ -112,7 +112,7 @@ class idep_HeaderFileIter {
   const char* operator()() const;
 
  private:
-  idep_HeaderFileIter_i* impl_;
+  HeaderFileIteratorImpl* impl_;
 
   DISALLOW_COPY_AND_ASSIGN(idep_HeaderFileIter);
 };
