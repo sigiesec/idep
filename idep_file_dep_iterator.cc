@@ -104,15 +104,15 @@ struct FileDepIteratorImpl {
   std::ifstream d_file;
   char d_buf[MAX_LINE_LENGTH];
   const char *d_header_p;
-  bool d_isValidFile;
+  bool is_valid_file;
 
   FileDepIteratorImpl(const char* file_name);
 };
 
 FileDepIteratorImpl::FileDepIteratorImpl(const char* file_name)
     : d_file(file_name),
-      d_header_p(d_buf)  /* Buffer is not yet initialized. */ {
-  d_isValidFile = d_file != NULL;  // Depends on result of initialization.
+      d_header_p(d_buf)  /* Buffer is not yet initialized. */,
+      is_valid_file(d_file != NULL) /* Depends on result of initialization. */ {
 }
 
 FileDepIterator::FileDepIterator(const char *fileName)
@@ -137,7 +137,7 @@ void FileDepIterator::Reset() {
 }
 
 bool FileDepIterator::IsValidFile() const {
-  return impl_->d_isValidFile;
+  return impl_->is_valid_file;
 }
 
 void FileDepIterator::operator++() {
