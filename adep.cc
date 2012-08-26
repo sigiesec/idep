@@ -4,37 +4,35 @@
 
 // This file contains a main program to exercise the idep_aliasdep component.
 
-#define NL "\n"
 static const char* help() {
-return NL
-"adep - create aliases to group files into cohesive components."             NL
-""                                                                           NL
-"  The following 3 command line interface modes are supported:"              NL
-""                                                                           NL
-"    adep [-s] [-a<alias>] [-f<filelist> ] [-X<fn>] [-x<xFile>] <filename>*" NL
-"    adep -v [-a<alias>] [-f<filelist>] [-X<fn>] [-x<xFile>] <cfilename>*"   NL
-"    adep -e [-a<alias>] [-f<filelist>] [-X<fn>] [-x<xFile>] <cfilename>*"   NL
-""                                                                           NL
-"      -s           Suppress the printing of suffixes for unpaired names."   NL
-"      -v           Verify file contains component name as 1st dependency."  NL
-"      -e           Extract aliases using name of first dependency."         NL
-"      -a<alias>    Specify file containing component name aliases."         NL
-"      -f<filelist> Specify file containing a list of files to consider."    NL
-"      -X<fn>       Specify name of file to ignore during processing."       NL
-"      -x<xFile>    Specify file containing a list of filenames to ignore."  NL
-""                                                                           NL
-"    Each filename on the command line specifies a file to be considered for"NL
-"    processing.  Specifying no arguments indicates that the list of files"  NL
-"    is to come from standard input unless the -f option has been invoked."  NL
-""                                                                           NL
-"  TYPICAL USAGE:"                                                           NL
-""                                                                           NL
-"    adep -s *.[ch]                     // print unpaired files to stdout"   NL
-""                                                                           NL
-"    adep -v -aaliases *.c              // print #include errors to stderr"  NL
-""                                                                           NL
-"    adep -e *.c                        // print extracted aliases to stderr"NL
-NL;
+return
+"\nadep - create aliases to group files into cohesive components.\n"
+"\n"
+"  The following 3 command line interface modes are supported:\n"
+"\n"
+"    adep [-s] [-a<alias>] [-f<filelist> ] [-X<fn>] [-x<xFile>] <filename>*\n"
+"    adep -v [-a<alias>] [-f<filelist>] [-X<fn>] [-x<xFile>] <cfilename>*\n"
+"    adep -e [-a<alias>] [-f<filelist>] [-X<fn>] [-x<xFile>] <cfilename>*\n"
+"\n"
+"      -s           Suppress the printing of suffixes for unpaired names.\n"
+"      -v           Verify file contains component name as 1st dependency.\n"
+"      -e           Extract aliases using name of first dependency.\n"
+"      -a<alias>    Specify file containing component name aliases.\n"
+"      -f<filelist> Specify file containing a list of files to consider.\n"
+"      -X<fn>       Specify name of file to ignore during processing.\n"
+"      -x<xFile>    Specify file containing a list of filenames to ignore.\n"
+"\n"
+"    Each filename on the command line specifies a file to be considered for\n"
+"    processing.  Specifying no arguments indicates that the list of files\n"
+"    is to come from standard input unless the -f option has been invoked.\n"
+"\n"
+"  TYPICAL USAGE:\n"
+"\n"
+"    adep -s *.[ch]                     // print unpaired files to stdout\n"
+"\n"
+"    adep -v -aaliases *.c              // print #include errors to stderr\n"
+"\n"
+"    adep -e *.c                        // print extracted aliases to stderr\n\n";
 }
 
 static enum { IOERROR = -1, GOOD = 0, BAD = 1 } s_status = GOOD;
