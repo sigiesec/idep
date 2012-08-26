@@ -162,12 +162,8 @@ void AliasDep::addIgnoreName(const char *fileName)
     impl_->d_ignoreNames.Add(fileName);
 }
 
-int AliasDep::readIgnoreNames(const char *file)
-{
-  /*
-idep_adep.cxx:180: error: argument of type 'void (AliasDep::)(const char*)' does not match 'void (AliasDep::*)(const char*)'
-    return loadFromFile(file, this, AliasDep::addIgnoreName);
-  */
+int AliasDep::readIgnoreNames(const char *file) {
+  return loadFromFile(file, this, &AliasDep::addIgnoreName);
 }
 
 const char *AliasDep::addAlias(const char *alias, const char *component) {
@@ -185,9 +181,8 @@ void AliasDep::addFileName(const char *fileName)
     impl_->d_fileNames.Add(fileName);
 }
 
-int AliasDep::readFileNames(const char *file)
-{
-  //    return loadFromFile(file, this, AliasDep::addFileName);
+int AliasDep::readFileNames(const char *file) {
+  return loadFromFile(file, this, &AliasDep::addFileName);
 }
 
 void AliasDep::inputFileNames()
