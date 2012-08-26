@@ -46,22 +46,18 @@ static const char *stripDir(const char *s)
     return s;   // input was null
 }
 
-static int isAsciiFile(const char *fileName)
-{
-    enum { NO = 0, YES = 1 };
-    std::ifstream in(fileName);
-    if (!in) {
-        return NO;
-    }
+static int IsAsciiFile(const char* file_name) {
+    std::ifstream in(file_name);
+    if (!in)
+        return false;
 
-    // check for non-ascii characters
+    // Check for non-ascii characters.
     char c;
     while (in && !in.get(c).eof()) {
-       if (!isascii(c)) {
-          return NO;
-       }
+       if (!isascii(c))
+          return false;
     }
-    return YES;
+    return true;
 }
 
 typedef void (AliasDep::*Func)(const char *);
@@ -84,7 +80,7 @@ static void loadFromStream(std::istream& in, AliasDep *dep, Func add)
 static int loadFromFile(const char *file, AliasDep *dep, Func add)
 {
     enum { BAD = -1, GOOD = 0 };
-    if (!isAsciiFile(file)) {
+    if (!IsAsciiFile(file)) {
         return BAD;
     }
     std::ifstream in(file);
