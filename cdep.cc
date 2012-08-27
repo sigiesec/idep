@@ -111,7 +111,7 @@ int main(int argc, char* argv[]) {
       }
     } else {
       ++file_count;
-      compile_dep.addRootFile(argv[i]);
+      compile_dep.AddRootFile(argv[i]);
     }
   }
 

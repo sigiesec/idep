@@ -204,15 +204,11 @@ struct addIncludeDirectoryFunctor
   }
 };
 
-struct addRootFileFunctor
-{
-  static int call(idep_CompileDep * athis,const char *dirName)      
-  {
-    athis->addRootFile(dirName);
-  }  
+struct addRootFileFunctor {
+  static int call(idep_CompileDep* compile_dep,const char* dir_name) {
+    compile_dep->AddRootFile(dir_name);
+  }
 };
-
-
 
 void idep_CompileDep::AddIncludeDirectory(const char* dir_name) {
     if (*dir_name) {
@@ -235,7 +231,7 @@ int idep_CompileDep::ReadIncludeDirectories(const char* file) {
   loadFromFile<addIncludeDirectoryFunctor>(file, this);
 }
 
-void idep_CompileDep::addRootFile(const char* file_name) {
+void idep_CompileDep::AddRootFile(const char* file_name) {
     d_this->d_rootFiles.Append(file_name);
 }
 

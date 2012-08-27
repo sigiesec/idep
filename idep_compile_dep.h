@@ -32,7 +32,7 @@ class idep_CompileDep {
 
   // Add the name of a file to be analyzed.  Errors in reading this file
   // will be detected only when the calculate() operation is invoked.
-  void addRootFile(const char *fileName);
+  void AddRootFile(const char* file_name);
 
   // Add a list of root file names read from a specified file.  This
   // function assumes that each contiguous sequence of non-whitespace
