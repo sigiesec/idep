@@ -317,7 +317,7 @@ bool idep_CompileDep::calculate(std::ostream& orf, bool recursionFlag) {
     return success;
 }
 
-std::ostream& operator<<(std::ostream& o, const idep_CompileDep&(dep))
+std::ostream& operator<<(std::ostream& o, const idep_CompileDep& dep)
 {
     const char *INDENT = "    ";
     for (idep_RootFileIter rit(dep); rit; ++rit) {
@@ -355,9 +355,8 @@ idep_RootFileIter_i::idep_RootFileIter_i(const idep_CompileDep_i& dep)
 
                 // -*-*-*- idep_RootFileIter -*-*-*-
 
-idep_RootFileIter::idep_RootFileIter(const idep_CompileDep& dep)
-: d_this(new idep_RootFileIter_i(*dep.d_this))
-{
+idep_RootFileIter::idep_RootFileIter(const idep_CompileDep& compile_dep)
+    : d_this(new idep_RootFileIter_i(*compile_dep.d_this)) {
 }
 
 idep_RootFileIter::~idep_RootFileIter()

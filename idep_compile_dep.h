@@ -79,7 +79,7 @@ std::ostream& operator<<(std::ostream& o, const idep_CompileDep&);
 class idep_RootFileIter_i;
 class idep_RootFileIter {
  public:
-  idep_RootFileIter(const idep_CompileDep& compileDep);
+  idep_RootFileIter(const idep_CompileDep& compile_dep);
   ~idep_RootFileIter();
 
   void operator++();
