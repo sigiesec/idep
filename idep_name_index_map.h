@@ -23,8 +23,8 @@ class NameIndexMap {
   int Add(const char* name);
 
   // Add a name to the table if necessary; always return a valid index.
-  // Note: entry() is usually more efficient than Lookup() followed by
-  // an occasional add().
+  // Note: entry() is usually more efficient than GetIndexByName() followed by
+  // an occasional Add().
   int Entry(const char* name);
 
   // Return the name associated with the specified index or 0 if the
@@ -35,7 +35,7 @@ class NameIndexMap {
   int Length() const;
 
   // Return the index of the specified name, or -1 if not found.
-  int Lookup(const char* name) const;
+  int GetIndexByName(const char* name) const;
 
  private:
   NameIndexMapImpl* impl_;

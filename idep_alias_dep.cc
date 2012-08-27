@@ -208,7 +208,7 @@ int AliasDep::unpaired(std::ostream& out, std::ostream& ing, int suffixFlag) con
     for (int i = 0; i < maxLength; ++i) {
         AliasDepString s(impl_->d_fileNames[i]);
 
-        if (impl_->d_ignoreNames.Lookup(s) >= 0) {
+        if (impl_->d_ignoreNames.GetIndexByName(s) >= 0) {
             continue; // ignore this file
         }
         removeSuffix(s);
@@ -302,7 +302,7 @@ int AliasDep::verify(std::ostream& orf) const
         const char *path = impl_->d_fileNames[i];
         AliasDepString c(path);
 
-        if (impl_->d_ignoreNames.Lookup(c) >= 0) {
+        if (impl_->d_ignoreNames.GetIndexByName(c) >= 0) {
             continue; // ignore this file
         }
 
@@ -383,7 +383,7 @@ int AliasDep::extract(std::ostream& out, std::ostream& orf) const
         const char *path = impl_->d_fileNames[i];
         AliasDepString c(path);
 
-        if (impl_->d_ignoreNames.Lookup(c) >= 0) {
+        if (impl_->d_ignoreNames.GetIndexByName(c) >= 0) {
             continue; // ignore this file
         }
 

@@ -122,8 +122,8 @@ int NameIndexMap::Length() const {
   return impl_->array_.Length();
 }
 
-int NameIndexMap::Lookup(const char* name) const {
-  NameIndexMapLink *& slot = impl_->findSlot(name);
+int NameIndexMap::GetIndexByName(const char* name) const {
+  NameIndexMapLink*& slot = impl_->findSlot(name);
   const NameIndexMapLink* link = find(slot, name);
   return link ? link->index_ : BAD_INDEX;
 }

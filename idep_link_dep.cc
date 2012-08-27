@@ -151,7 +151,7 @@ int idep_LinkDep_i::entry(const char *name, int suffixFlag)
 
     if (!IsLocal(buf)) {
         removeFileName(buf);
-        if (d_unaliases.Lookup(buf) >= 0) {             // found unalias
+        if (d_unaliases.GetIndexByName(buf) >= 0) {     // found unalias
             memcpy(buf, name, size);                    // restore buffer
         }
     }
