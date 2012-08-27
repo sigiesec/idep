@@ -323,7 +323,7 @@ std::ostream& operator<<(std::ostream& o, const idep_CompileDep&(dep))
     for (idep_RootFileIter rit(dep); rit; ++rit) {
         idep::NameArray a;
         o << rit() << std::endl;
-        for (idep_HeaderFileIter hit(rit); hit; ++hit) {
+        for (HeaderFileIterator hit(rit); hit; ++hit) {
             if (IsAbsolutePath(hit())) {
                 a.Append(hit());
             } else {
@@ -395,18 +395,18 @@ HeaderFileIteratorImpl::HeaderFileIteratorImpl(const idep_RootFileIter_i& iter)
       d_index(-1) {
 }
 
-                // -*-*-*- idep_HeaderFileIter -*-*-*-
+                // -*-*-*- HeaderFileIterator -*-*-*-
 
-idep_HeaderFileIter::idep_HeaderFileIter(const idep_RootFileIter& iter)
+HeaderFileIterator::HeaderFileIterator(const idep_RootFileIter& iter)
     : impl_(new HeaderFileIteratorImpl(*iter.d_this)) {
   ++*this;
 }
 
-idep_HeaderFileIter::~idep_HeaderFileIter() {
+HeaderFileIterator::~HeaderFileIterator() {
   delete impl_;
 }
 
-void idep_HeaderFileIter::operator++() {
+void HeaderFileIterator::operator++() {
   assert(*this);
   idep::BinaryRelation* rel = impl_->d_iter.d_dep.d_dependencies_p;
 
@@ -417,11 +417,11 @@ void idep_HeaderFileIter::operator++() {
   );
 }
 
-idep_HeaderFileIter::operator const void *() const {
+HeaderFileIterator::operator const void *() const {
   idep::BinaryRelation* rel = impl_->d_iter.d_dep.d_dependencies_p;
   return impl_->d_index < rel->Length() ? this : 0;
 }
 
-const char* idep_HeaderFileIter::operator()() const {
+const char* HeaderFileIterator::operator()() const {
   return (*impl_->d_iter.d_dep.d_fileNames_p)[impl_->d_index];
 }
