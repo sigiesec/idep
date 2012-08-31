@@ -338,16 +338,16 @@ std::ostream& operator<<(std::ostream& o, const idep_CompileDep& dep)
     return o;
 }
 
-                // -*-*-*- idep_RootFileIter_i -*-*-*-
+                // -*-*-*- RootFileIteratorImpl -*-*-*-
 
-struct idep_RootFileIter_i {
+struct RootFileIteratorImpl {
     const idep_CompileDep_i& d_dep;
     int d_index;
 
-    idep_RootFileIter_i(const idep_CompileDep_i& dep);
+    RootFileIteratorImpl(const idep_CompileDep_i& dep);
 };
 
-idep_RootFileIter_i::idep_RootFileIter_i(const idep_CompileDep_i& dep)
+RootFileIteratorImpl::RootFileIteratorImpl(const idep_CompileDep_i& dep)
 : d_dep(dep)
 , d_index(0)
 {
@@ -356,7 +356,7 @@ idep_RootFileIter_i::idep_RootFileIter_i(const idep_CompileDep_i& dep)
                 // -*-*-*- idep_RootFileIter -*-*-*-
 
 idep_RootFileIter::idep_RootFileIter(const idep_CompileDep& compile_dep)
-    : d_this(new idep_RootFileIter_i(*compile_dep.d_this)) {
+    : d_this(new RootFileIteratorImpl(*compile_dep.d_this)) {
 }
 
 idep_RootFileIter::~idep_RootFileIter()
@@ -383,13 +383,13 @@ const char *idep_RootFileIter::operator()() const
                 // -*-*-*- HeaderFileIteratorImpl -*-*-*-
 
 struct HeaderFileIteratorImpl {
-  const idep_RootFileIter_i& d_iter;
+  const RootFileIteratorImpl& d_iter;
   int d_index;
 
-  HeaderFileIteratorImpl(const idep_RootFileIter_i& iter);
+  HeaderFileIteratorImpl(const RootFileIteratorImpl& iter);
 };
 
-HeaderFileIteratorImpl::HeaderFileIteratorImpl(const idep_RootFileIter_i& iter)
+HeaderFileIteratorImpl::HeaderFileIteratorImpl(const RootFileIteratorImpl& iter)
     : d_iter(iter),
       d_index(-1) {
 }

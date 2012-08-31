@@ -76,7 +76,7 @@ class idep_CompileDep {
 //    header file upon which the root file depends at compile time.
 std::ostream& operator<<(std::ostream& o, const idep_CompileDep&);
 
-class idep_RootFileIter_i;
+class RootFileIteratorImpl;
 class idep_RootFileIter {
  public:
   idep_RootFileIter(const idep_CompileDep& compile_dep);
@@ -92,7 +92,7 @@ class idep_RootFileIter {
  private:
   friend class HeaderFileIterator;
 
-  idep_RootFileIter_i *d_this;
+  RootFileIteratorImpl *d_this;
 
   DISALLOW_COPY_AND_ASSIGN(idep_RootFileIter);
 };
