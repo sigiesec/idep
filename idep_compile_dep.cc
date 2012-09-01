@@ -320,7 +320,7 @@ bool idep_CompileDep::calculate(std::ostream& orf, bool recursionFlag) {
 std::ostream& operator<<(std::ostream& o, const idep_CompileDep& dep)
 {
     const char *INDENT = "    ";
-    for (idep_RootFileIter rit(dep); rit; ++rit) {
+    for (RootFileIterator rit(dep); rit; ++rit) {
         idep::NameArray a;
         o << rit() << std::endl;
         for (HeaderFileIterator hit(rit); hit; ++hit) {
@@ -353,29 +353,29 @@ RootFileIteratorImpl::RootFileIteratorImpl(const idep_CompileDep_i& dep)
 {
 }
 
-                // -*-*-*- idep_RootFileIter -*-*-*-
+                // -*-*-*- RootFileIterator -*-*-*-
 
-idep_RootFileIter::idep_RootFileIter(const idep_CompileDep& compile_dep)
+RootFileIterator::RootFileIterator(const idep_CompileDep& compile_dep)
     : d_this(new RootFileIteratorImpl(*compile_dep.d_this)) {
 }
 
-idep_RootFileIter::~idep_RootFileIter()
+RootFileIterator::~RootFileIterator()
 {
     delete d_this;
 }
 
-void idep_RootFileIter::operator++()
+void RootFileIterator::operator++()
 {
     assert(*this);
     ++d_this->d_index;
 }
 
-idep_RootFileIter::operator const void *() const
+RootFileIterator::operator const void *() const
 {
     return d_this->d_index < d_this->d_dep.d_numRootFiles ? this : 0;
 }
 
-const char *idep_RootFileIter::operator()() const
+const char *RootFileIterator::operator()() const
 {
     return (*d_this->d_dep.d_fileNames_p)[d_this->d_index];
 }
@@ -396,7 +396,7 @@ HeaderFileIteratorImpl::HeaderFileIteratorImpl(const RootFileIteratorImpl& iter)
 
                 // -*-*-*- HeaderFileIterator -*-*-*-
 
-HeaderFileIterator::HeaderFileIterator(const idep_RootFileIter& iter)
+HeaderFileIterator::HeaderFileIterator(const RootFileIterator& iter)
     : impl_(new HeaderFileIteratorImpl(*iter.d_this)) {
   ++*this;
 }

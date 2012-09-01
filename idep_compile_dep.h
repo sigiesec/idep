@@ -3,14 +3,14 @@
 
 // This wrapper component defines 3 fully insulated classes:
 //       idep_CompileDep: environment for analyzing compile-time dependencies
-//     idep_RootFileIter: iterate over the specified root file names
+//     RootFileIterator: iterate over the specified root file names
 //   HeaderFileIterator: iterate over the dependencies of each root file
 
 #include "basictypes.h"
 
 #include <ostream>
 
-class idep_RootFileIter;
+class RootFileIter;
 class HeaderFileIterator;
 
 class idep_CompileDep_i;
@@ -61,7 +61,7 @@ class idep_CompileDep {
   bool calculate(std::ostream& err, bool recursion_flag);
 
  private:
-  friend class idep_RootFileIter;
+  friend class RootFileIterator;
   friend class HeaderFileIterator;
 
   idep_CompileDep_i *d_this;
@@ -77,10 +77,10 @@ class idep_CompileDep {
 std::ostream& operator<<(std::ostream& o, const idep_CompileDep&);
 
 class RootFileIteratorImpl;
-class idep_RootFileIter {
+class RootFileIterator {
  public:
-  idep_RootFileIter(const idep_CompileDep& compile_dep);
-  ~idep_RootFileIter();
+  RootFileIterator(const idep_CompileDep& compile_dep);
+  ~RootFileIterator();
 
   void operator++();
 
@@ -94,13 +94,13 @@ class idep_RootFileIter {
 
   RootFileIteratorImpl *d_this;
 
-  DISALLOW_COPY_AND_ASSIGN(idep_RootFileIter);
+  DISALLOW_COPY_AND_ASSIGN(RootFileIterator);
 };
 
 class HeaderFileIteratorImpl;
 class HeaderFileIterator {
  public:
-  HeaderFileIterator(const idep_RootFileIter& rootFileIter);
+  HeaderFileIterator(const RootFileIterator& iterator);
   ~HeaderFileIterator();
 
   void operator++();
