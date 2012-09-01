@@ -2,7 +2,7 @@
 #define IDEP_COMPILE_DEP_H_
 
 // This wrapper component defines 3 fully insulated classes:
-//       idep_CompileDep: environment for analyzing compile-time dependencies
+//       CompileDep: environment for analyzing compile-time dependencies
 //     RootFileIterator: iterate over the specified root file names
 //   HeaderFileIterator: iterate over the dependencies of each root file
 
@@ -14,10 +14,10 @@ class RootFileIter;
 class HeaderFileIterator;
 
 class CompileDepImpl;
-class idep_CompileDep {
+class CompileDep {
  public:
-  idep_CompileDep();
-  ~idep_CompileDep();
+  CompileDep();
+  ~CompileDep();
 
   // Add a directory to be searched for include files.
   // Errors will be detected during the calculation process.
@@ -66,7 +66,7 @@ class idep_CompileDep {
 
   CompileDepImpl *d_this;
 
-  DISALLOW_COPY_AND_ASSIGN(idep_CompileDep);
+  DISALLOW_COPY_AND_ASSIGN(CompileDep);
 };
 
 // output dependencies in standard format:
@@ -74,12 +74,12 @@ class idep_CompileDep {
 //    denoting the end of each series.  The first file in each series is
 //    is the root file.  Each subsequent file in the series represents a
 //    header file upon which the root file depends at compile time.
-std::ostream& operator<<(std::ostream& o, const idep_CompileDep&);
+std::ostream& operator<<(std::ostream& o, const CompileDep&);
 
 class RootFileIteratorImpl;
 class RootFileIterator {
  public:
-  RootFileIterator(const idep_CompileDep& compile_dep);
+  RootFileIterator(const CompileDep& compile_dep);
   ~RootFileIterator();
 
   void operator++();

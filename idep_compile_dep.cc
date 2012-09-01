@@ -44,8 +44,8 @@ static int IsAsciiFile(const char* file_name) {
     return true;
 }
 
-//typedef void (idep_CompileDep::*Func)(const char *); // TODO 
-template <typename Func> static void loadFromStream(std::istream& in, idep_CompileDep *dep) 
+//typedef void (CompileDep::*Func)(const char *); // TODO 
+template <typename Func> static void loadFromStream(std::istream& in, CompileDep *dep) 
 { 
     assert(in);
     for (idep::TokenIterator it(in); it; ++it) {
@@ -61,7 +61,7 @@ template <typename Func> static void loadFromStream(std::istream& in, idep_Compi
     }
 }
 
-template <typename Func> static int loadFromFile(const char *file, idep_CompileDep *dep) 
+template <typename Func> static int loadFromFile(const char *file, CompileDep *dep) 
 {
     enum { BAD = -1, GOOD = 0 };
     if (!IsAsciiFile(file)) {
@@ -180,37 +180,37 @@ CompileDepImpl::~CompileDepImpl()
     delete d_dependencies_p;
 }
 
-                // -*-*-*- idep_CompileDep -*-*-*-
+                // -*-*-*- CompileDep -*-*-*-
 
-idep_CompileDep::idep_CompileDep() 
+CompileDep::CompileDep() 
 : d_this(new CompileDepImpl)
 {
 }
 
-idep_CompileDep::~idep_CompileDep()
+CompileDep::~CompileDep()
 {
     delete d_this;
 }
 
 
-  //  loadFromFile(file, this, &idep_CompileDep::addRootFile); 
-      //      loadFromStream(cin, this, idep_CompileDep::addRootFile); 
+  //  loadFromFile(file, this, &CompileDep::addRootFile); 
+      //      loadFromStream(cin, this, CompileDep::addRootFile); 
 
 struct addIncludeDirectoryFunctor
 {
-  static int call(idep_CompileDep* athis, const char* dir_name)
+  static int call(CompileDep* athis, const char* dir_name)
   {
     athis->AddIncludeDirectory(dir_name);
   }
 };
 
 struct addRootFileFunctor {
-  static int call(idep_CompileDep* compile_dep,const char* dir_name) {
+  static int call(CompileDep* compile_dep,const char* dir_name) {
     compile_dep->AddRootFile(dir_name);
   }
 };
 
-void idep_CompileDep::AddIncludeDirectory(const char* dir_name) {
+void CompileDep::AddIncludeDirectory(const char* dir_name) {
     if (*dir_name) {
         int len = strlen(dir_name);
         if ('/' == dir_name[len - 1]) {            // already ends in '/'
@@ -226,25 +226,25 @@ void idep_CompileDep::AddIncludeDirectory(const char* dir_name) {
     }
 }
 
-int idep_CompileDep::ReadIncludeDirectories(const char* file) {
+int CompileDep::ReadIncludeDirectories(const char* file) {
   //TODO return
   loadFromFile<addIncludeDirectoryFunctor>(file, this);
 }
 
-void idep_CompileDep::AddRootFile(const char* file_name) {
+void CompileDep::AddRootFile(const char* file_name) {
     d_this->d_rootFiles.Append(file_name);
 }
 
-int idep_CompileDep::readRootFiles(const char* file) {
+int CompileDep::readRootFiles(const char* file) {
   //TODO return
-  //  loadFromFile(file, this, &idep_CompileDep::addRootFile);
+  //  loadFromFile(file, this, &CompileDep::addRootFile);
   loadFromFile<addRootFileFunctor>(file, this);
 }
 
-void idep_CompileDep::inputRootFiles() {
+void CompileDep::inputRootFiles() {
     if (std::cin) {
       //todo
-      //      loadFromStream(cin, this, idep_CompileDep::addRootFile);
+      //      loadFromStream(cin, this, CompileDep::addRootFile);
       loadFromStream<addRootFileFunctor>(std::cin, this);
 
       // Reset eof for standard input.
@@ -252,7 +252,7 @@ void idep_CompileDep::inputRootFiles() {
     }
 }
 
-bool idep_CompileDep::calculate(std::ostream& orf, bool recursionFlag) {
+bool CompileDep::calculate(std::ostream& orf, bool recursionFlag) {
     bool success = true;
 
     // clean up any previous calculation artifacts
@@ -317,7 +317,7 @@ bool idep_CompileDep::calculate(std::ostream& orf, bool recursionFlag) {
     return success;
 }
 
-std::ostream& operator<<(std::ostream& o, const idep_CompileDep& dep)
+std::ostream& operator<<(std::ostream& o, const CompileDep& dep)
 {
     const char *INDENT = "    ";
     for (RootFileIterator rit(dep); rit; ++rit) {
@@ -354,7 +354,7 @@ RootFileIteratorImpl::RootFileIteratorImpl(const CompileDepImpl& dep)
 
                 // -*-*-*- RootFileIterator -*-*-*-
 
-RootFileIterator::RootFileIterator(const idep_CompileDep& compile_dep)
+RootFileIterator::RootFileIterator(const CompileDep& compile_dep)
     : d_this(new RootFileIteratorImpl(*compile_dep.d_this)) {
 }
 

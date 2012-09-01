@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
   int file_count = 0;          // Record the number of files on the command line.
   bool file_flag = false;      // -f<file> sets this to true.
   bool check_recursive = true;  // -x sets this to false.
-  idep_CompileDep compile_dep;
+  CompileDep compile_dep;
   for (int i = 1; i < argc; ++i) {
     const char* word = argv[i];
     if  ('-' == word[0]) {
