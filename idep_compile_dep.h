@@ -13,7 +13,7 @@
 class RootFileIter;
 class HeaderFileIterator;
 
-class idep_CompileDep_i;
+class CompileDepImpl;
 class idep_CompileDep {
  public:
   idep_CompileDep();
@@ -64,7 +64,7 @@ class idep_CompileDep {
   friend class RootFileIterator;
   friend class HeaderFileIterator;
 
-  idep_CompileDep_i *d_this;
+  CompileDepImpl *d_this;
 
   DISALLOW_COPY_AND_ASSIGN(idep_CompileDep);
 };

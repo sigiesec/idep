@@ -153,9 +153,9 @@ static int getDep(int index) {
     return status;
 }
 
-                // -*-*-*- idep_CompileDep_i -*-*-*-
+                // -*-*-*- CompileDepImpl -*-*-*-
 
-struct idep_CompileDep_i {
+struct CompileDepImpl {
     idep::NameArray d_includeDirectories;      // e.g., ".", "/usr/include"
     idep::NameArray d_rootFiles;               // files to be analyzed
 
@@ -163,18 +163,18 @@ struct idep_CompileDep_i {
     idep::BinaryRelation *d_dependencies_p;            // compile-time dependencies
     int d_numRootFiles;                       // number of roots in relation
 
-    idep_CompileDep_i();
-    ~idep_CompileDep_i();
+    CompileDepImpl();
+    ~CompileDepImpl();
 };
 
-idep_CompileDep_i::idep_CompileDep_i() 
+CompileDepImpl::CompileDepImpl() 
 : d_fileNames_p(0)
 , d_dependencies_p(0)
 , d_numRootFiles(-1)
 {
 }
 
-idep_CompileDep_i::~idep_CompileDep_i() 
+CompileDepImpl::~CompileDepImpl() 
 {
     delete d_fileNames_p;
     delete d_dependencies_p;
@@ -183,7 +183,7 @@ idep_CompileDep_i::~idep_CompileDep_i()
                 // -*-*-*- idep_CompileDep -*-*-*-
 
 idep_CompileDep::idep_CompileDep() 
-: d_this(new idep_CompileDep_i)
+: d_this(new CompileDepImpl)
 {
 }
 
@@ -341,16 +341,15 @@ std::ostream& operator<<(std::ostream& o, const idep_CompileDep& dep)
                 // -*-*-*- RootFileIteratorImpl -*-*-*-
 
 struct RootFileIteratorImpl {
-    const idep_CompileDep_i& d_dep;
+    const CompileDepImpl& d_dep;
     int d_index;
 
-    RootFileIteratorImpl(const idep_CompileDep_i& dep);
+    RootFileIteratorImpl(const CompileDepImpl& dep);
 };
 
-RootFileIteratorImpl::RootFileIteratorImpl(const idep_CompileDep_i& dep)
-: d_dep(dep)
-, d_index(0)
-{
+RootFileIteratorImpl::RootFileIteratorImpl(const CompileDepImpl& dep)
+    : d_dep(dep),
+      d_index(0) {
 }
 
                 // -*-*-*- RootFileIterator -*-*-*-
