@@ -13,6 +13,8 @@
 #include "idep_name_index_map.h"
 #include "idep_token_iterator.h"
 
+namespace idep {
+
 static std::ostream& err(std::ostream& orf) {
     return orf << "Error: ";
 }
@@ -167,14 +169,13 @@ struct CompileDepImpl {
     ~CompileDepImpl();
 };
 
-CompileDepImpl::CompileDepImpl() 
-: d_fileNames_p(0)
-, d_dependencies_p(0)
-, d_numRootFiles(-1)
-{
+CompileDepImpl::CompileDepImpl()
+    : d_fileNames_p(0),
+      d_dependencies_p(0),
+      d_numRootFiles(-1) {
 }
 
-CompileDepImpl::~CompileDepImpl() 
+CompileDepImpl::~CompileDepImpl()
 {
     delete d_fileNames_p;
     delete d_dependencies_p;
@@ -423,3 +424,5 @@ HeaderFileIterator::operator const void *() const {
 const char* HeaderFileIterator::operator()() const {
   return (*impl_->d_iter.d_dep.d_fileNames_p)[impl_->d_index];
 }
+
+}  // namespace idep

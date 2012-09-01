@@ -10,6 +10,8 @@
 
 #include <ostream>
 
+namespace idep {
+
 class RootFileIter;
 class HeaderFileIterator;
 
@@ -116,5 +118,7 @@ class HeaderFileIterator {
 
   DISALLOW_COPY_AND_ASSIGN(HeaderFileIterator);
 };
+
+}  // namespace idep
 
 #endif  // IDEP_COMPILE_DEP_H_
