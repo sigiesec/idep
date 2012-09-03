@@ -1,9 +1,11 @@
 #include "idep_compile_dep.h"
 
+#include <stdio.h>
+
 #include <iostream>
 
 const char cdep_usage[] =
-"\ncdep: Extract compile-time dependencies from a collection of files.\n"
+"cdep: Extract compile-time dependencies from a collection of files.\n"
 "\n"
 "  The following command line interface is supported:\n"
 "\n"
@@ -53,6 +55,11 @@ static const char* getArg(int* i, int argc, const char* argv[]) {
 }
 
 int main(int argc, char* argv[]) {
+  if (argc < 2) {
+    printf("%s", cdep_usage);
+    return 0;
+  }
+
   int file_count = 0;          // Record the number of files on the command line.
   bool file_flag = false;      // -f<file> sets this to true.
   bool check_recursive = true;  // -x sets this to false.
