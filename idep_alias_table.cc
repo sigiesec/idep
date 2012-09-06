@@ -6,10 +6,11 @@
 
 #include <iostream>
 
+namespace {
+
 enum { DEFAULT_TABLE_SIZE = 521 };
 
-static unsigned hash(register const char* name) // Note: returns unsigned!
-{
+unsigned hash(register const char* name) {
     register unsigned sum = 1000003; // 1,000,003 is the 78,498th prime number
     while (*name) {
         sum *= *name++; // integer multiplication is a subroutine on a SPARC
@@ -17,13 +18,15 @@ static unsigned hash(register const char* name) // Note: returns unsigned!
     return sum; // unsigned ensures positive value for use with (%) operator.
 }
 
-static char* NewStrCpy(const char* old_str) {
+char* NewStrCpy(const char* old_str) {
   int size = strlen(old_str) + 1;
   char* new_str = new char[size];
   assert(new_str);
   memcpy(new_str, old_str, size);
   return new_str;
 }
+
+}  // namespace
 
 namespace idep {
 
