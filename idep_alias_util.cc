@@ -10,28 +10,30 @@
 
 namespace idep {
 
+namespace {
+
 const char kEmptyName[] = "";
 const char kNullChar= *kEmptyName;
 const char kCommentChar= '#';
 const char kContinueChar= '\\';
 const char kNewLineChar= '\n';
 
-static std::ostream& warning(std::ostream& orf,
-                             const char* file,
-                             int line_number) {
+std::ostream& warning(std::ostream& orf,
+                      const char* file,
+                      int line_number) {
   return orf << "Warning in " << file << '(' << line_number << "): ";
 }
 
-static std::ostream& err(std::ostream& orf, const char* file, int line_number) {
+std::ostream& err(std::ostream& orf, const char* file, int line_number) {
   return orf << "Error in " << file << '(' << line_number << "): ";
 }
 
-static int TryToAlias(AliasTable* table,
-                      std::ostream& orf,
-                      const char* input_name,
-                      int line_number,
-                      const char* component_name,
-                      const char* alias) {
+int TryToAlias(AliasTable* table,
+               std::ostream& orf,
+               const char* input_name,
+               int line_number,
+               const char* component_name,
+               const char* alias) {
   if (table->Add(alias, component_name) < 0) {
     const char* previous_name = table->Lookup(alias);
     err(orf, input_name, line_number) << "two names for alias \""
@@ -41,6 +43,8 @@ static int TryToAlias(AliasTable* table,
   }
   return 0;
 }
+
+}  // namespace
 
 int AliasUtil::ReadAliases(AliasTable* table,
                            std::ostream& orf,
