@@ -582,13 +582,13 @@ int idep_LinkDep_i::calculate(std::ostream& orf, int canonicalFlag, int suffixFl
         ++cycleCount;
     }
 
-    assert(cycleCount == d_numCycles); 
-        
+    assert(cycleCount == d_numCycles);
+
     // Now sort components within each level again, but this time
     // group cyclically dependent components together in order of
     // cycle index to facilitate understanding of cycle composition.
-    // The previous sort ensured that cycle indices will be in the 
-    // order of the lexicographically smallest member of the cycle 
+    // The previous sort ensured that cycle indices will be in the
+    // order of the lexicographically smallest member of the cycle
     // on a given level.
 
     start = 0;
@@ -598,9 +598,9 @@ int idep_LinkDep_i::calculate(std::ostream& orf, int canonicalFlag, int suffixFl
             for (int j = start; j < i; ++j) {
                 int ci = d_cycleIndices_p[d_map_p[i]];
                 int cj = d_cycleIndices_p[d_map_p[j]];
-                if (ci < cj || ci == cj &&
-                               strcmp((*d_componentNames_p)[d_map_p[i]],
-                                      (*d_componentNames_p)[d_map_p[j]]) < 0) {
+                if ((ci < cj || ci == cj) &&
+                    strcmp((*d_componentNames_p)[d_map_p[i]],
+                           (*d_componentNames_p)[d_map_p[j]]) < 0) {
                     int tmp = d_map_p[i];
                     d_map_p[i] = d_map_p[j];
                     d_map_p[j] = tmp;
