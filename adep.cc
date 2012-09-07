@@ -42,8 +42,8 @@ static std::ostream& PrintError() {
   return std::cerr << "error: ";
 }
 
-static int missing(const char *argName, char option) {
-  PrintError() << "missing `" << argName << "' argument for -"
+static int missing(const char* arg_name, char option) {
+  PrintError() << "missing `" << arg_name << "' argument for -"
       << option << " option." << std::endl;
   return s_status;
 }
