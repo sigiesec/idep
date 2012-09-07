@@ -11,6 +11,8 @@
 //    idep_ComponentIter: iterate over components on a given level
 //   idep_DependencyIter: iterate over dependencies for a given component
 
+#include "basictypes.h"
+
 #include <ostream>
 
 class idep_AliasIter;
@@ -348,44 +350,41 @@ class idep_ComponentIter {
     ~idep_ComponentIter();
 
     // MANIPULATORS
-    void operator++(); 
+    void operator++();
 
     // ACCESSORS
-    operator const void *() const; 
-    const char *operator()() const; 
+    operator const void *() const;
+    const char *operator()() const;
         // Return the name of the current component on the current level.
 
-    int cycle() const; 
+    int cycle() const;
         // return the positive index of the current cycle or 0 if acyclic.
 };
 
 class idep_DependencyIter_i;
 class idep_DependencyIter {
-    idep_DependencyIter_i *d_this;
+ public:
+  idep_DependencyIter(const idep_ComponentIter& componentIter);
+  ~idep_DependencyIter();
 
-  private:
-    idep_DependencyIter(const idep_DependencyIter&);            // not impl.
-    idep_DependencyIter& operator=(const idep_DependencyIter&); // not impl.
+  void operator++();
 
-  public:
-    // CREATORS
-    idep_DependencyIter(const idep_ComponentIter& componentIter);
-    ~idep_DependencyIter();
+  operator const void *() const;
 
-    // MANIPULATORS
-    void operator++(); 
+  // Return the name of the current component on which the initial
+  // component depends.
+  const char* operator()() const;
 
-    // ACCESSORS
-    operator const void *() const;
-    const char *operator()() const;
-        // Return the name of the current component on which the initial
-        // component depends.
+  // Return the level of the current component.
+  int level() const;
 
-    // Return the level of the current component.
-    int level() const;
+  // return the positive index of the current cycle or 0 if acyclic.
+  int cycle() const;
 
-    // return the positive index of the current cycle or 0 if acyclic.
-    int cycle() const;
+ private:
+  idep_DependencyIter_i *d_this;
+
+  DISALLOW_COPY_AND_ASSIGN(idep_DependencyIter);
 };
 
 #endif  // IDEP_LINK_DEP_H_
