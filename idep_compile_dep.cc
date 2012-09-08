@@ -63,16 +63,16 @@ template <typename Func> static void loadFromStream(std::istream& in, CompileDep
     }
 }
 
-template <typename Func> static int loadFromFile(const char *file, CompileDep *dep) 
+template <typename Func> static bool loadFromFile(const char* file,
+                                                  CompileDep* dep)
 {
-    enum { BAD = -1, GOOD = 0 };
-    if (!IsAsciiFile(file)) {
-        return BAD;
-    }
+    if (!IsAsciiFile(file))
+        return false;
+
     std::ifstream in(file);
     assert(in);
     loadFromStream<Func>(in, dep);
-    return GOOD;
+    return true;
 }
 
 static const char* search(std::string* s,
