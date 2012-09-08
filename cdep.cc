@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
     const char* word = argv[i];
     if  ('-' == word[0]) {
       char option = word[1];
-      switch(option) {
+      switch (option) {
         case 'I': {
           const char** p = (const char **)argv;
           const char* dir_name = getArg(&i, argc, p);
