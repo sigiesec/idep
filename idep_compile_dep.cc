@@ -242,7 +242,7 @@ int CompileDep::ReadRootFiles(const char* file) {
   loadFromFile<addRootFileFunctor>(file, this);
 }
 
-void CompileDep::inputRootFiles() {
+void CompileDep::InputRootFiles() {
     if (std::cin) {
       //todo
       //      loadFromStream(cin, this, CompileDep::addRootFile);

@@ -49,7 +49,7 @@ class CompileDep {
   // Similar to ReadRootFiles except that input is presumed to come
   // from <stdin>, which is reset on eof.  No check is done for
   // non-ascii characters.
-  void inputRootFiles();
+  void InputRootFiles();
 
   // Calculate compile-time dependencies among the specified set of
   // rootfiles. Return true on success, false on error.  Errors will
