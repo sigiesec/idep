@@ -236,10 +236,9 @@ void CompileDep::AddRootFile(const char* file_name) {
     d_this->d_rootFiles.Append(file_name);
 }
 
-int CompileDep::ReadRootFiles(const char* file) {
-  //TODO return
+bool CompileDep::ReadRootFiles(const char* file) {
   //  loadFromFile(file, this, &CompileDep::addRootFile);
-  loadFromFile<addRootFileFunctor>(file, this);
+  return loadFromFile<addRootFileFunctor>(file, this);
 }
 
 void CompileDep::InputRootFiles() {

@@ -94,7 +94,7 @@ int main(int argc, char* argv[]) {
           if (!*arg)
             return missing("file", option);
 
-          if (0 != compile_dep.ReadRootFiles(arg))
+          if (!compile_dep.ReadRootFiles(arg))
             return unreadable(arg, option);
 
           file_flag = true;
