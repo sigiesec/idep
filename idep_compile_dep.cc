@@ -227,9 +227,8 @@ void CompileDep::AddIncludeDirectory(const char* dir_name) {
     }
 }
 
-int CompileDep::ReadIncludeDirectories(const char* file) {
-  //TODO return
-  loadFromFile<addIncludeDirectoryFunctor>(file, this);
+bool CompileDep::ReadIncludeDirectories(const char* file) {
+  return loadFromFile<addIncludeDirectoryFunctor>(file, this);
 }
 
 void CompileDep::AddRootFile(const char* file_name) {

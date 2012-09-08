@@ -30,7 +30,7 @@ class CompileDep {
   // non-whitespace characters represents directory to be added.
   // This function returns 0 unless the specified file is unreadable
   // or contains non-ascii characters.
-  int ReadIncludeDirectories(const char* file);
+  bool ReadIncludeDirectories(const char* file);
 
   // Add the name of a file to be analyzed.  Errors in reading this file
   // will be detected only when the calculate() operation is invoked.
