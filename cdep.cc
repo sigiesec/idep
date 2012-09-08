@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
   }
 
   int file_count = 0;          // Record the number of files on the command line.
-  bool file_flag = false;      // -f<file> sets this to true.
+  bool read_from_file = false;      // -f<file> sets this to true.
   bool check_recursive = true;  // -x sets this to false.
   idep::CompileDep compile_dep;
   for (int i = 1; i < argc; ++i) {
@@ -97,7 +97,7 @@ int main(int argc, char* argv[]) {
           if (!compile_dep.ReadRootFiles(arg))
             return unreadable(arg, option);
 
-          file_flag = true;
+          read_from_file = true;
         }
         break;
         case 'x': {
@@ -122,7 +122,7 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  if (!file_flag && !file_count)
+  if (!read_from_file && !file_count)
     compile_dep.InputRootFiles();
 
   if (!compile_dep.Calculate(std::cerr, check_recursive))
