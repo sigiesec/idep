@@ -43,8 +43,8 @@ static int extra(const char* text, char option) {
   return s_status;
 }
 
-static int unreadable(const char* dirFile, char option) {
-  err() << "unable to read \"" << dirFile << "\" for -"
+static int unreadable(const char* dir_file, char option) {
+  err() << "unable to read \"" << dir_file << "\" for -"
         << option << " option." << std::endl;
   return s_status;
 }
