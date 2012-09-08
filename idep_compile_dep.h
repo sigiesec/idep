@@ -44,9 +44,9 @@ class CompileDep {
   // contains non-ascii characters.  Errors in reading individual root
   // files named there in will be detected only when a processing
   // operation is invoked.
-  int readRootFiles(const char *file);
+  int ReadRootFiles(const char *file);
 
-  // Similar to readRootFiles except that input is presumed to come
+  // Similar to ReadRootFiles except that input is presumed to come
   // from <stdin>, which is reset on eof.  No check is done for
   // non-ascii characters.
   void inputRootFiles();
