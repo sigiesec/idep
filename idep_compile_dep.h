@@ -33,7 +33,7 @@ class CompileDep {
   bool ReadIncludeDirectories(const char* file);
 
   // Add the name of a file to be analyzed.  Errors in reading this file
-  // will be detected only when the calculate() operation is invoked.
+  // will be detected only when the Calculate() operation is invoked.
   void AddRootFile(const char* file_name);
 
   // Add a list of root file names read from a specified file.  This
@@ -60,7 +60,7 @@ class CompileDep {
   // recursive investigation of dependencies within external files.
   // Note that turning off recursion is potentially much faster, but
   // provides an incomplete list of compile-time dependencies.
-  bool calculate(std::ostream& err, bool recursion_flag);
+  bool Calculate(std::ostream& err, bool recursion_flag);
 
  private:
   friend class RootFileIterator;

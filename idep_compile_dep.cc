@@ -251,7 +251,7 @@ void CompileDep::InputRootFiles() {
     }
 }
 
-bool CompileDep::calculate(std::ostream& orf, bool recursionFlag) {
+bool CompileDep::Calculate(std::ostream& orf, bool recursionFlag) {
     bool success = true;
 
     // clean up any previous calculation artifacts

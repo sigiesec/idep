@@ -125,7 +125,7 @@ int main(int argc, char* argv[]) {
   if (!file_flag && !file_count)
     compile_dep.InputRootFiles();
 
-  if (compile_dep.calculate(std::cerr, check_recursive))
+  if (compile_dep.Calculate(std::cerr, check_recursive))
     s_status = IOERROR;
 
   std::cout << compile_dep;
