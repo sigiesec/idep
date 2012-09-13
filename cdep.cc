@@ -24,29 +24,26 @@ const char cdep_usage[] =
 "\n"
 "    cdep -iincludes *.[ch]\n\n";
 
-static enum { IOERROR = -1, GOOD = 0 } s_status = GOOD;
-
 static std::ostream& err() {
-  s_status = IOERROR;
   return std::cerr << "error: ";
 }
 
 static int missing(const char* arg_name, char option)  {
   err() << "missing `" << arg_name << "' argument for -"
         << option << " option." << std::endl;
-  return s_status;
+  return -1;
 }
 
 static int extra(const char* text, char option) {
   err() << "extra text \"" << text << "\" encountered after -"
         << option << " option." << std::endl;
-  return s_status;
+  return -1;
 }
 
 static int unreadable(const char* dir_file, char option) {
   err() << "unable to read \"" << dir_file << "\" for -"
         << option << " option." << std::endl;
-  return s_status;
+  return -1;
 }
 
 static const char* getArg(int* i, int argc, const char* argv[]) {
@@ -112,7 +109,7 @@ int main(int argc, char* argv[]) {
         default: {
           err() << "unknown option \"" << word << "\"." << std::endl
                 << cdep_usage;
-          return s_status;
+          return -1;
         }
         break;
       }
@@ -125,10 +122,11 @@ int main(int argc, char* argv[]) {
   if (!read_from_file && !file_count)
     compile_dep.InputRootFiles();
 
+  int status = 0;
   if (!compile_dep.Calculate(std::cerr, check_recursive))
-    s_status = IOERROR;
+    status = -1;
 
   std::cout << compile_dep;
 
-  return s_status;
+  return status;
 }
