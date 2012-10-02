@@ -63,7 +63,7 @@ static const char* getArg(int* i, int argc, const char* argv[]) {
 
 int main(int argc, char* argv[]) {
   if (argc < 2) {
-    printf("%s", cdep_usage);
+    Printf(cdep_usage);
     return 0;
   }
 
