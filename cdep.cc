@@ -52,8 +52,7 @@ static int extra(const char* text, char option) {
 }
 
 static int unreadable(const char* dir_file, char option) {
-  err() << "unable to read \"" << dir_file << "\" for -"
-        << option << " option." << std::endl;
+  Printf("error: unable to read \"%s\" for -%c option.\n", dir_file, option);
   return -1;
 }
 
