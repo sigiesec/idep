@@ -41,8 +41,7 @@ static std::ostream& err() {
 }
 
 static int missing(const char* arg_name, char option)  {
-  err() << "missing `" << arg_name << "' argument for -"
-        << option << " option." << std::endl;
+  Printf("error: missing '%s' argument for option -%c.\n", arg_name, option);
   return -1;
 }
 
