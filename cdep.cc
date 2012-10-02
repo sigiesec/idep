@@ -27,11 +27,11 @@ const char cdep_usage[] =
 
 const size_t kBufferSize = 2048;
 
-void Printf(const char format[], ...) {
+void Printf(const char* msg, ...) {
   char buffer[kBufferSize + 1];
   va_list args;
-  va_start(args, format);
-  vsnprintf(buffer, kBufferSize, format, args);
+  va_start(args, msg);
+  vsnprintf(buffer, kBufferSize, msg, args);
   va_end(args);
   fprintf(stderr, "%s", buffer);
 }
