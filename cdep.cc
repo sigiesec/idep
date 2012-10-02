@@ -5,6 +5,8 @@
 
 #include <iostream>
 
+namespace {
+
 const char cdep_usage[] =
 "cdep: Extract compile-time dependencies from a collection of files.\n"
 "\n"
@@ -36,27 +38,29 @@ void Printf(const char* msg, ...) {
   fprintf(stderr, "%s", buffer);
 }
 
-static int missing(const char* arg_name, char option)  {
+int Missing(const char* arg_name, char option)  {
   Printf("error: missing '%s' argument for option -%c.\n", arg_name, option);
   return -1;
 }
 
-static int extra(const char* text, char option) {
+int Extra(const char* text, char option) {
   Printf("error: extra text \"%s\" encountered after -%c option.\n", text, option);
   return -1;
 }
 
-static int unreadable(const char* dir_file, char option) {
+int Unreadable(const char* dir_file, char option) {
   Printf("error: unable to read \"%s\" for -%c option.\n", dir_file, option);
   return -1;
 }
 
-static const char* getArg(int* i, int argc, const char* argv[]) {
+const char* GetArg(int* i, int argc, const char* argv[]) {
   return 0 != argv[*i][2] ? argv[*i] + 2 :
          ++*i >= argc || '-' == argv[*i][0] ? "" : argv[*i];
 }
 
-int main(int argc, char* argv[]) {
+}  // namespace
+
+int main(int argc, char** argv) {
   if (argc < 2) {
     Printf(cdep_usage);
     return 0;
@@ -73,40 +77,40 @@ int main(int argc, char* argv[]) {
       switch (option) {
         case 'I': {
           const char** p = (const char **)argv;
-          const char* dir_name = getArg(&i, argc, p);
+          const char* dir_name = GetArg(&i, argc, p);
           if (!*dir_name)
-            return missing("dir", option);
+            return Missing("dir", option);
 
           compile_dep.AddIncludeDirectory(dir_name);
         }
         break;
         case 'i': {
           const char** p = (const char **)argv;
-          const char* arg = getArg(&i, argc, p);
+          const char* arg = GetArg(&i, argc, p);
           if (!*arg)
-            return missing("file", option);
+            return Missing("file", option);
 
           if (!compile_dep.ReadIncludeDirectories(arg))
-            return unreadable(arg, option);
+            return Unreadable(arg, option);
         }
         break;
         case 'f': {
           const char** p = (const char **)argv;
-          const char* arg = getArg(&i, argc, p);
+          const char* arg = GetArg(&i, argc, p);
           if (!*arg)
-            return missing("file", option);
+            return Missing("file", option);
 
           if (!compile_dep.ReadRootFiles(arg))
-            return unreadable(arg, option);
+            return Unreadable(arg, option);
 
           read_from_file = true;
         }
         break;
         case 'x': {
           const char** p = (const char **)argv;
-          const char* arg = getArg(&i, argc, p);
+          const char* arg = GetArg(&i, argc, p);
           if (*arg)
-            return extra(arg, option);
+            return Extra(arg, option);
 
           check_recursive = false;
         }
