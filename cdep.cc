@@ -36,10 +36,6 @@ void Printf(const char* msg, ...) {
   fprintf(stderr, "%s", buffer);
 }
 
-static std::ostream& err() {
-  return std::cerr << "error: ";
-}
-
 static int missing(const char* arg_name, char option)  {
   Printf("error: missing '%s' argument for option -%c.\n", arg_name, option);
   return -1;
