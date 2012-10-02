@@ -46,8 +46,7 @@ static int missing(const char* arg_name, char option)  {
 }
 
 static int extra(const char* text, char option) {
-  err() << "extra text \"" << text << "\" encountered after -"
-        << option << " option." << std::endl;
+  Printf("error: extra text \"%s\" encountered after -%c option.\n", text, option);
   return -1;
 }
 
