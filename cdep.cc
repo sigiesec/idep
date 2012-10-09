@@ -29,27 +29,31 @@ const char cdep_usage[] =
 
 const size_t kBufferSize = 2048;
 
-void Printf(const char* msg, ...) {
+void Printf(const char* prefix, const char* msg, va_list params) {
   char buffer[kBufferSize + 1];
-  va_list args;
-  va_start(args, msg);
-  vsnprintf(buffer, kBufferSize, msg, args);
-  va_end(args);
-  fprintf(stderr, "%s", buffer);
+  vsnprintf(buffer, kBufferSize, msg, params);
+  fprintf(stderr, "%s%s\n", prefix, buffer);
+}
+
+void Error(const char* msg, ...) {
+  va_list params;
+  va_start(params, msg);
+  Printf("error: ", msg, params);
+  va_end(params);
 }
 
 int Missing(const char* arg_name, char option)  {
-  Printf("error: missing '%s' argument for option -%c.\n", arg_name, option);
+  Error("missing '%s' argument for option -%c.", arg_name, option);
   return -1;
 }
 
 int Extra(const char* text, char option) {
-  Printf("error: extra text \"%s\" encountered after -%c option.\n", text, option);
+  Error("extra text \"%s\" encountered after -%c option.", text, option);
   return -1;
 }
 
 int Unreadable(const char* dir_file, char option) {
-  Printf("error: unable to read \"%s\" for -%c option.\n", dir_file, option);
+  Error("unable to read \"%s\" for -%c option.", dir_file, option);
   return -1;
 }
 
@@ -62,7 +66,7 @@ const char* GetArg(int* i, int argc, const char* argv[]) {
 
 int main(int argc, char** argv) {
   if (argc < 2) {
-    Printf(cdep_usage);
+    Error(cdep_usage);
     return 0;
   }
 
@@ -116,8 +120,8 @@ int main(int argc, char** argv) {
         }
         break;
         default: {
-          Printf("error: unknown option \"%s\".\n", word);
-          Printf(cdep_usage);
+          Error("unknown option \"%s\".", word);
+          Error(cdep_usage);
           return -1;
         }
         break;
