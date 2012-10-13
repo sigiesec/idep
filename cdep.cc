@@ -66,7 +66,7 @@ const char* GetArg(int* i, int argc, const char* argv[]) {
 
 int main(int argc, char** argv) {
   if (argc < 2) {
-    Error(cdep_usage);
+    printf(cdep_usage);
     return 0;
   }
 
@@ -121,7 +121,7 @@ int main(int argc, char** argv) {
         break;
         default: {
           Error("unknown option \"%s\".", word);
-          Error(cdep_usage);
+          printf(cdep_usage);
           return -1;
         }
         break;
