@@ -1334,22 +1334,22 @@ int idep_ComponentIter::cycle() const {
       d_this->d_dep.d_map_p[d_this->d_index]] + 1;
 }
 
-struct idep_DependencyIter_i {
+struct DependencyIteratorImpl {
     const idep_LinkDep_i& d_dep;
     int d_row;
     int d_col;
 
-    idep_DependencyIter_i(const idep_ComponentIter_i& iter);
+    DependencyIteratorImpl(const idep_ComponentIter_i& iter);
 };
 
-idep_DependencyIter_i::idep_DependencyIter_i(const idep_ComponentIter_i& iter) 
+DependencyIteratorImpl::DependencyIteratorImpl(const idep_ComponentIter_i& iter) 
     : d_dep(iter.d_dep),
       d_row(iter.d_dep.d_map_p[iter.d_index]),
       d_col(-1){
 }
 
 idep_DependencyIter::idep_DependencyIter(const idep_ComponentIter& iter) 
-    : d_this(new idep_DependencyIter_i(*iter.d_this)) {
+    : d_this(new DependencyIteratorImpl(*iter.d_this)) {
   ++*this;
 }
 

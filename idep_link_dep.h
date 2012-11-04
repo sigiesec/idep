@@ -361,7 +361,7 @@ class idep_ComponentIter {
         // return the positive index of the current cycle or 0 if acyclic.
 };
 
-class idep_DependencyIter_i;
+class DependencyIteratorImpl;
 class idep_DependencyIter {
  public:
   idep_DependencyIter(const idep_ComponentIter& componentIter);
@@ -382,7 +382,7 @@ class idep_DependencyIter {
   int cycle() const;
 
  private:
-  idep_DependencyIter_i *d_this;
+  DependencyIteratorImpl *d_this;
 
   DISALLOW_COPY_AND_ASSIGN(idep_DependencyIter);
 };
