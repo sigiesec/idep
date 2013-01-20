@@ -1,7 +1,6 @@
 This is the idep package from the John Lakos book.
 
-I extracted the source from:
+The source code was extracted from:
 http://prdownloads.sourceforge.net/introspector/LSC-rpkg-0.1.tgz?download
 
-That I found in this blog post:
-http://www.apibook.com/blog/archives/41
+I found it in this blog http://www.apibook.com/blog/archives/41 post.
