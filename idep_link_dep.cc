@@ -909,7 +909,7 @@ void idep_LinkDep::printLevels(std::ostream& o, int longFlag, int supressFlag) c
 
             if (longFlag) {
                 int firstFlag = 1;
-                for (idep_DependencyIter dit(cit); dit; ++dit) {
+                for (DependencyIterator dit(cit); dit; ++dit) {
                     if (firstFlag) {
                         firstFlag = 0;
                     }
@@ -1348,16 +1348,16 @@ DependencyIteratorImpl::DependencyIteratorImpl(const idep_ComponentIter_i& iter)
       d_col(-1){
 }
 
-idep_DependencyIter::idep_DependencyIter(const idep_ComponentIter& iter) 
+DependencyIterator::DependencyIterator(const idep_ComponentIter& iter) 
     : d_this(new DependencyIteratorImpl(*iter.d_this)) {
   ++*this;
 }
 
-idep_DependencyIter::~idep_DependencyIter() {
+DependencyIterator::~DependencyIterator() {
   delete d_this;
 }
 
-void idep_DependencyIter::operator++()  {
+void DependencyIterator::operator++()  {
   assert(*this);
   do {
     ++d_this->d_col;
@@ -1367,23 +1367,23 @@ void idep_DependencyIter::operator++()  {
           d_this->d_dep.d_map_p[d_this->d_col]));
 }
 
-idep_DependencyIter::operator const void *() const {
+DependencyIterator::operator const void *() const {
   return d_this->d_col < d_this->d_dep.d_numComponents ? this : 0;
 }
 
-const char* idep_DependencyIter::operator()() const {
+const char* DependencyIterator::operator()() const {
   // Levelized order.
   return (*d_this->d_dep.d_componentNames_p)[
       d_this->d_dep.d_map_p[d_this->d_col]];
 }
 
-int idep_DependencyIter::level() const {
+int DependencyIterator::level() const {
   // Levelized order.
   return d_this->d_dep.d_levelNumbers_p[
       d_this->d_dep.d_map_p[d_this->d_col]];
 }
 
-int idep_DependencyIter::cycle() const {
+int DependencyIterator::cycle() const {
   // Levelized order.
   return d_this->d_dep.d_cycleIndices_p[
       d_this->d_dep.d_map_p[d_this->d_col]] + 1;

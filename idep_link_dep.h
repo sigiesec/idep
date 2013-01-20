@@ -9,7 +9,7 @@
 //       idep_MemberIter: iterate over members within a given cycle
 //        idep_LevelIter: iterate over levels in the system
 //    idep_ComponentIter: iterate over components on a given level
-//   idep_DependencyIter: iterate over dependencies for a given component
+//   DependencyIterator: iterate over dependencies for a given component
 
 #include "basictypes.h"
 
@@ -21,7 +21,7 @@ class idep_CycleIter;
 class idep_MemberIter;
 class idep_LevelIter;
 class idep_ComponentIter;
-class idep_DependencyIter;
+class DependencyIterator;
 
 class idep_LinkDep_i;
 class idep_LinkDep {
@@ -33,7 +33,7 @@ class idep_LinkDep {
     friend class idep_MemberIter;
     friend class idep_LevelIter;
     friend class idep_ComponentIter;
-    friend class idep_DependencyIter;
+    friend class DependencyIterator;
 
   private:
     idep_LinkDep(const idep_LinkDep&);                  // not implemented
@@ -338,7 +338,7 @@ class idep_ComponentIter_i;
 class idep_ComponentIter {
     idep_ComponentIter_i *d_this;
 
-    friend class idep_DependencyIter;
+    friend class DependencyIterator;
 
   private:
     idep_ComponentIter(const idep_ComponentIter&);              // not impl.
@@ -362,10 +362,10 @@ class idep_ComponentIter {
 };
 
 class DependencyIteratorImpl;
-class idep_DependencyIter {
+class DependencyIterator {
  public:
-  idep_DependencyIter(const idep_ComponentIter& componentIter);
-  ~idep_DependencyIter();
+  DependencyIterator(const idep_ComponentIter& componentIter);
+  ~DependencyIterator();
 
   void operator++();
 
@@ -384,7 +384,7 @@ class idep_DependencyIter {
  private:
   DependencyIteratorImpl *d_this;
 
-  DISALLOW_COPY_AND_ASSIGN(idep_DependencyIter);
+  DISALLOW_COPY_AND_ASSIGN(DependencyIterator);
 };
 
 #endif  // IDEP_LINK_DEP_H_
