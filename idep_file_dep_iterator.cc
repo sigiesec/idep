@@ -112,7 +112,7 @@ struct FileDepIteratorImpl {
 FileDepIteratorImpl::FileDepIteratorImpl(const char* file_name)
     : d_file(file_name),
       d_header_p(d_buf)  /* Buffer is not yet initialized. */,
-      is_valid_file(d_file != NULL) /* Depends on result of initialization. */ {
+      is_valid_file(!!d_file) /* Depends on result of initialization. */ {
 }
 
 FileDepIterator::FileDepIterator(const char *fileName)
